@@ -7,13 +7,12 @@ import cv2
 import depthai as dai
 import numpy as np
 
-
 class StartCameraStream():
 
-	def __init__(self,ip):
+	def __init__(self,ip,gps_flag):
 	
 		self.ip = ip
-		
+		self.gps_flag = gps_flag
 		self.pipeline = dai.Pipeline()
 
 		self.camRgb = self.pipeline.create(dai.node.ColorCamera)
@@ -27,21 +26,38 @@ class StartCameraStream():
 		self.xoutRgb.input.setQueueSize(1)
 		self.camRgb.preview.link(self.xoutRgb.input)
 	
-	def run_camera(self):
+	def start_camera_stream(self,gps_flag):
+
+		self.gps_flag = gps_flag
 		cam = dai.DeviceInfo(self.ip)
 		with dai.Device(self.pipeline, cam) as device:	
+
 			print("Connected")
 			qRGB = device.getOutputQueue(name="rgb", maxSize=1, blocking=False)
+
 			while True:
+
 				frame = qRGB.tryGet()
 				if frame is not None:
+					
+					self.get_image_frame(frame)
 					cv2.imshow("cam", frame.getCvFrame())
+
 				if cv2.waitKey(1) == ord('q'):
 					break
-
-# if __name__ == '__main__':
 	
-#     # enter IP address of the cameras in the input field.
-# 	cmd_cam = StartCameraStream("")
-# 	cmd_cam.run_camera()
+	def get_image_frame(self, frame):
+		"""
+			This function will check for the GPS flag to be true and then return the latest frame
+		"""
+		if self.gps_flag == True :
+			
+			# return frame
+			rospy.loginfo('gps flag is : '+self.gps_flag)
+			rospy.loginfo('Returning Images')
+		
+		self.gps_flag = False
+		rospy.loginfo('gps flag changed to : '+self.gps_flag)
+
+
 		
