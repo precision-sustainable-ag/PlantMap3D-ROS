@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
     This class is a driver for streaming the RGB pipeline for oakd cameras.
 """
@@ -38,9 +39,9 @@ class StartCameraStream():
 				if cv2.waitKey(1) == ord('q'):
 					break
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
 	
-    # enter IP address of the cameras in the input field.
-	cmd_cam = StartCameraStream("")
-	cmd_cam.run_camera()
+#     # enter IP address of the cameras in the input field.
+# 	cmd_cam = StartCameraStream("")
+# 	cmd_cam.run_camera()
 		
