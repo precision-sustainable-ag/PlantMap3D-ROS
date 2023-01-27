@@ -2,18 +2,27 @@
 """
     This class is a driver for streaming the RGB pipeline for oakd cameras.
 """
-import time, sys
+
 import cv2
 import depthai as dai
 import numpy as np
-
+import rospy
+from sensor_msgs.msg import Image
+from cv_bridge import CvBridge
+import time, sys 
+import os
 class StartCameraStream():
 
-	def __init__(self,ip,gps_flag):
-	
+	def __init__(self,ip,node_name):
+		
+		rospy.init_node('camera_driver')
 		self.ip = ip
-		self.gps_flag = gps_flag
+		self.node_name = node_name
+		
+		self.br =  CvBridge()
+
 		self.pipeline = dai.Pipeline()
+		self.pub = rospy.Publisher(self.node_name,Image,queue_size=10)
 
 		self.camRgb = self.pipeline.create(dai.node.ColorCamera)
 		self.camRgb.setBoardSocket(dai.CameraBoardSocket.RGB)
@@ -25,10 +34,10 @@ class StartCameraStream():
 		self.xoutRgb.input.setBlocking(False)
 		self.xoutRgb.input.setQueueSize(1)
 		self.camRgb.preview.link(self.xoutRgb.input)
-	
-	def start_camera_stream(self,gps_flag):
 
-		self.gps_flag = gps_flag
+	
+	def start_camera_stream_rgb(self):
+
 		cam = dai.DeviceInfo(self.ip)
 		with dai.Device(self.pipeline, cam) as device:	
 
@@ -39,25 +48,10 @@ class StartCameraStream():
 
 				frame = qRGB.tryGet()
 				if frame is not None:
-					
-					self.get_image_frame(frame)
-					cv2.imshow("cam", frame.getCvFrame())
-
+					self.pub.publish(self.br.cv2_to_imgmsg(frame.getCvFrame())) 
+					cv2.imshow(self.node_name,frame.getCvFrame())
 				if cv2.waitKey(1) == ord('q'):
 					break
 	
-	def get_image_frame(self, frame):
-		"""
-			This function will check for the GPS flag to be true and then return the latest frame
-		"""
-		if self.gps_flag == True :
-			
-			# return frame
-			rospy.loginfo('gps flag is : '+self.gps_flag)
-			rospy.loginfo('Returning Images')
-		
-		self.gps_flag = False
-		rospy.loginfo('gps flag changed to : '+self.gps_flag)
 
 
-		
