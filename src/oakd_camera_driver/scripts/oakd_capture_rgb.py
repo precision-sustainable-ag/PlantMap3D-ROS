@@ -21,6 +21,7 @@ class StartCameraStream():
 		self.node_name = node_name
 		self.topic_name = topic_name
 		rospy.init_node(node_name)
+		rospy.loginfo('Creating new camera node')
 		self.pub = rospy.Publisher(self.topic_name,Image,queue_size=10)
 		
 		self.br =  CvBridge()
@@ -43,12 +44,10 @@ class StartCameraStream():
 	
 	def start_camera_stream_rgb(self):
 
-		
-		rospy.loginfo('Inside start camera fun')
 		cam = dai.DeviceInfo(self.ip)
 		with dai.Device(self.pipeline, cam) as device:	
 
-			print("Connected")
+			print(f"Connected to {self.node_name}")
 			qRGB = device.getOutputQueue(name="rgb", maxSize=1, blocking=False)
 
 			while True:

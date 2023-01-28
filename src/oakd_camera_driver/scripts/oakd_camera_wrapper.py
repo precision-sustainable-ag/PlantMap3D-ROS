@@ -16,7 +16,6 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 if __name__ == '__main__':
 	
     camera_data = [["169.254.54.205","camera_1","camera_1_data"],["169.254.54.200","camera_2","camera_2_data"]]
-    # camera_data = [["169.254.54.205","camera_1"]]
 
     for cam_data in camera_data:
         
