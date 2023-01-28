@@ -8,6 +8,15 @@
 catkin_make
 ```
 
-## oakd_camera_driver
+## To run the camera driver
 
-Script to run the oakd cameras. 
+Start a ros master in a new terminal window
+```
+roscore
+```
+
+In a new terminal
+
+```
+rosrun oakd_camera_driver oakd_camera_wrapper.py
+```
