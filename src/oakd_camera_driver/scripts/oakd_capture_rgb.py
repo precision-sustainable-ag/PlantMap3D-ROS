@@ -13,17 +13,20 @@ import time, sys
 import os
 class StartCameraStream():
 
-	def __init__(self,ip,node_name):
+	def __init__(self,ip,node_name,topic_name):
 		
-		rospy.init_node('camera_driver')
+		
+
 		self.ip = ip
 		self.node_name = node_name
+		self.topic_name = topic_name
+		rospy.init_node(node_name)
+		self.pub = rospy.Publisher(self.topic_name,Image,queue_size=10)
 		
 		self.br =  CvBridge()
 
 		self.pipeline = dai.Pipeline()
-		self.pub = rospy.Publisher(self.node_name,Image,queue_size=10)
-
+		
 		self.camRgb = self.pipeline.create(dai.node.ColorCamera)
 		self.camRgb.setBoardSocket(dai.CameraBoardSocket.RGB)
 		self.camRgb.setResolution(dai.ColorCameraProperties.SensorResolution.THE_1080_P)
@@ -35,9 +38,13 @@ class StartCameraStream():
 		self.xoutRgb.input.setQueueSize(1)
 		self.camRgb.preview.link(self.xoutRgb.input)
 
+		self.start_camera_stream_rgb()
+
 	
 	def start_camera_stream_rgb(self):
 
+		
+		rospy.loginfo('Inside start camera fun')
 		cam = dai.DeviceInfo(self.ip)
 		with dai.Device(self.pipeline, cam) as device:	
 
@@ -48,10 +55,13 @@ class StartCameraStream():
 
 				frame = qRGB.tryGet()
 				if frame is not None:
-					self.pub.publish(self.br.cv2_to_imgmsg(frame.getCvFrame())) 
+					
 					cv2.imshow(self.node_name,frame.getCvFrame())
+					self.pub.publish(self.br.cv2_to_imgmsg(frame.getCvFrame())) 
 				if cv2.waitKey(1) == ord('q'):
 					break
 	
+if __name__ == '__main__':
 
-
+	cmd_rec = sys.argv[1:]
+	camera_obj = StartCameraStream(cmd_rec[0],cmd_rec[1],cmd_rec[2])
