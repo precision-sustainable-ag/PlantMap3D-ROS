@@ -1,0 +1,8 @@
+prefix=/home/plantmap3d/Desktop/ROS_dev_ws/PlantMap3D-ROS/devel
+
+Name: gps_module_driver
+Description: Description of gps_module_driver
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

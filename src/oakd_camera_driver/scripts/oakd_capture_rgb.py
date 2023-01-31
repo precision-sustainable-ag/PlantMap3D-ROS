@@ -11,6 +11,7 @@ from sensor_msgs.msg import Image
 from cv_bridge import CvBridge
 import time, sys 
 import os
+
 class StartCameraStream():
 
 	def __init__(self,ip,node_name,topic_name):
@@ -56,7 +57,8 @@ class StartCameraStream():
 				if frame is not None:
 					
 					cv2.imshow(self.node_name,frame.getCvFrame())
-					self.pub.publish(self.br.cv2_to_imgmsg(frame.getCvFrame())) 
+					self.pub.publish(self.br.cv2_to_imgmsg(frame.getCvFrame(),"bgr8"))
+					time.sleep(2) 
 				if cv2.waitKey(1) == ord('q'):
 					break
 	
