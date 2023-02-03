@@ -11,7 +11,7 @@
 
 # since this file is sourced either use the provided _CATKIN_SETUP_DIR
 # or fall back to the destination set at configure time
-: ${_CATKIN_SETUP_DIR:=/home/plantmap3d/Desktop/ROS_dev_ws/PlantMap3D-ROS/devel}
+: ${_CATKIN_SETUP_DIR:=/home/plantmap3d/Desktop/ROS_dev_ws2/PlantMap3D-ROS/devel}
 _SETUP_UTIL="$_CATKIN_SETUP_DIR/_setup_util.py"
 unset _CATKIN_SETUP_DIR
 
