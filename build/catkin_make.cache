@@ -1,2 +1,0 @@
-
--DCATKIN_DEVEL_PREFIX=/home/plantmap3d/Desktop/ROS_dev_ws/PlantMap3D-ROS/devel -DCMAKE_INSTALL_PREFIX=/home/plantmap3d/Desktop/ROS_dev_ws/PlantMap3D-ROS/install -G Unix Makefiles
