@@ -1,8 +1,0 @@
-prefix=/home/plantmap3d/Desktop/ROS_dev_ws2/PlantMap3D-ROS/devel
-
-Name: biomass_estimator_driver
-Description: Description of biomass_estimator_driver
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 

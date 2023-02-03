@@ -1,8 +1,0 @@
-prefix=/home/plantmap3d/Desktop/ROS_dev_ws2/PlantMap3D-ROS/devel
-
-Name: oakd_camera_driver
-Description: Description of oakd_camera_driver
-Version: 0.0.0
-Cflags: 
-Libs: -L${prefix}/lib 
-Requires: 
