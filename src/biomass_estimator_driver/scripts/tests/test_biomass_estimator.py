@@ -20,3 +20,10 @@ class TestBiomassEstimator(TestCase):
         biomass_results = bio_est.run()
         self.assertEqual(biomass_results['AMATU'], 5)
 
+    def test_should_sum_to_two_ECHCG(self):
+        self.test_input_1 = np.ones([2, 3])
+        self.test_input_1[0][1] = 2
+        self.test_input_1[1][0] = 2
+        bio_est = BiomassEstimator(semantic_array=self.test_input_1, heights_array=self.test_input_2)
+        biomass_results = bio_est.run()
+        self.assertEqual(biomass_results['ECHCG'], 2)

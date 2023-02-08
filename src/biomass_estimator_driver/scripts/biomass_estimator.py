@@ -9,16 +9,8 @@ class BiomassEstimator:
         self.biomass_estimates = {'AMAPA': 0, 'AMATU': 0, 'ECHCG': 0, 'PROLO': 0, 'ZEAMX': 0, 'GLXMA': 0}
 
     def run(self) -> Dict:
-
-        for i in range(np.shape(self.semantic_array)[0]):
-            for j in range(np.shape(self.semantic_array)[1]):
-                if self.semantic_array[i][j] == 0:
-                    self.biomass_estimates['AMAPA'] += 1
-                elif self.semantic_array[i][j] == 1:
-                    self.biomass_estimates['AMATU'] += 1
-                elif self.semantic_array[i][j] == 2:
-                    self.biomass_estimates['ECHCG'] += 1
-
+        i = 0
+        for key in self.biomass_estimates:
+            self.biomass_estimates[key] = np.sum(self.semantic_array == i)
+            i += 1
         return self.biomass_estimates
-
-
