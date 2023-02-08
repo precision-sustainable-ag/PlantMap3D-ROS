@@ -80,7 +80,7 @@ class StartCameraStream():
 				if inDepth is not None:
 					dframe = inDepth.getFrame()
 					# dframe = (dframe * init_dsp).astype(np.uint8)
-					# cv2.imshow("Depth", dframe)
+					cv2.imshow("Depth", dframe)
 
 				if frame is not None:
 					
