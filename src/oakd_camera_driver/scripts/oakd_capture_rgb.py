@@ -40,25 +40,54 @@ class StartCameraStream():
 		self.xoutRgb.input.setQueueSize(1)
 		self.camRgb.preview.link(self.xoutRgb.input)
 
-		self.start_camera_stream_rgb()
+		self.monoRight = self.pipeline.create(dai.node.MonoCamera)
+		self.monoRight.setBoardSocket(dai.CameraBoardSocket.RIGHT)
+		self.monoRight.setResolution(dai.MonoCameraProperties.SensorResolution.THE_720_P)
+		self.monoLeft = self.pipeline.create(dai.node.MonoCamera)
+		self.monoLeft.setBoardSocket(dai.CameraBoardSocket.LEFT)
+		self.monoLeft.setResolution(dai.MonoCameraProperties.SensorResolution.THE_720_P)
+
+		self.Depth = self.pipeline.create(dai.node.StereoDepth)
+		self.Depth.setDefaultProfilePreset(dai.node.StereoDepth.PresetMode.HIGH_DENSITY)
+		self.Depth.initialConfig.setMedianFilter(dai.MedianFilter.KERNEL_7x7)
+		self.Depth.setLeftRightCheck(True)
+		self.Depth.setExtendedDisparity(False)
+		self.Depth.setSubpixel(False)
+		
+		self.xoutDepth = self.pipeline.create(dai.node.XLinkOut)
+		self.xoutDepth.setStreamName("disparity")
+		self.monoRight.out.link(self.Depth.right)
+		self.monoLeft.out.link(self.Depth.left)
+		self.Depth.disparity.link(self.xoutDepth.input)
+
+		self.get_camera_data()
 
 	
-	def start_camera_stream_rgb(self):
+	def get_camera_data(self):
 
 		cam = dai.DeviceInfo(self.ip)
 		with dai.Device(self.pipeline, cam) as device:	
 
 			print(f"Connected to {self.node_name}")
 			qRGB = device.getOutputQueue(name="rgb", maxSize=1, blocking=False)
+			qDepth = device.getOutputQueue(name="disparity", maxSize=1, blocking=False)
 
 			while True:
 
 				frame = qRGB.tryGet()
+				inDepth = qDepth.tryGet()
+
+				if inDepth is not None:
+					dframe = inDepth.getFrame()
+					# dframe = (dframe * init_dsp).astype(np.uint8)
+					# cv2.imshow("Depth", dframe)
+
 				if frame is not None:
 					
 					cv2.imshow(self.node_name,frame.getCvFrame())
 					self.pub.publish(self.br.cv2_to_imgmsg(frame.getCvFrame(),"bgr8"))
 					time.sleep(2) 
+
 				if cv2.waitKey(1) == ord('q'):
 					break
 	
