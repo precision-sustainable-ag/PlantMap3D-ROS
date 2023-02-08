@@ -2,6 +2,7 @@ from unittest import TestCase
 import numpy as np
 from biomass_estimator import BiomassEstimator
 
+
 class TestBiomassEstimator(TestCase):
 
     def setUp(self):

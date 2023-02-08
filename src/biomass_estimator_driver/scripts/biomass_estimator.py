@@ -1,8 +1,12 @@
 import numpy as np
 from typing import Dict
 
-class BiomassEstimator:
 
+def biomassCorrelation(pix_count: float) -> float:
+    return pix_count
+
+
+class BiomassEstimator:
     def __init__(self, semantic_array: np.array, heights_array: np.array):
         self.semantic_array = semantic_array
         self.heights_array = heights_array
@@ -11,6 +15,6 @@ class BiomassEstimator:
     def run(self) -> Dict:
         i = 0
         for key in self.biomass_estimates:
-            self.biomass_estimates[key] = np.sum(self.semantic_array == i)
+            self.biomass_estimates[key] = biomassCorrelation(np.sum(self.semantic_array == i))
             i += 1
         return self.biomass_estimates
