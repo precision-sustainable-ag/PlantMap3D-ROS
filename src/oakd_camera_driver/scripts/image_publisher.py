@@ -12,6 +12,9 @@ PM3DCameraData :
     int64[] rgb_data
     int64[] depth_map
     int64[] segmentation_labels
+    int64[] rgb_dims
+    int64[] depth_map_dims
+    int64[] segmentation_label_dims
 """
 
 
@@ -34,13 +37,15 @@ if __name__ == '__main__':
     #talker()
 
     array_data = np.arange(27,dtype=np.int64).reshape((3,3,3))
-    print(array_data)
     depth_data = np.random.randint(0,30,(128,128,3),dtype=np.int64)
     segmentation_label_arr = np.random.randint(0,4,(128,128,3),dtype=np.int64)
-
     msg = PM3DCameraData()
     msg.rgb_data = array_data.flatten().tolist()
     msg.depth_map = depth_data.flatten().tolist()
     msg.segmentation_labels = segmentation_label_arr.flatten().tolist()
+    
+    msg.rgb_dims = array_data.shape
+    msg.depth_map_dims = depth_data.shape
+    msg.segmentation_label_dims = segmentation_label_arr.shape
 
     talker(msg)

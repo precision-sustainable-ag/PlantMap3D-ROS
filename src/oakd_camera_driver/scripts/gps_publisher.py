@@ -16,7 +16,7 @@ if __name__ == '__main__':
     camera_trigger = True
     rate = rospy.Rate(3)
     pub = rospy.Publisher("camera_trigger",Bool,queue_size=1)
-    gps_string = "$GNRMC,175800.00,A,3546.48455,N,07841.05018,W,0.212,,010223,,,A,V*04"
+    # gps_string = "$GNRMC,175800.00,A,3546.48455,N,07841.05018,W,0.212,,010223,,,A,V*04"
 
     while not rospy.is_shutdown():
         
