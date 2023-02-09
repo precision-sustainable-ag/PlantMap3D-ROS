@@ -10,7 +10,11 @@ def callback(data):
 
     # rospy.loginfo(f"Got depth data :{data.depth_map}")
     # getting image data as list and converting back to numpy arrays
-    print("depth data is : ", data.depth_map.reshape(128,128,3))
+    # print("depth data is : ", data.depth_map.reshape(128,128,3))
+    # array_data = np.arange(27,dtype=np.int64).reshape((3,3,3))
+    array_data = np.ones((3,3,3))
+    subscribed_rgb_data = data.rgb_data.reshape((3,3,3))
+    assert ((subscribed_rgb_data == array_data).all()), "Arrays are not same"
     
 
 def listener():
