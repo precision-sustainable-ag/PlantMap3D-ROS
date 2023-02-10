@@ -21,8 +21,3 @@ class BiomassEstimator:
         for i in range(self.num_categories):
             self.biomass_estimates[i] = biomassCorrelation(np.sum(self.semantic_array == i))
         return self.biomass_estimates
-
-#if __name__ == "__main__":
-#    test_input_1 = np.ones([2, 3])
-#    test_input_2 = np.ones([2, 3])
-#    be = BiomassEstimator(test_input_1, test_input_2)
