@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Dict
+import json
 
 
 def biomassCorrelation(pix_count: float) -> float:
@@ -10,11 +10,19 @@ class BiomassEstimator:
     def __init__(self, semantic_array: np.array, heights_array: np.array):
         self.semantic_array = semantic_array
         self.heights_array = heights_array
-        self.biomass_estimates = {'AMAPA': 0, 'AMATU': 0, 'ECHCG': 0, 'PROLO': 0, 'ZEAMX': 0, 'GLXMA': 0}
+        # Opening JSON file
+        with open("config/species_list.json", 'r') as species_file:
+            self.species_data = json.load(species_file)
+        self.num_categories = len(self.species_data["species"])
+        self.biomass_estimates = np.zeros(self.num_categories)
 
-    def run(self) -> Dict:
-        i = 0
-        for key in self.biomass_estimates:
-            self.biomass_estimates[key] = biomassCorrelation(np.sum(self.semantic_array == i))
-            i += 1
+
+    def run(self) -> np.array:
+        for i in range(self.num_categories):
+            self.biomass_estimates[i] = biomassCorrelation(np.sum(self.semantic_array == i))
         return self.biomass_estimates
+
+#if __name__ == "__main__":
+#    test_input_1 = np.ones([2, 3])
+#    test_input_2 = np.ones([2, 3])
+#    be = BiomassEstimator(test_input_1, test_input_2)
