@@ -2,6 +2,19 @@
 
 ## Creating a ROS workspace
 
+
+
+## Some common erros
+
+1. 
+![image](https://user-images.githubusercontent.com/71589098/218086068-499a5122-87de-429d-a2ca-c7f20ace9aa5.png)
+
+Answer : Try the following command line :
+
+```
+sudo apt-get install ros-noetic-catkin-virtualenv
+```
+
 # BioMassEstimator module
 ROS wrapper will collect the output of the segmentation module for a segmentation array and a height above ground array from a height estimation module
 
