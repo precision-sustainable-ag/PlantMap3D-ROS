@@ -18,6 +18,6 @@ class BiomassEstimator:
 
 
     def run(self) -> np.array:
-        for i in range(self.num_categories):
+        for i in range(1, self.num_categories):
             self.biomass_estimates[i] = biomassCorrelation(np.sum(self.semantic_array == i))
         return self.biomass_estimates
