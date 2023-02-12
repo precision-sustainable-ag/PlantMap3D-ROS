@@ -1,0 +1,80 @@
+{
+    "species": {
+        "background": {
+            "class_id": 0,
+            "USDA_symbol": "background",
+            "EPPO": "background",
+            "group": "background",
+            "class": "background",
+            "subclass": "background",
+            "order": "background",
+            "family": "background",
+            "genus": "background",
+            "species": "background",
+            "common_name": "background",
+            "authority": "background",
+            "growth_habit": "background",
+            "duration": "background",
+            "category": "background",
+            "link": null,
+            "note": null,
+            "hex": "#000000",
+            "rgb": [
+                0,
+                0,
+                0
+            ]
+        },
+        "monocot": {
+            "class_id": 1,
+            "USDA_symbol": "monocot",
+            "EPPO": "monocot",
+            "group": "monocot",
+            "class": "monocot",
+            "subclass": "monocot",
+            "order": "monocot",
+            "family": "monocot",
+            "genus": "monocot",
+            "species": "monocot",
+            "common_name": "monocot",
+            "authority": "monocot",
+            "growth_habit": "monocot",
+            "duration": "monocot",
+            "category": "monocot",
+            "link": null,
+            "note": null,
+            "hex": "#1d686e",
+            "rgb": [
+                29,
+                104,
+                110
+            ]
+        },
+        "dicot": {
+            "class_id": 2,
+            "USDA_symbol": "dicot",
+            "EPPO": "dicot",
+            "group": "dicot",
+            "class": "dicot",
+            "subclass": "dicot",
+            "order": "dicot",
+            "family": "dicot",
+            "genus": "dicot",
+            "species": "dicot",
+            "common_name": "dicot",
+            "authority": "dicot",
+            "growth_habit": "dicot",
+            "duration": "dicot",
+            "category": "dicot",
+            "link": null,
+            "note": null,
+            "hex": "#e452f1",
+            "rgb": [
+                228,
+                82,
+                241
+            ]
+        }
+    },
+    "Version": 1.3
+}
