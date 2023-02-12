@@ -1,6 +1,7 @@
 import numpy as np
 import json
-
+import os
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 def biomassCorrelation(pix_count: float) -> float:
     return pix_count
