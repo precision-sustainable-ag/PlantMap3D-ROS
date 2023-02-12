@@ -4,3 +4,5 @@ int64[] segmentation_labels
 int64[] rgb_dims
 int64[] depth_map_dims
 int64[] segmentation_label_dims
+int64[] height_map
+int64[] height_map_dims

@@ -14,7 +14,7 @@ if __name__ == '__main__':
     rospy.init_node("camera_trigger")
 
     camera_trigger = True
-    rate = rospy.Rate(3)
+    rate = rospy.Rate(1)
     pub = rospy.Publisher("camera_trigger",Bool,queue_size=1)
     # gps_string = "$GNRMC,175800.00,A,3546.48455,N,07841.05018,W,0.212,,010223,,,A,V*04"
 
@@ -22,5 +22,6 @@ if __name__ == '__main__':
         
         rospy.loginfo(f"triggering camera : {camera_trigger}")
         pub.publish(camera_trigger)
+        rate.sleep()
 
     

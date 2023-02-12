@@ -4,3 +4,5 @@ build/
 devel/
 .idea/
 mona_lisa.png
+.vscode
+test_loop_break.py
