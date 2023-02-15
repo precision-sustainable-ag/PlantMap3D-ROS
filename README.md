@@ -107,11 +107,16 @@ Add the setup.bash file to .bashrc file
 echo "source ~/ROS_dev_ws/PlantMap3D-ROS/devel/setup.bash" >> ~/.bashrc
 ```
 
+## Current working pipeline : 
+
+<img src="https://user-images.githubusercontent.com/71589098/219067817-b72f6703-93ee-4166-b9c9-d8205a2e3886.jpeg" width=50%% height=50% />
+
 
 ## Some common erros
 
 1. 
-![image](https://user-images.githubusercontent.com/71589098/218086068-499a5122-87de-429d-a2ca-c7f20ace9aa5.png)
+
+<img src="https://user-images.githubusercontent.com/71589098/218086068-499a5122-87de-429d-a2ca-c7f20ace9aa5.png" width=50%% height=50% />
 
 Answer : Try the following command line :
 
