@@ -8,7 +8,9 @@ from std_msgs.msg import Bool
 import numpy as np
 import cv2
 import os 
+import sys
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
 """
 PM3DCameraData :
     int64[] rgb_data
@@ -21,55 +23,55 @@ PM3DCameraData :
 """
 
 
-# def image_publisher(array_data):
+class TestImagePublisher():
 
-#     rospy.init_node('talker')
-#     pub = rospy.Publisher('numpy_data',numpy_msg(PM3DCameraData),queue_size=1)
-
-#     r = rospy.Rate(10)
-
-#     while not rospy.is_shutdown():
-
+    def __init__(self,image_name,node_name,topic_name):
         
-#         pub.publish(array_data)
-#         r.sleep()
+        rospy.init_node(node_name)
+        self.image_name = cv2.imread(image_name)
+        self.node_name = node_name
+        self.topic_name = topic_name
+        self.pub = rospy.Publisher(topic_name,numpy_msg(PM3DCameraData),queue_size=1)
+        self.run()
 
-image_data = cv2.imread("mona_lisa.png")
+    def callback(self,data):
+   
+        array_data = cv2.resize(self.image_name,(1024,1024),cv2.INTER_CUBIC)
+        depth_data = np.random.randint(0,30,(128,128,3),dtype=np.int64)
+        segmentation_label_arr = np.random.randint(0,4,(128,128,3),dtype=np.int64)
+        msg = PM3DCameraData()
+        msg.rgb_data = array_data.flatten().tolist()
+        msg.depth_map = depth_data.flatten().tolist()
+        msg.segmentation_labels = segmentation_label_arr.flatten().tolist()
 
-def callback(data):
+        msg.rgb_dims = array_data.shape
+        msg.depth_map_dims = depth_data.shape
+        msg.segmentation_label_dims = segmentation_label_arr.shape
 
-    global image_data    
-    array_data = cv2.resize(image_data,(1024,1024),cv2.INTER_CUBIC)
-    depth_data = np.random.randint(0,30,(128,128,3),dtype=np.int64)
-    segmentation_label_arr = np.random.randint(0,4,(128,128,3),dtype=np.int64)
-    msg = PM3DCameraData()
-    msg.rgb_data = array_data.flatten().tolist()
-    msg.depth_map = depth_data.flatten().tolist()
-    msg.segmentation_labels = segmentation_label_arr.flatten().tolist()
+        rospy.loginfo("Node name : %s" ,rospy.get_name())
+        if data.data == True:
+            """
+            When camera trigger is true, publish camera image data
+            """
+            rospy.loginfo("Publishing Camera Data")
+            self.pub   .publish(msg)
+        else:
+            rospy.loginfo("Not Publishing")
 
-    msg.rgb_dims = array_data.shape
-    msg.depth_map_dims = depth_data.shape
-    msg.segmentation_label_dims = segmentation_label_arr.shape
+    def run(self):
 
-    pub = rospy.Publisher('camera_data',numpy_msg(PM3DCameraData),queue_size=1)
-
-    if data.data == True:
-        """
-        When camera trigger is true, publish camera image data
-        """
-        rospy.loginfo("Publishing Camera Data")
-        pub.publish(msg)
-    else:
-        rospy.loginfo("Not Publishing")
+        while True: 
+            rospy.Subscriber('camera_trigger',Bool,callback=self.callback)
+            rospy.spin()
 
 
 
 if __name__ == '__main__':
 
     #talker()
-    rospy.init_node('image_publisher')
-    while True: 
-            rospy.Subscriber('camera_trigger',Bool,callback=callback)
-            rospy.spin()
+    print("in system")
+    cmd_rec = sys.argv[1:]
+    camera_obj = TestImagePublisher(cmd_rec[0],cmd_rec[1],cmd_rec[2])
+    print("out system")
 
     

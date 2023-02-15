@@ -18,7 +18,7 @@ def callback(camera_data):
     camera_data.height_map_dims = np.array(height_map_array.shape)
 
     rospy.loginfo("Publishing Camera Data with height array")
-    pub = rospy.Publisher('camera_data/height_data',numpy_msg(PM3DCameraData),queue_size=1)
+    pub = rospy.Publisher('camera_data/height_data',numpy_msg(PM3DCameraData),queue_size=2)
     pub.publish(camera_data)
 
     
