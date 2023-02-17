@@ -8,10 +8,14 @@ import numpy as np
 from biomass_estimator import BiomassEstimator
 
 """
-A wrapper for the biomass estimator
+A ROS wrapper for the biomass estimation driver.
 """
 
 def biomass_estimator_callback(camera_data):
+
+    """
+    Callback function to listen to data published from the height map driver and compute the biomass estimation.
+    """
 
     semantic_array = camera_data.segmentation_labels.reshape(camera_data.segmentation_label_dims)
     height_array = camera_data.height_map.reshape(camera_data.height_map_dims)
