@@ -1,9 +1,9 @@
-int16[] rgb_data
-int16[] depth_map
-int16[] segmentation_labels
-int16[] rgb_dims
-int16[] depth_map_dims
-int16[] segmentation_label_dims
-int16[] height_map
-int16[] height_map_dims
+int64[] rgb_data
+int64[] depth_map
+int64[] segmentation_labels
+int64[] rgb_dims
+int64[] depth_map_dims
+int64[] segmentation_label_dims
+int64[] height_map
+int64[] height_map_dims
 float32[] biomass_estimate

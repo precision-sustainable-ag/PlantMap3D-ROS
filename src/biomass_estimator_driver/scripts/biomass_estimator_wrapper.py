@@ -2,6 +2,7 @@
 import roslib; roslib.load_manifest('oakd_camera_driver')
 import rospy
 from rospy.numpy_msg import numpy_msg
+from std_msgs.msg import Bool
 from oakd_camera_driver.msg import PM3DCameraData
 import numpy as np
 
@@ -22,16 +23,17 @@ def biomass_estimator_callback(camera_data):
     biomass_estimator_data = BiomassEstimator(semantic_array,height_array)
     biomass_estimate_res = biomass_estimator_data.run()
     camera_data.biomass_estimate = biomass_estimate_res
+    print(camera_data)
+    print("----------------------------")
     rospy.loginfo("Publishing biomass estimates")
     pub = rospy.Publisher('camera_data/biomass_estimate',numpy_msg(PM3DCameraData),queue_size=2)
-    pub.publish(camera_data)
-    print(biomass_estimate_res)
-    
+    pub.publish(camera_data)  
 
 if __name__ == '__main__':
 
     rospy.init_node("biomass_estimate")
 
+    # numpy_msg(PM3DCameraData)
     while True: 
             rospy.Subscriber('camera_data/height_data',numpy_msg(PM3DCameraData),callback=biomass_estimator_callback)
             rospy.spin()
