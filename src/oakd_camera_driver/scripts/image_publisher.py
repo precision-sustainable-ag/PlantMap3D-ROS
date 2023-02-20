@@ -20,6 +20,8 @@ PM3DCameraData :
     int64[] depth_map_dims
     int64[] segmentation_label_dims
     int64[] height_map
+    int64[] height_map_dims
+    float32[] biomass_estimate
 """
 
 
@@ -60,7 +62,7 @@ class TestImagePublisher():
 
     def run(self):
 
-        while True: 
+        while not rospy.is_shutdown(): 
             rospy.Subscriber('camera_trigger',Bool,callback=self.callback)
             rospy.spin()
 

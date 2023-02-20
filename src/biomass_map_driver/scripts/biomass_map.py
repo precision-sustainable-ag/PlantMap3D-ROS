@@ -2,6 +2,8 @@ from typing import Tuple
 from PIL import Image
 import numpy as np
 import json
+import os
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 class BiomassMap:
 

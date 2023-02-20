@@ -34,6 +34,6 @@ if __name__ == '__main__':
     rospy.init_node("biomass_estimate")
 
     # numpy_msg(PM3DCameraData)
-    while True: 
+    while not rospy.is_shutdown(): 
             rospy.Subscriber('camera_data/height_data',numpy_msg(PM3DCameraData),callback=biomass_estimator_callback)
             rospy.spin()
