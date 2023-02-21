@@ -25,7 +25,7 @@ PM3DCameraData :
 """
 
 
-class TestImagePublisher():
+class DummyImagePublisher():
 
     def __init__(self,image_name,node_name,topic_name):
         
@@ -73,7 +73,7 @@ if __name__ == '__main__':
     #talker()
     print("in system")
     cmd_rec = sys.argv[1:]
-    camera_obj = TestImagePublisher(cmd_rec[0],cmd_rec[1],cmd_rec[2])
+    camera_obj = DummyImagePublisher(cmd_rec[0],cmd_rec[1],cmd_rec[2])
     print("out system")
 
     
