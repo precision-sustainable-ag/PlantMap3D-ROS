@@ -10,6 +10,7 @@ import roslib; roslib.load_manifest('oakd_camera_driver')
 import rospy
 from rospy.numpy_msg import numpy_msg
 from oakd_camera_driver.msg import PM3DCameraData
+from std_msgs.msg import String
 
 import numpy as np
 np.random.seed(45)
@@ -38,7 +39,7 @@ class TestImageSubscriber(unittest.TestCase):
 
         self.success = False
         self.sub = rospy.Subscriber("camera_1",numpy_msg(PM3DCameraData),callback=self.callback)
-        self.pub = rospy.Publisher("camera_1",numpy_msg(PM3DCameraData),queue_size=1)
+       
         self.msg = PM3DCameraData()
 
     def tearDown(self):
@@ -72,19 +73,14 @@ class TestImageSubscriber(unittest.TestCase):
         self.msg.depth_map_dims = self.depth_data.shape
         self.msg.segmentation_label_dims = self.segmentation_label_arr.shape
 
-        
-        
-        timeout_t = time.time() + 10.0
-        while not rospy.is_shutdown and time.time() < timeout_t:
-            self.pub.publish(self.msg)
-            time.sleep(0.1)
-        
-        # self.pub.publish(self.msg)
-
-        rospy.sleep(2)
-        # test_data = self.subscribed_rgb_data.reshape((self.subscribed_rgb_data_dims))
+        pub = rospy.Publisher("camera_1",numpy_msg(PM3DCameraData),queue_size=10)
+        rospy.sleep(1)
+        pub.publish(self.msg)
+        rospy.sleep(1)
+        test_data = self.subscribed_rgb_data.reshape((self.subscribed_rgb_data_dims))
         rospy.loginfo(f"The variable is  {self.subscribed_rgb_data}")
-        # assert ((test_data == self.array_data).all()), "Arrays are not same"
+        assert((test_data == self.array_data).all()), "Arrays are not same"
+        
 
     # def test_check_data_parameters(self):
 
@@ -94,6 +90,10 @@ class TestImageSubscriber(unittest.TestCase):
         
     #     subscribed_rgb_data = self.subscribed_rgb_data.reshape((self.subscribed_rgb_data_dims))
     #     assert ((subscribed_rgb_data == self.array_data_flag).all())
+
+
+
+
 
 if __name__ == '__main__':
     
