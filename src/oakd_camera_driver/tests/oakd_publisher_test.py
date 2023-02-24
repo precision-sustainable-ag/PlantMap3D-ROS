@@ -23,7 +23,7 @@ class TestImageSubscriber(unittest.TestCase):
         # initializing dummy camera data
         # rospy.init_node("oakd_camera_test")
         rospy.init_node("camera_data_subscriber")
-        self.array_data = np.random.randint(0,30,(128,128,3),dtype=np.int64)
+        self.rgb_data = np.random.randint(0,30,(128,128,3),dtype=np.int64)
         self.depth_data = np.random.randint(0,30,(128,128,3),dtype=np.int64)
         self.segmentation_label_arr = np.random.randint(0,4,(128,128,3),dtype=np.int64)
         
@@ -60,18 +60,14 @@ class TestImageSubscriber(unittest.TestCase):
         
 
 
-    def test_check_camera_data_msg_type(self):
+    def test_check_rgb_data(self):
 
         """
         Checking what msg type is being published
         """
-        self.msg.rgb_data = self.array_data.flatten().tolist()
-        self.msg.depth_map = self.depth_data.flatten().tolist()
-        self.msg.segmentation_labels = self.segmentation_label_arr.flatten().tolist()
+        self.msg.rgb_data = self.rgb_data.flatten().tolist()
 
-        self.msg.rgb_dims = self.array_data.shape
-        self.msg.depth_map_dims = self.depth_data.shape
-        self.msg.segmentation_label_dims = self.segmentation_label_arr.shape
+        self.msg.rgb_dims = self.rgb_data.shape
 
         pub = rospy.Publisher("camera_1",numpy_msg(PM3DCameraData),queue_size=10)
         rospy.sleep(1)
@@ -79,20 +75,44 @@ class TestImageSubscriber(unittest.TestCase):
         rospy.sleep(1)
         test_data = self.subscribed_rgb_data.reshape((self.subscribed_rgb_data_dims))
         rospy.loginfo(f"The variable is  {self.subscribed_rgb_data}")
-        assert((test_data == self.array_data).all()), "Arrays are not same"
+        assert((test_data == self.rgb_data).all()), "Arrays are not same"
+
+    def test_check_depth_data(self):
+
+        """
+        Checking what msg type is being published
+        """
+        
+        self.msg.depth_map = self.depth_data.flatten().tolist()
+        
+        self.msg.depth_map_dims = self.depth_data.shape
+        pub = rospy.Publisher("camera_1",numpy_msg(PM3DCameraData),queue_size=10)
+        rospy.sleep(1)
+        pub.publish(self.msg)
+        rospy.sleep(1)
+        test_data = self.subscribed_depth_data.reshape((self.subscribed_depth_data_dims))
+        rospy.loginfo(f"The variable is  {self.subscribed_rgb_data}")
+        assert((test_data == self.depth_data).all()), "Arrays are not same"
+
+    def test_check_segmentation_data(self):
+
+        """
+        Checking what msg type is being published
+        """
+        
+        self.msg.segmentation_labels = self.segmentation_label_arr.flatten().tolist()
+        
+        self.msg.segmentation_label_dims = self.segmentation_label_arr.shape
+        pub = rospy.Publisher("camera_1",numpy_msg(PM3DCameraData),queue_size=10)
+        rospy.sleep(1)
+        pub.publish(self.msg)
+        rospy.sleep(1)
+        test_data =self.subscribed_segmentation_labels.reshape((self.subscribed_segmentation_data_dims))
+        rospy.loginfo(f"The variable is  {self.subscribed_rgb_data}")
+        assert((test_data == self.segmentation_label_arr ).all()), "Arrays are not same"
         
 
-    # def test_check_data_parameters(self):
-
-    #     """
-    #     Checking if the topic is publishing the correct data type and shape
-    #     """
         
-    #     subscribed_rgb_data = self.subscribed_rgb_data.reshape((self.subscribed_rgb_data_dims))
-    #     assert ((subscribed_rgb_data == self.array_data_flag).all())
-
-
-
 
 
 if __name__ == '__main__':
