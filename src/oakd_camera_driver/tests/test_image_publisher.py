@@ -8,6 +8,7 @@ import roslib; roslib.load_manifest('oakd_camera_driver')
 import rospy
 from rospy.numpy_msg import numpy_msg
 from oakd_camera_driver.msg import PM3DCameraData
+from std_msgs.msg import Bool
 
 import numpy as np
 
@@ -26,7 +27,6 @@ class TestImagePublisher():
         self.depth_data_flag = self.depth_data 
         self.segmentation_label_arr_flag = self.segmentation_label_arr 
         self.pub = rospy.Publisher(topic_name,numpy_msg(PM3DCameraData),queue_size=1)
-        self.run()
 
     def callback(self,data):
         

@@ -3,7 +3,8 @@
 import unittest
 import rostest
 import os 
-import sys
+import queue
+import threading
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 import roslib; roslib.load_manifest('oakd_camera_driver')
@@ -13,65 +14,76 @@ from oakd_camera_driver.msg import PM3DCameraData
 
 import numpy as np
 
-class TestImagePublisher(unittest.TestCase):
+from test_image_publisher import TestImagePublisher
+
+class TestImageSubscriber(unittest.TestCase):
 
     def __init__(self,*args):
 
         super(TestImagePublisher,self).__init__(*args)
         # initializing dummy camera data
-        rospy.init_node("oakd_camera_test")
-        self.rgb_data = np.random.randint(0,255,(1024,1024,3),dtype=np.int64)
-        self.depth_data = np.random.randint(0,30,(128,128,3),dtype=np.int64)
-        self.segmentation_label_arr = np.random.randint(0,4,(128,128,3),dtype=np.int64)
-        self.message_data = []
+        # rospy.init_node("oakd_camera_test")
+        image_publisher = TestImagePublisher()
+        self.queue = queue.Queue()
+        self.publisher_thread = threading.Thread(target=image_publisher.run())
+        self.subscriber_thread = threading.Thread(target=self.image_subscriber())
+        
+        self.array_data_flag, self.depth_data_flag, self.segmentation_label_arr_flag = image_publisher.return_current_camera_data()
+        
+        self.subscribed_rgb_data = None
+        self.subscribed_depth_data = None 
+        self.subscribed_segmentation_labels = None 
+        
+        self.subscribed_rgb_data_dims = None 
+        self.subscribed_depth_data_dims = None 
+        self.subscribed_segmentation_data_dims = None
 
-        self.pub = rospy.Publisher('camera_data_test',numpy_msg(PM3DCameraData),queue_size=2)
+        self.subscribed_data = None
+
+        self.publisher_thread.start()
+        self.subscriber_thread.start()
+        self.publisher_thread.join()
+        self.subscriber_thread.join()
        
+    
+    def image_subscriber(self):
+
+        rospy.init_node("camera_data_subscriber")
+        rospy.Subscriber("camera_1",numpy_msg(PM3DCameraData),callback=self.callback)
+        rospy.spin()
     
     def callback(self,data):
         rospy.loginfo("Appending Camera Data")
-        self.message_data.append(data)
-    
-    def image_publisher(self):
+        self.subscribed_rgb_data = data.rgb_data
+        self.subscribed_depth_data = data.depth_map
+        self.subscribed_segmentation_labels = data.segmentation_labels
+        self.subscribed_rgb_data_dims = data.rgb_dims
+        self.subscribed_depth_data_dims = data.depth_map_dims
+        self.subscribed_segmentation_data_dims = data.segmentation_label_dims
 
-        rate = rospy.Rate(1)
-        count = 0
-        data = PM3DCameraData()
-        data.rgb_data = self.rgb_data.flatten().tolist()
-        data.depth_map = self.depth_data.flatten().tolist()
-        data.segmentation_labels = self.segmentation_label_arr.flatten().tolist()
-        data.rgb_dims = self.rgb_data.shape
-        data.depth_map_dims = self.depth_data.shape
-        data.segmentation_label_dims = self.segmentation_label_arr.shape
-        rospy.Subscriber('camera_data_test',numpy_msg(PM3DCameraData),callback=self.callback)
-        # publishing data 5 times
-        while count < 6:
-            rospy.loginfo("Publishing Camera Data")
-            self.pub(data)
-            count += 1
-            rate.sleep()
-        self.assertGreater(len(self.message_data),0,'No messages received')
+        self.subscribed_data = data
 
 
-    def check_camera_data_msg_type(self):
+    def test_check_camera_data_msg_type(self):
 
         """
         Checking what msg type is being published
         """
-        for data in self.message_data:
-            self.assertEqual(type(data),'PM3DCameraData')
+        
+        self.assertEqual(type(self.data),'PM3DCameraData')
 
 
-    def check_data_parameters(self):
+    def test_check_data_parameters(self):
 
         """
         Checking if the topic is publishing the correct data type and shape
         """
         
-        self.assertTrue(self.message_data)
-
+        subscribed_rgb_data = self.subscribed_rgb_data.reshape((self.subscribed_rgb_data_dims))
+        assert ((subscribed_rgb_data == self.array_data_flag).all())
+        
 if __name__ == '__main__':
     
-    rostest.rosrun('oakd_camera_driver','oakd_camera_test',TestImagePublisher)
+    rostest.rosrun('oakd_camera_driver','oakd_camera_test',TestImageSubscriber)
     
     
