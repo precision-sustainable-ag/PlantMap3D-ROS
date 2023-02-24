@@ -1,3 +1,4 @@
 <launch>
+    <node pkg="oakd_camera_driver" type="gps_publisher.py"  name="camera_trigger" />
     <test test-name="oakd_publisher_test" pkg= "oakd_camera_driver" type="oakd_publisher_test.py"/>
 </launch>
