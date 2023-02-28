@@ -71,14 +71,12 @@ class TestImagePublisher():
 
 if __name__ == '__main__':
 
-    #talker()
     print("in system")
-    # cmd_rec = sys.argv[1:]
-    # camera_obj = DummyImagePublisher(cmd_rec[0],cmd_rec[1],cmd_rec[2])
     try : 
         camera_obj = TestImagePublisher(sys.argv[0],sys.argv[1],sys.argv[2])
 
     except rospy.ROSInterruptException:
         print("out system")
+
 
     
