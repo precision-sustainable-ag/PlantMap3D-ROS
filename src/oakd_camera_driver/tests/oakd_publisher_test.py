@@ -14,14 +14,13 @@ from std_msgs.msg import String
 
 import numpy as np
 np.random.seed(45)
-from test_image_publisher import TestImagePublisher
+
 
 class TestImageSubscriber(unittest.TestCase):
 
     def setUp(self):
 
         # initializing dummy camera data
-        # rospy.init_node("oakd_camera_test")
         rospy.init_node("camera_data_subscriber")
         self.rgb_data = np.random.randint(0,30,(128,128,3),dtype=np.int64)
         self.depth_data = np.random.randint(0,30,(128,128,3),dtype=np.int64)
@@ -63,7 +62,7 @@ class TestImageSubscriber(unittest.TestCase):
     def test_check_rgb_data(self):
 
         """
-        Checking what msg type is being published
+            Testing RGB data that is published
         """
         self.msg.rgb_data = self.rgb_data.flatten().tolist()
 
@@ -80,7 +79,7 @@ class TestImageSubscriber(unittest.TestCase):
     def test_check_depth_data(self):
 
         """
-        Checking what msg type is being published
+            Testing Depth data that is published
         """
         
         self.msg.depth_map = self.depth_data.flatten().tolist()
@@ -97,7 +96,7 @@ class TestImageSubscriber(unittest.TestCase):
     def test_check_segmentation_data(self):
 
         """
-        Checking what msg type is being published
+            Testing Segmentation data that is published
         """
         
         self.msg.segmentation_labels = self.segmentation_label_arr.flatten().tolist()
