@@ -12,6 +12,7 @@ from oakd_camera_driver.msg import PM3DCameraData
 
 if __name__ == '__main__':
 
+    rospy.init_node('camera_exec')
     camera_data = [["mona_lisa.png","camera_1","camera_data"],["test_painting.png","camera_2","camera_data"],
     ["test_painting.png","camera_3","camera_data"],["test_painting.png","camera_4","camera_data"]]
     # camera_data = [["169.254.54.205","camera_1","camera_1_data"]]
