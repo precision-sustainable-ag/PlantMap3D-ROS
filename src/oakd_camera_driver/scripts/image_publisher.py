@@ -37,8 +37,9 @@ class TestImagePublisher():
         self.run()
 
     def callback(self,data):
-   
-        array_data = cv2.resize(self.image_name,(1024,1024),cv2.INTER_CUBIC)
+        
+        print(self.image_name)
+        array_data = np.random.randint(0,30,(128,128,3),dtype=np.int64)
         depth_data = np.random.randint(0,30,(128,128,3),dtype=np.int64)
         segmentation_label_arr = np.random.randint(0,4,(128,128,3),dtype=np.int64)
         msg = PM3DCameraData()
@@ -72,5 +73,7 @@ if __name__ == '__main__':
 
     cmd_rec = sys.argv[1:]
     camera_obj = TestImagePublisher(cmd_rec[0],cmd_rec[1],cmd_rec[2])
+
+
 
     
