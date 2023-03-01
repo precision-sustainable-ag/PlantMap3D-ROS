@@ -26,8 +26,9 @@ class GPSHeadingInterpreter():
 
             # do something
             # debugging
-            print(self.messages) 
-            self.pub.publish(self.messages)
+            
+            gps_reading_1 = self.messages[0].data
+            gps_reading_2 = self.messages[1].data
             self.messages.clear()
 
     def publish_gps_data(self):
