@@ -20,7 +20,7 @@ if __name__ == '__main__':
 
     
     while not rospy.is_shutdown(): 
-        rospy.Subscriber('camera_data/height_data',numpy_msg(PM3DCameraData),callback=biomass_map_wrapper_callback)
+        rospy.Subscriber('camera_data/biomass_estimate',numpy_msg(PM3DCameraData),callback=biomass_map_wrapper_callback)
         rospy.spin()
 
     

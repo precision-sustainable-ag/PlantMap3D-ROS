@@ -25,7 +25,7 @@ PM3DCameraData :
 """
 
 
-class DummyImagePublisher():
+class TestImagePublisher():
 
     def __init__(self,image_name,node_name,topic_name):
         
@@ -56,7 +56,7 @@ class DummyImagePublisher():
             When camera trigger is true, publish camera image data
             """
             rospy.loginfo("Publishing Camera Data")
-            self.pub   .publish(msg)
+            self.pub.publish(msg)
         else:
             rospy.loginfo("Not Publishing")
 
@@ -70,10 +70,7 @@ class DummyImagePublisher():
 
 if __name__ == '__main__':
 
-    #talker()
-    print("in system")
     cmd_rec = sys.argv[1:]
-    camera_obj = DummyImagePublisher(cmd_rec[0],cmd_rec[1],cmd_rec[2])
-    print("out system")
+    camera_obj = TestImagePublisher(cmd_rec[0],cmd_rec[1],cmd_rec[2])
 
     
