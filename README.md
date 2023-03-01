@@ -5,7 +5,7 @@ Robot Operating System (ROS):
 
 ## Current working pipeline : 
 
-<img src="https://user-images.githubusercontent.com/71589098/219067817-b72f6703-93ee-4166-b9c9-d8205a2e3886.jpeg" width=50%% height=50% />
+<img src="https://user-images.githubusercontent.com/71589098/222145418-b61845eb-078b-4856-8990-7fecf505570d.png" width=50%% height=50% />
 
 
 ## Some common erros
