@@ -111,7 +111,7 @@ if __name__ == "__main__":
     is_usb_cam = True
 
     script_path = str(pathlib.Path(__file__).parent.resolve())
-    blob_rel_to_script = "/models/small2021_4_8shaves_only_dt_and_is.blob"
-    neural_network_shape = (512,512)
+    blob_rel_to_script = "/models/small1024_2021_4_8shaves_only_dt_and_is.blob"
+    neural_network_shape = (1024,1024)
     seg_pipeline = Establish_Pipeline(is_usb_cam,"169.254.54.205",neural_network_shape,script_path,blob_rel_to_script)
     seg_pipeline.enable_camera()
