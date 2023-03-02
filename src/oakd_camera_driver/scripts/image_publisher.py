@@ -73,7 +73,6 @@ class TestImagePublisher():
     def shutdown(self):
 
         self.pub.unregister()
-        sys.exit()
 
 
 if __name__ == '__main__':
