@@ -110,10 +110,7 @@ class PM3DCameraDataPublisher():
                 break
 
 if __name__ == "__main__":
-    
-    is_usb_cam = True
-
-    
+       
     ip = "169.254.54.205"
     seg_pipeline = PM3DCameraDataPublisher(ip)
     seg_pipeline.enable_camera()
