@@ -8,13 +8,25 @@ import numpy as np
 import os
 import cv2
 import matplotlib.pyplot as plt
+import roslib; roslib.load_manifest('oakd_camera_driver')
+import rospy
+from rospy.numpy_msg import numpy_msg
+from oakd_camera_driver.msg import PM3DCameraData
+from std_msgs.msg import Bool
+
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 class PM3DCameraDataPublisher():
-    def __init__(self,ip):
+    def __init__(self,ip,node_name,topic_name):
         
-        self.ip = ip 
-        # 
+        self.ip = ip
+        self.node_name = node_name
+        self.topic_name = topic_name 
+        rospy.init_node(node_name)
+        rospy.loginfo('Creating new camera node')
+        self.pub = rospy.Publisher(topic_name,numpy_msg(PM3DCameraData),queue_size=6)
+
+        # setting the neural network file path 
         self.__blob_path = "/small1024_2021_4_8shaves_only_dt_and_is.blob"
 
         # setting shape for outputs
@@ -105,6 +117,7 @@ class PM3DCameraDataPublisher():
             #Output for Testing
             cv2.imshow("RGB",rgb_img)
             cv2.imshow("Depth",depth_img)
+            if rgb_data , depth_data , 
 
             if cv2.waitKey(1) == ord('q'):
                 break
