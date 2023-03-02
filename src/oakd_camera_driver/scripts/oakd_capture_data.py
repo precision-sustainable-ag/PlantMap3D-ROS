@@ -1,25 +1,27 @@
 #!/usr/bin/env python3
 """
-    This class is a driver for streaming the RGB pipeline for oakd cameras.
+    This class is a driver for streaming the PM3DCamera Data driver for oakd cameras.
 """
 import time
 import depthai as dai
 import numpy as np
 import os
-import argparse
-import pathlib
 import cv2
 import matplotlib.pyplot as plt
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-class Establish_Pipeline:
-    def __init__(self,usb,ip,shape,current_path,model_rel_path):
-        self.communication_type = usb
-        self.script_path = current_path
-        self.blob_path = model_rel_path
+class PM3DCameraDataPublisher():
+    def __init__(self,ip):
+        
+        self.ip = ip 
+        # 
+        self.__blob_path = "/small1024_2021_4_8shaves_only_dt_and_is.blob"
 
-        self.nn_shape = shape
+        # setting shape for outputs
+        self.nn_shape = (1024,1024)
 
-        self.nn_path = pathlib.Path(self.script_path + self.blob_path)
+        self.nn_path = os.path.join(os.getcwd() +'/models' + self.__blob_path)
+        print(self.nn_path)
 
         self.pipeline = dai.Pipeline()
 
@@ -71,14 +73,11 @@ class Establish_Pipeline:
         self.depth.depth.link(self.depth_out.input)
         print("Done")
 
-        if not self.communication_type:
-            self.ip = ip
-            self.cam = dai.DeviceInfo(ip)
-            with dai.Device(self.pipeline,self.cam) as self.device:
-                self.enable_camera()
-        else:
-            with dai.Device(self.pipeline) as self.device:
-                self.enable_camera()
+        
+        self.cam = dai.DeviceInfo(ip)
+        with dai.Device(self.pipeline,self.cam) as self.device:
+            self.enable_camera()
+        
 
 
     def enable_camera(self):
@@ -96,12 +95,16 @@ class Establish_Pipeline:
             depth_data = depth_out.get()
             depth_img = np.array(depth_data.getCvFrame())
             depth_img = (depth_img * (255/self.depth.initialConfig.getMaxDisparity())).astype(np.uint8)
-            self.out[0] = rgb_img #shape is (height, width, 3)
-            self.out[1] = segmentation_labels #shape is (height, width, 1)
-            self.out[2] = depth_img #shape is default
+            # shape is (height, width, 3)
+            self.out[0] = rgb_img 
+            # shape is (height, width, 1)
+            self.out[1] = segmentation_labels 
+            # shape is default
+            self.out[2] = depth_img 
 
             #Output for Testing
             cv2.imshow("RGB",rgb_img)
+            cv2.imshow("Depth",depth_img)
 
             if cv2.waitKey(1) == ord('q'):
                 break
@@ -110,8 +113,7 @@ if __name__ == "__main__":
     
     is_usb_cam = True
 
-    script_path = str(pathlib.Path(__file__).parent.resolve())
-    blob_rel_to_script = "/models/small1024_2021_4_8shaves_only_dt_and_is.blob"
-    neural_network_shape = (1024,1024)
-    seg_pipeline = Establish_Pipeline(is_usb_cam,"169.254.54.205",neural_network_shape,script_path,blob_rel_to_script)
+    
+    ip = "169.254.54.205"
+    seg_pipeline = PM3DCameraDataPublisher(ip)
     seg_pipeline.enable_camera()
