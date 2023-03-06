@@ -1,7 +1,7 @@
 # PlantMap3D-ROS
 
 
-## This branch acts as a beta development branch, create a new branch for new development and create a pull request.
+## This branch acts as a beta development branch, create a new branch for feature development and create a pull request.
 
 
 ## Current working pipeline : 
