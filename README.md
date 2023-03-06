@@ -6,7 +6,7 @@
 ## Intended System Flow-diagram : 
 
 [Note : This diagram is expected to be updated with design upgrades]
-<img src="https://user-images.githubusercontent.com/71589098/223198277-275437fe-df28-4ac8-885b-ba5ca5676e2b.png" width=75%% height=75% />
+<img src="https://user-images.githubusercontent.com/71589098/223206776-9bc1921d-8d86-4459-a1e4-c80bfcbe7eb2.png" width=75%% height=75% />
 
 
 ## Current working pipeline : 
