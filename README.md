@@ -1,6 +1,7 @@
 # PlantMap3D-ROS
 
-Robot Operating System (ROS):
+
+## This branch acts as a beta development branch, create a new branch for new development and create a pull request.
 
 
 ## Current working pipeline : 
