@@ -45,30 +45,3 @@ if __name__ == '__main__':
     thread2.start()
     thread1.start()
     
-
-
-
-# def shutdown_callback(data):
-
-#     rospy.loginfo(f"Printing data {data.data}")
-#     # if data.level == Log.FATAL and data.msg == 'shutdown':
-#     #     rospy.signal_shutdown("Shutting down GPS")
-
-# if __name__ == '__main__': 
-
-#     rospy.init_node("camera_trigger")
-
-#     camera_trigger = True
-#     rate = rospy.Rate(1)
-#     pub = rospy.Publisher("camera_trigger",Bool,queue_size=10)
-#     sub = rospy.Subscriber('shutdown',String,callback=shutdown_callback)
-#     while not rospy.is_shutdown():
-        
-#         rospy.loginfo(f"triggering camera : {camera_trigger}")
-#         pub.publish(camera_trigger)
-#         rate.sleep()
-#     rospy.spin()
-    
-    
-
-    
