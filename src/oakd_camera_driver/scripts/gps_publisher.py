@@ -6,7 +6,12 @@ from rosgraph_msgs.msg import Log
 import threading
 
 def get_gps_data():
+    """
+        This function is a psuedo function that publishes a camera trigger based on regular intervals, 
+        this trigger is used to capture and publish camera data
 
+        [This file is just for integration testing]
+    """
     camera_trigger = True
     rate = rospy.Rate(1)
     pub = rospy.Publisher("camera_trigger",Bool,queue_size=1)
@@ -18,7 +23,9 @@ def get_gps_data():
         rate.sleep()
 
 def shutdown_callback(data):
-
+    """
+        The callback function to shutdown all active nodes
+    """
     rospy.loginfo(f"Printing data {data.data}")
     if data.data == 'shutdown':
         rospy.signal_shutdown("Shutting down GPS")
