@@ -34,8 +34,6 @@ class TestImagePublisher():
         self.node_name = node_name
         self.topic_name = topic_name
         self.pub = rospy.Publisher(topic_name,numpy_msg(PM3DCameraData),queue_size=1)
-        self.sub = None
-        rospy.on_shutdown(self.shutdown) 
         self.run()
 
     def callback(self,data):
@@ -68,11 +66,7 @@ class TestImagePublisher():
         while not rospy.is_shutdown(): 
             rospy.Subscriber('camera_trigger',Bool,callback=self.callback)
             rospy.spin()
-    
-    
-    def shutdown(self):
 
-        self.pub.unregister()
 
 
 if __name__ == '__main__':
