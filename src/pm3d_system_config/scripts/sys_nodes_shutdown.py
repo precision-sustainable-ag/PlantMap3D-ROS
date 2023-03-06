@@ -20,4 +20,16 @@ if __name__ == '__main__':
 
     pub = rospy.Publisher('shutdown',String,queue_size=10)
 
-    rate = rospy.Rate(1)
+    rospy.loginfo("Sleeping for 20 secs")
+    rospy.sleep(20)
+    pub.publish("shutdown")
+    rospy.loginfo("Shutting down system...")
+    
+    rospy.sleep(1)
+    # rate = rospy.Rate(1)
+    # while True:
+
+    #     rospy.loginfo("Publishing data")
+    #     pub.publish("shutdown")
+        
+    #     rate.sleep()
