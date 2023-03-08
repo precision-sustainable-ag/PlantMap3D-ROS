@@ -18,7 +18,7 @@
 
 1. 
 
-<img src="https://user-images.githubusercontent.com/71589098/218086068-499a5122-87de-429d-a2ca-c7f20ace9aa5.png" width=50%% height=50% />
+<img src=""https://user-images.githubusercontent.com/71589098/222145418-b61845eb-078b-4856-8990-7fecf505570d.png" width=50%% height=50% />
 
 Answer : Try the following command line :
 
