@@ -6,7 +6,7 @@
 ## Intended System Flow-diagram : 
 
 [Note : This diagram is expected to be updated with design upgrades]
-<img src="" width=75%% height=75% />
+<img src="https://user-images.githubusercontent.com/71589098/223757472-7125820d-c9fd-440f-b53d-5ef4b4bba8d3.png" width=95%% height=75% />
 
 
 ## Current working pipeline : 
@@ -17,8 +17,7 @@
 ## Some common erros
 
 1. 
-
-<img src=""https://user-images.githubusercontent.com/71589098/222145418-b61845eb-078b-4856-8990-7fecf505570d.png" width=50%% height=50% />
+>> Catkin_virtualenv not found
 
 Answer : Try the following command line :
 
