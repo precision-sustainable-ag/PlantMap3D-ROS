@@ -5,12 +5,13 @@ from std_msgs.msg import Bool, String
 from rosgraph_msgs.msg import Log
 import threading
 
+## [This file is just for integration testing]
+
 def get_gps_data():
     """
         This function is a psuedo function that publishes a camera trigger based on regular intervals, 
         this trigger is used to capture and publish camera data
 
-        [This file is just for integration testing]
     """
     camera_trigger = True
     rate = rospy.Rate(1)
