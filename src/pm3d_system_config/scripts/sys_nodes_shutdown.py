@@ -13,8 +13,8 @@ if __name__ == '__main__':
     pub = rospy.Publisher('shutdown',String,queue_size=10)
 
     rospy.loginfo("Sleeping for 20 secs")
-    rospy.sleep(15)
+    rospy.sleep(50)
     pub.publish("shutdown")
     rospy.loginfo("Shutting down system...")
-    
+    rospy.signal_shutdown("shutting down all nodes")
     rospy.sleep(1)

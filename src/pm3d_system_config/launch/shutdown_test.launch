@@ -1,6 +1,8 @@
 <launch>
-    <node pkg="pm3d_system_config" type="sys_nodes_shutdown.py" name = "node_shutdown" respawn = "True" output="screen">
+    <node pkg="pm3d_system_config" type="sys_nodes_shutdown.py" name = "node_shutdown" output="screen">
     </node>
     <node pkg="oakd_camera_driver" type="gps_publisher.py" name="camera_trigger_node" output="screen">
+    </node>
+    <node pkg="oakd_camera_driver" type="dummy_image_publisher_wrapper.py" name="camera_wrapper" output="screen">
     </node>
 </launch>

@@ -19,7 +19,7 @@ def get_gps_data():
     while not rospy.is_shutdown():
         
         rospy.loginfo(f"triggering camera : {camera_trigger}")
-        # pub.publish(camera_trigger)
+        pub.publish(camera_trigger)
         rate.sleep()
 
 def shutdown_callback(data):

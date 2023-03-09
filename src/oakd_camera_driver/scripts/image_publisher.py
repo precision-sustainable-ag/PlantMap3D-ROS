@@ -4,10 +4,12 @@ import roslib; roslib.load_manifest('oakd_camera_driver')
 import rospy
 from rospy.numpy_msg import numpy_msg
 from oakd_camera_driver.msg import PM3DCameraData
-from std_msgs.msg import Bool
+from std_msgs.msg import Bool, String
 import numpy as np
 import cv2
 import os 
+import sys
+import threading
 import sys
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -27,20 +29,16 @@ PM3DCameraData :
 
 class TestImagePublisher():
 
-    def __init__(self,image_name,node_name,topic_name):
+    def __init__(self,node_name,topic_name):
         
-        rospy.init_node(node_name)
-        self.image_name = cv2.imread(image_name)
         self.node_name = node_name
+        rospy.init_node(node_name)
         self.topic_name = topic_name
         self.pub = rospy.Publisher(topic_name,numpy_msg(PM3DCameraData),queue_size=1)
         self.sub = None
-        rospy.on_shutdown(self.shutdown) 
-        self.run()
 
     def callback(self,data):
         
-        print(self.image_name)
         array_data = np.random.randint(0,30,(128,128,3),dtype=np.int64)
         depth_data = np.random.randint(0,30,(128,128,3),dtype=np.int64)
         segmentation_label_arr = np.random.randint(0,4,(128,128,3),dtype=np.int64)
@@ -53,12 +51,11 @@ class TestImagePublisher():
         msg.depth_map_dims = depth_data.shape
         msg.segmentation_label_dims = segmentation_label_arr.shape
 
-        rospy.loginfo("Node name : %s" ,rospy.get_name())
         if data.data == True:
             """
             When camera trigger is true, publish camera image data
             """
-            rospy.loginfo("Publishing Camera Data")
+            rospy.loginfo(f"Publishing {self.node_name} Data")
             self.pub.publish(msg)
         else:
             rospy.loginfo("Not Publishing")
@@ -69,17 +66,32 @@ class TestImagePublisher():
             rospy.Subscriber('camera_trigger',Bool,callback=self.callback)
             rospy.spin()
     
-    
-    def shutdown(self):
+    def sys_shutdown(self):
 
-        self.pub.unregister()
+        rospy.Subscriber('shutdown',String,callback=self.shutdown_callback)
+        rospy.spin()
 
+    def shutdown_callback(self,data):
+        """
+            The callback function to shutdown all active nodes
+        """
+        # rospy.loginfo(f"Printing data {data.data}")
+        if data.data == 'shutdown':
+            rospy.signal_shutdown("Shutting down GPS")
+            
+            
+        
 
 if __name__ == '__main__':
 
     cmd_rec = sys.argv[1:]
-    camera_obj = TestImagePublisher(cmd_rec[0],cmd_rec[1],cmd_rec[2])
+    camera_obj = TestImagePublisher(cmd_rec[0],cmd_rec[1])
 
+    thread1 = threading.Thread(target=camera_obj.run())
+    thread2 = threading.Thread(target=camera_obj.sys_shutdown())
+    thread2.start()
+    thread1.start()
 
+    
 
     
