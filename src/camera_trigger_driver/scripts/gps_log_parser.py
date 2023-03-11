@@ -10,16 +10,15 @@ if __name__ == '__main__':
     # Initialize ROS node
     rospy.init_node('gps_node')
 
-    # Create publisher for NavSatFix messages
-    gps_pub = rospy.Publisher('gps', NavSatFix, queue_size=10)
+    gps_pub = rospy.Publisher('fix', NavSatFix, queue_size=10)
 
-    # Set up file for reading GPS log data
+    
     log_file = open('gps_data.log', 'r')
     
     rate = rospy.Rate(1)
-    # Continuously read and publish GPS data
+    
     for line in log_file:
-        # Check if the line contains an RMC sentence
+        
         
         if line.startswith('$GNRMC'):
             try:
@@ -37,12 +36,11 @@ if __name__ == '__main__':
                     gps_msg.status.service = NavSatStatus.SERVICE_GPS
                     gps_msg.header.stamp = rospy.Time.now()
                     # Publish the NavSatFix message
-                    # gps_pub.publish(gps_msg)
+                    gps_pub.publish(gps_msg)
 
                     rospy.loginfo(f"{gps_msg}")
                     rate.sleep()
             except pynmea2.ChecksumError:
                 continue
 
-    # Clean up
     log_file.close()
