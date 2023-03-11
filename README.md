@@ -23,6 +23,12 @@ Answer : Try the following command line :
 ```
 sudo apt-get install ros-noetic-catkin-virtualenv
 ```
+2. 
+>> python module pynmea not found
+
+```
+pip install pynmea2
+```
 
 # BioMassEstimator module
 ROS wrapper will collect the output of the segmentation module for a segmentation array and a height above ground array from a height estimation module
