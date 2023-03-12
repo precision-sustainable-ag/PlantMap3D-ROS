@@ -1,0 +1,2 @@
+float32 lat_and_lon
+float32 gps_heading
