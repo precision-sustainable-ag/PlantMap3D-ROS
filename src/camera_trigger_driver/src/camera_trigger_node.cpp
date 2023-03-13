@@ -30,7 +30,11 @@ void gpsCallBack(const sensor_msgs::NavSatFixConstPtr& msg)
     float tempt_const = 0.07; // temporary variable changed from 10.0 (meters)
 
     ROS_INFO("Printing distance %f",d);
+    /*
     //If d > 10m, then trigger and update last, though only if record switch is active
+     Temporary threshold value set
+     Final distance threshold would be read from a common launch file or config file
+    */
     if(record && (d>tempt_const) && (((ros::WallTime::now() - previous_exposure_time).toNSec() * 1e-6)>2000))
     {
       std_msgs::Empty t;
