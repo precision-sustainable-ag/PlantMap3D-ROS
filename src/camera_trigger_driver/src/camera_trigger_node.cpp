@@ -5,7 +5,7 @@
 #include <std_msgs/Float64.h>
 #include <sensor_msgs/Range.h>
 #include <LatLong-UTMconversion.h>
-
+#include <iostream>
 #include <math.h>
 
 double lastNorthing, lastEasting, lastRange;
@@ -27,6 +27,7 @@ void gpsCallBack(const sensor_msgs::NavSatFixConstPtr& msg)
     d = sqrt(pow(lastNorthing-Northing,2) + pow(lastEasting-Easting,2));
     distance.data = d;
     distancePub.publish(distance);
+    ROS_INFO("In GPS Callback %f", d);
     //If d > 10m, then trigger and update last, though only if record switch is active
     if(record && (d>10.0) && (((ros::WallTime::now() - previous_exposure_time).toNSec() * 1e-6)>2000))
     {

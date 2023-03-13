@@ -20,7 +20,7 @@ if __name__ == '__main__':
     
     log_file = open('gps_data.log', 'r')
     
-    rate = rospy.Rate(1)
+    rate = rospy.Rate(2)
     
     for line in log_file:
         
@@ -43,7 +43,7 @@ if __name__ == '__main__':
                     gps_msg.status.service = NavSatStatus.SERVICE_GPS
                     gps_msg.header.stamp = rospy.Time.now()
                     # Publish the NavSatFix message
-                    # gps_pub.publish(gps_msg)
+                    gps_pub.publish(gps_msg)
                     test_gps = PM3DGPSData()
                     test_gps.lat_and_lon = 1
                     test_gps.gps_heading = 1
