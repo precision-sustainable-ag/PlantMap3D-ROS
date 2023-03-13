@@ -1,0 +1,6 @@
+float32 NORTHING
+float32 L_NORTHING
+float32 EASTING
+float32 L_EASTING
+---
+float32 HEADING
