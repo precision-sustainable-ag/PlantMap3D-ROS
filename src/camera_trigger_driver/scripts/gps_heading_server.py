@@ -23,13 +23,17 @@ class GPSHeadingInterpreter():
 
         return gps_heading
     
-    def gps_heading_callback(self,gps_fix_data):
+    def gps_heading_callback(self,gps_msg):
 
-        gps_msg = PM3DGPSHeading()
-        diff_northing = gps_msg.NORTHING - gps_msg.L_NORTHING
-        diff_easting = gps_msg.EASTING - gps_msg.L_EASTING
+        diff_northing = gps_msg.northing - gps_msg.lnorthing
+        diff_easting = gps_msg.easting - gps_msg.leasting
         
-        gps_heading = self.compute_heading(diff_northing,diff_easting)
+        rospy.loginfo(f"northing : {gps_msg.northing}")
+        rospy.loginfo(f"northing : {gps_msg.lnorthing}")
+        rospy.loginfo(f"northing : {gps_msg.easting}")
+        rospy.loginfo(f"northing : {gps_msg.leasting}")
+
+        gps_heading = self.compute_heading(diff_easting,diff_northing)
 
         rospy.loginfo(f"GPS heading computed is : {gps_heading}")
         return gps_heading

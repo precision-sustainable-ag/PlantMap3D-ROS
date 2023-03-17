@@ -1,6 +1,7 @@
-float32 NORTHING
-float32 L_NORTHING
-float32 EASTING
-float32 L_EASTING
+float32 northing
+float32 lnorthing
+float32 easting
+float32 leasting
 ---
-float32 HEADING
+float32 gps_heading
+
