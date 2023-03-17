@@ -39,7 +39,7 @@ void gpsCallBack(const sensor_msgs::NavSatFixConstPtr& msg)
     {
       std_msgs::Empty t;
       triggerPub.publish(t);
-      ROS_INFO("------------Triggering-------------------------");
+      ROS_INFO("------------Triggering Camera to take image------------");
       lastNorthing = Northing; lastEasting = Easting;
       previous_exposure_time = ros::WallTime::now();
     }
