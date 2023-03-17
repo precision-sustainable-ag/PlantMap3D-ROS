@@ -42,14 +42,15 @@ if __name__ == '__main__':
                     gps_msg.status.status = NavSatStatus.STATUS_FIX
                     gps_msg.status.service = NavSatStatus.SERVICE_GPS
                     gps_msg.header.stamp = rospy.Time.now()
+
+                    rospy.loginfo(f"Printing Lat : {gps_msg.latitude} and Lon : {gps_msg.longitude}")
                     # Publish the NavSatFix message
                     gps_pub.publish(gps_msg)
-                    test_gps = PM3DGPSData()
-                    test_gps.lat_and_lon = 1
-                    test_gps.gps_heading = 1
+                    # test_gps = PM3DGPSData()
+                    # test_gps.lat_and_lon = 1
+                    # test_gps.gps_heading = 1
 
-                    test_pub.publish(test_gps)
-                    rospy.loginfo(f"{gps_msg}")
+                    # test_pub.publish(test_gps)
                     rate.sleep()
             except pynmea2.ChecksumError:
                 continue
