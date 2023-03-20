@@ -4,6 +4,7 @@
 #include <std_msgs/Bool.h>
 #include <std_msgs/Float64.h>
 #include <sensor_msgs/Range.h>
+#include <camera_trigger_driver/PM3DGPSHeading.h>
 #include <LatLong-UTMconversion.h>
 #include <iostream>
 #include <math.h>
@@ -64,6 +65,8 @@ int main(int argc, char **argv)
   ros::Subscriber gpsSub_ = nh.subscribe("/fix", 10, &gpsCallBack);
   triggerPub = nh.advertise<std_msgs::Empty>("Trigger", 32);
   distancePub = nh.advertise<std_msgs::Float64>("Distance", 32);
+  
+  ros::ServiceClient gpsHeadingClient = nh.serviceClient<camera_trigger_driver::PM3DGPSHeading>("gps_heading_service")
   ros::spin();
 }
 
