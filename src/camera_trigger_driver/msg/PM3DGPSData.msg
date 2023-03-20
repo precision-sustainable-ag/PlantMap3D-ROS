@@ -1,2 +1,2 @@
-float32 lat_and_lon
-float32 gps_heading
+float64 lat_and_lon
+float64 gps_heading
