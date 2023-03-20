@@ -5,7 +5,7 @@
 #include <std_msgs/Float64.h>
 #include <sensor_msgs/Range.h>
 #include <LatLong-UTMconversion.h>
-
+#include <iostream>
 #include <math.h>
 
 double lastNorthing, lastEasting, lastRange;
@@ -21,23 +21,30 @@ void gpsCallBack(const sensor_msgs::NavSatFixConstPtr& msg)
     double Northing, Easting, d;
     char z[4];
     std_msgs::Float64 distance;
-    ROS_INFO("Received GPS position: %f %f", msg->latitude, msg->longitude);
+     // ROS_INFO("Received GPS position: %f %f", msg->latitude, msg->longitude);
     LLtoUTM(23, msg->latitude, msg->longitude, Northing, Easting, z);
-    ROS_INFO("In UTM %f %f %s", Northing, Easting, z);
+    // ROS_INFO("In UTM %f %f %s", Northing, Easting, z);
     d = sqrt(pow(lastNorthing-Northing,2) + pow(lastEasting-Easting,2));
     distance.data = d;
     distancePub.publish(distance);
+    float tempt_const = 0.07; // temporary variable changed from 10.0 (meters)
+
+    ROS_INFO("Printing distance %f",d);
+    /*
     //If d > 10m, then trigger and update last, though only if record switch is active
-    if(record && (d>10.0) && (((ros::WallTime::now() - previous_exposure_time).toNSec() * 1e-6)>2000))
+     Temporary threshold value set
+     Final distance threshold would be read from a common launch file or config file
+    */
+    if(record && (d>tempt_const) && (((ros::WallTime::now() - previous_exposure_time).toNSec() * 1e-6)>2000))
     {
       std_msgs::Empty t;
       triggerPub.publish(t);
-      ROS_INFO("Triggering");
+      ROS_INFO("------------Triggering Camera to take image------------");
       lastNorthing = Northing; lastEasting = Easting;
       previous_exposure_time = ros::WallTime::now();
     }
 //    lastNorthing = Northing; lastEasting = Easting;
-    ROS_INFO("Distance since last in meters %f", d);
+    // ROS_INFO("Distance since last in meters %f", d);
 }
 
 void recordCallBack(const std_msgs::BoolConstPtr& msg)

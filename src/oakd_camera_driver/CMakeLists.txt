@@ -51,7 +51,7 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
    FILES
    PM3DCameraData.msg
-   
+   # PM3DGPSData.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -72,6 +72,7 @@ add_message_files(
 generate_messages(
    DEPENDENCIES
    sensor_msgs
+   # PM3DGPSData.msg
  )
 
 ################################################
