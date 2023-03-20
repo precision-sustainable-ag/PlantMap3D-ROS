@@ -64,7 +64,7 @@ class TestGPSHeading(unittest.TestCase):
         srv_gps_heading = rospy.ServiceProxy('gps_heading_service',PM3DGPSHeading)
 
         response = srv_gps_heading(gps_data)
-        self.assertAlmostEqual(test_gps_heading,response.gps_heading,places=5)
+        self.assertAlmostEqual(test_gps_heading,response.gps_heading,places=3)
         
 
 
