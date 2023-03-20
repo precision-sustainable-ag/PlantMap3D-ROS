@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-    This class is a driver for streaming the PM3DCamera Data driver for oakd cameras.
-"""
+
 import time
 import depthai as dai
 import numpy as np
@@ -17,6 +15,9 @@ from std_msgs.msg import Bool
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 class PM3DCameraDataPublisher():
+    """
+    This class is a driver for streaming the PM3DCamera Data driver for oakd cameras.
+    """
     def __init__(self,ip,node_name,topic_name):
         
         self.ip = ip
@@ -25,7 +26,7 @@ class PM3DCameraDataPublisher():
         rospy.init_node(node_name)
         rospy.loginfo('Creating new camera node')
         self.pub = rospy.Publisher(topic_name,numpy_msg(PM3DCameraData),queue_size=6)
-
+        self.camera_data_msg = PM3DCameraData()
         # setting the neural network file path 
         self.__blob_path = "/small1024_2021_4_8shaves_only_dt_and_is.blob"
 
@@ -91,7 +92,6 @@ class PM3DCameraDataPublisher():
             self.enable_camera()
         
 
-
     def enable_camera(self):
         depth_out = self.device.getOutputQueue("depth",1,False)
         segmentation_queue = self.device.getOutputQueue("seg out",1,False)
@@ -107,17 +107,19 @@ class PM3DCameraDataPublisher():
             depth_data = depth_out.get()
             depth_img = np.array(depth_data.getCvFrame())
             depth_img = (depth_img * (255/self.depth.initialConfig.getMaxDisparity())).astype(np.uint8)
-            # shape is (height, width, 3)
+
             self.out[0] = rgb_img 
-            # shape is (height, width, 1)
             self.out[1] = segmentation_labels 
-            # shape is default
             self.out[2] = depth_img 
 
-            #Output for Testing
-            cv2.imshow("RGB",rgb_img)
-            cv2.imshow("Depth",depth_img)
-            if rgb_data , depth_data , 
+            
+            self.camera_data_msg.rgb_data = rgb_img.flatten().tolist()
+            self.camera_data_msg.depth_map = depth_img.flatten().tolist()
+            self.camera_data_msg.segmentation_labels = segmentation_labels.flatten().tolist()
+
+            self.camera_data_msg.rgb_dims = rgb_img.shape 
+            self.camera_data_msg.depth_map_dims = depth_img.shape 
+            self.camera_data_msg.segmentation_label_dims = segmentation_labels.shape
 
             if cv2.waitKey(1) == ord('q'):
                 break
