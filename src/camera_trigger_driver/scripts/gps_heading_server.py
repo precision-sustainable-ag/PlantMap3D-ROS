@@ -32,7 +32,7 @@ class GPSHeadingInterpreter():
         diff_easting = gps_msg.easting - gps_msg.leasting
     
         gps_heading = self.compute_heading(diff_northing,diff_easting)
-
+        rospy.loginfo(f"GPS Heading computed is : {gps_heading}")
         return gps_heading
 
     def gps_heading_server(self):
