@@ -3,15 +3,13 @@
 import time
 import depthai as dai
 import numpy as np
-import os
 import cv2
-import matplotlib.pyplot as plt
 import roslib; roslib.load_manifest('oakd_camera_driver')
 import rospy
 from rospy.numpy_msg import numpy_msg
 from oakd_camera_driver.msg import PM3DCameraData
 from std_msgs.msg import Bool
-
+import os, sys
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 class PM3DCameraDataPublisher():
@@ -112,6 +110,7 @@ class PM3DCameraDataPublisher():
             self.out[1] = segmentation_labels 
             self.out[2] = depth_img 
 
+            cv2.imshow(f"{self.node_name}",rgb_img)
             
             self.camera_data_msg.rgb_data = rgb_img.flatten().tolist()
             self.camera_data_msg.depth_map = depth_img.flatten().tolist()
@@ -125,7 +124,7 @@ class PM3DCameraDataPublisher():
                 break
 
 if __name__ == "__main__":
-       
-    ip = "169.254.54.205"
-    seg_pipeline = PM3DCameraDataPublisher(ip)
+    
+    cmd_rec = sys.argv[1:]
+    seg_pipeline = PM3DCameraDataPublisher(cmd_rec[0],cmd_rec[1],cmd_rec[2])
     seg_pipeline.enable_camera()
