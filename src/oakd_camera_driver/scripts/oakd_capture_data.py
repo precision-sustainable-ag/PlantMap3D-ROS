@@ -20,15 +20,16 @@ class PM3DCameraDataPublisher():
         
         self.ip = ip
         self.node_name = node_name
-        self.topic_name = topic_name 
+        self.topic_name = topic_name
+
         rospy.init_node(node_name)
         rospy.loginfo('Creating new camera node')
+
         self.pub = rospy.Publisher(topic_name,numpy_msg(PM3DCameraData),queue_size=6)
         self.camera_data_msg = PM3DCameraData()
-        # setting the neural network file path 
+        
         self.__blob_path = "/small1024_2021_4_8shaves_only_dt_and_is.blob"
 
-        # setting shape for outputs
         self.nn_shape = (1024,1024)
 
         self.nn_path = os.path.join(os.getcwd() +'/models' + self.__blob_path)
@@ -120,6 +121,7 @@ class PM3DCameraDataPublisher():
             self.camera_data_msg.depth_map_dims = depth_img.shape 
             self.camera_data_msg.segmentation_label_dims = segmentation_labels.shape
 
+            self.pub.publish(self.camera_data_msg)
             if cv2.waitKey(1) == ord('q'):
                 break
 
