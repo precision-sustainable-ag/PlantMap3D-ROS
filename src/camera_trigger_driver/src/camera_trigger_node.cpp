@@ -5,6 +5,7 @@
 #include <std_msgs/Float64.h>
 #include <sensor_msgs/Range.h>
 #include <camera_trigger_driver/PM3DGPSHeading.h>
+#include <camera_trigger_driver/PM3DGPSData.h>
 #include <LatLong-UTMconversion.h>
 #include <iostream>
 #include <math.h>
@@ -15,7 +16,7 @@ ros::WallTime previous_exposure_time;
 
 ros::Publisher triggerPub;
 ros::Publisher distancePub;
-
+ros::Publisher gpsTriggerPub;
 
 void gpsCallBack(const sensor_msgs::NavSatFixConstPtr& msg)
 {
@@ -25,9 +26,9 @@ void gpsCallBack(const sensor_msgs::NavSatFixConstPtr& msg)
 
     ros::NodeHandle srv_nh;
     ros::ServiceClient gpsHeadingClient = srv_nh.serviceClient<camera_trigger_driver::PM3DGPSHeading>("gps_heading_service");
+    camera_trigger_driver::PM3DGPSData cameraTriggerMsg;
 
     // ROS_INFO("Received GPS position: %f %f", msg->latitude, msg->longitude);
-
     LLtoUTM(23, msg->latitude, msg->longitude, Northing, Easting, z);
 
     // ROS_INFO("In UTM %f %f %s", Northing, Easting, z);
@@ -50,6 +51,11 @@ void gpsCallBack(const sensor_msgs::NavSatFixConstPtr& msg)
       ROS_INFO("------------Triggering Camera to take image------------");
       lastNorthing = Northing; lastEasting = Easting;
       previous_exposure_time = ros::WallTime::now();
+
+      cameraTriggerMsg.latitude = 0.0;
+      cameraTriggerMsg.longitude = 0.0;
+      cameraTriggerMsg.gps_heading = 0.0;
+      gpsTriggerPub.publish(cameraTriggerMsg);
     }
 
     camera_trigger_driver::PM3DGPSHeadingRequest req;
@@ -66,11 +72,8 @@ void gpsCallBack(const sensor_msgs::NavSatFixConstPtr& msg)
     else {
 
       ROS_WARN("GPS HEADING SERVER NOT ONLINE...");
-    }
+    } 
 
-    
-    //    lastNorthing = Northing; lastEasting = Easting;
-    // ROS_INFO("Distance since last in meters %f", d);
 }
 
 void recordCallBack(const std_msgs::BoolConstPtr& msg)
@@ -89,6 +92,7 @@ int main(int argc, char **argv)
   ros::NodeHandle nh;
   ros::Subscriber gpsSub_ = nh.subscribe("/fix", 10, &gpsCallBack);
   triggerPub = nh.advertise<std_msgs::Empty>("Trigger", 32);
+  gpsTriggerPub = nh.advertise<camera_trigger_driver::PM3DGPSData>("camera_trigger",10);
   distancePub = nh.advertise<std_msgs::Float64>("Distance", 32);
   
   ros::spin();

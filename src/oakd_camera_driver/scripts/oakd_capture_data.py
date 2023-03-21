@@ -125,6 +125,11 @@ class PM3DCameraDataPublisher():
             if cv2.waitKey(1) == ord('q'):
                 break
 
+    def camera_trigger_listener(self):
+
+        rospy.Subscriber('camera_trigger',Bool,callback=self.callback)
+        rospy.spin()
+
 if __name__ == "__main__":
     
     cmd_rec = sys.argv[1:]
