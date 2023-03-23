@@ -3,22 +3,20 @@
 """
     Code for python wrapper
 """
-
-from oakd_capture_rgb import StartCameraStream
-import rospy
-from sensor_msgs.msg import Image 
-from cv_bridge import CvBridge, CvBridgeError
-import numpy as np
-from std_msgs.msg import Bool 
+import os 
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
+import roslib; roslib.load_manifest('oakd_camera_driver')
+import rospy 
+import subprocess
 import os 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 if __name__ == '__main__':
 	
-    camera_data = [["169.254.54.205","camera_1","camera_1_data"],["169.254.54.200","camera_2","camera_2_data"]]
-    # camera_data = [["169.254.54.205","camera_1","camera_1_data"]]
-
+    rospy.init_node("camera_wrapper")
+    camera_data = [["python3","oakd_capture_data.py","169.254.54.205","camera_1","camera_data"],["python3","oakd_capture_data.py","169.254.54.200","camera_2","camera_data"]]
+    processes = []
     for cam_data in camera_data:
         
-        commd = "python3 oakd_capture_rgb.py {} {} {} &".format(str(cam_data[0]),str(cam_data[1]),str(cam_data[2]))
-        os.system(commd)
+        process = subprocess.Popen(cam_data)
+        processes.append(process)
