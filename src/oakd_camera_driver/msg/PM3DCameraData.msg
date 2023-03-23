@@ -1,5 +1,3 @@
-# PM3DGPSData lat_and_lon
-# PM3DGPSData gps_heading
 int64[] rgb_data
 int64[] depth_map
 int64[] segmentation_labels
@@ -10,3 +8,4 @@ int64[] height_map
 int64[] height_map_dims
 float32[] biomass_estimate
 int16 camera_id
+camera_trigger_driver/PM3DGPSData gps_data

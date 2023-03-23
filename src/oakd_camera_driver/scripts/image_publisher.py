@@ -50,6 +50,8 @@ class TestImagePublisher():
         msg.rgb_dims = array_data.shape
         msg.depth_map_dims = depth_data.shape
         msg.segmentation_label_dims = segmentation_label_arr.shape
+        msg.gps_data.lat_and_lon = 1.0
+        msg.gps_data.gps_heading = 50
 
         if data.data == True:
             """
