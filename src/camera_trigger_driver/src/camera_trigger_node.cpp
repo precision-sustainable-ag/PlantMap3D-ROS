@@ -44,6 +44,8 @@ void gpsCallBack(const sensor_msgs::NavSatFixConstPtr& msg)
      Temporary threshold value set
      Final distance threshold would be read from a common launch file or config file
     */
+    camera_trigger_driver::PM3DGPSHeadingRequest req;
+    camera_trigger_driver::PM3DGPSHeadingResponse res;
     if(record && (d>tempt_const) && (((ros::WallTime::now() - previous_exposure_time).toNSec() * 1e-6)>2000))
     {
       std_msgs::Empty t;
@@ -52,27 +54,30 @@ void gpsCallBack(const sensor_msgs::NavSatFixConstPtr& msg)
       lastNorthing = Northing; lastEasting = Easting;
       previous_exposure_time = ros::WallTime::now();
 
-      cameraTriggerMsg.latitude = 0.0;
-      cameraTriggerMsg.longitude = 0.0;
-      cameraTriggerMsg.gps_heading = 0.0;
-      gpsTriggerPub.publish(cameraTriggerMsg);
-    }
+      req.northing = Northing;
+      req.lnorthing = lastNorthing;
+      req.easting = Easting;
+      req.leasting = lastEasting;
 
-    camera_trigger_driver::PM3DGPSHeadingRequest req;
-    req.northing = Northing;
-    req.lnorthing = lastNorthing;
-    req.easting = Easting;
-    req.leasting = lastEasting;
-
-    camera_trigger_driver::PM3DGPSHeadingResponse res;
-    if (gpsHeadingClient.call(req,res)){
+      camera_trigger_driver::PM3DGPSData gps_msg;
+      if (gpsHeadingClient.call(req,res)){
 
       ROS_INFO("Received GPS Heading : %f",res.gps_heading);
-    }
-    else {
+      cameraTriggerMsg.latitude = 0.0;
+      cameraTriggerMsg.longitude = 0.0;
+      cameraTriggerMsg.gps_heading = res.gps_heading;
+      gpsTriggerPub.publish(cameraTriggerMsg);
+      }
+      else {
 
       ROS_WARN("GPS HEADING SERVER NOT ONLINE...");
-    } 
+      }
+
+    }
+
+    
+
+     
 
 }
 
