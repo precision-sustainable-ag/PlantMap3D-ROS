@@ -51,7 +51,9 @@ void gpsCallBack(const sensor_msgs::NavSatFixConstPtr& msg)
       std_msgs::Empty t;
       triggerPub.publish(t);
       ROS_INFO("------------Triggering Camera to take image------------");
-      lastNorthing = Northing; lastEasting = Easting;
+      
+    }
+    lastNorthing = Northing; lastEasting = Easting;
       previous_exposure_time = ros::WallTime::now();
 
       req.northing = Northing;
@@ -72,8 +74,6 @@ void gpsCallBack(const sensor_msgs::NavSatFixConstPtr& msg)
 
       ROS_WARN("GPS HEADING SERVER NOT ONLINE...");
       }
-
-    }
 
     
 
