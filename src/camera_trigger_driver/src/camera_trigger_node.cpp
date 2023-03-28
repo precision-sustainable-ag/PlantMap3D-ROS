@@ -38,6 +38,8 @@ void gpsCallBack(const sensor_msgs::NavSatFixConstPtr& msg)
     distancePub.publish(distance);
     float tempt_const = 0.07; // temporary variable changed from 10.0 (meters)
 
+    float gps_heading;
+
     ROS_INFO("Printing distance %f",d);
     /*
     If d > 10m, then trigger and update last, though only if record switch is active
@@ -51,10 +53,10 @@ void gpsCallBack(const sensor_msgs::NavSatFixConstPtr& msg)
       std_msgs::Empty t;
       triggerPub.publish(t);
       ROS_INFO("------------Triggering Camera to take image------------");
-      
-    }
-    lastNorthing = Northing; lastEasting = Easting;
+      lastNorthing = Northing; lastEasting = Easting;
       previous_exposure_time = ros::WallTime::now();
+    }
+    
 
       req.northing = Northing;
       req.lnorthing = lastNorthing;
@@ -63,12 +65,14 @@ void gpsCallBack(const sensor_msgs::NavSatFixConstPtr& msg)
 
       camera_trigger_driver::PM3DGPSData gps_msg;
       if (gpsHeadingClient.call(req,res)){
-
-      ROS_INFO("Received GPS Heading : %f",res.gps_heading);
-      cameraTriggerMsg.latitude = 0.0;
-      cameraTriggerMsg.longitude = 0.0;
-      cameraTriggerMsg.gps_heading = res.gps_heading;
-      gpsTriggerPub.publish(cameraTriggerMsg);
+      
+      gps_heading = res.gps_heading;
+      ROS_INFO("Received GPS Heading : %f",gps_heading);
+      
+      // cameraTriggerMsg.latitude = 0.0;
+      // cameraTriggerMsg.longitude = 0.0;
+      // cameraTriggerMsg.gps_heading = res.gps_heading;
+      // gpsTriggerPub.publish(cameraTriggerMsg);
       }
       else {
 
