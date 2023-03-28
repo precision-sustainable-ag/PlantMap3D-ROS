@@ -26,13 +26,13 @@ class GPSHeadingInterpreter():
     
     def gps_heading_callback(self,gps_msg):
 
-        rospy.loginfo(f"GPS MSG from server : {gps_msg}")
+        # rospy.loginfo(f"GPS MSG from server : {gps_msg}")
 
         diff_northing = gps_msg.northing - gps_msg.lnorthing
         diff_easting = gps_msg.easting - gps_msg.leasting
     
         gps_heading = self.compute_heading(diff_northing,diff_easting)
-        rospy.loginfo(f"GPS Heading computed is : {gps_heading}")
+        # rospy.loginfo(f"GPS Heading computed is : {gps_heading}")
         return gps_heading
 
     def gps_heading_server(self):

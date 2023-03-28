@@ -12,7 +12,7 @@
 
 double lastNorthing, lastEasting, lastRange;
 bool record;
-float gps_heading1;
+float gps_heading_data;
 ros::WallTime previous_exposure_time;
 
 ros::Publisher triggerPub;
@@ -57,10 +57,10 @@ void gpsCallBack(const sensor_msgs::NavSatFixConstPtr& msg)
       previous_exposure_time = ros::WallTime::now();
       cameraTriggerMsg.latitude = 0.0;
       cameraTriggerMsg.longitude = 0.5;
-      cameraTriggerMsg.gps_heading = gps_heading1;
+      cameraTriggerMsg.gps_heading = gps_heading_data;
       cameraTriggerMsg.camera_trigger = true;
       gpsTriggerPub.publish(cameraTriggerMsg);
-      ROS_INFO("Received GPS Heading : %f",gps_heading1);
+      ROS_INFO("Received GPS Heading : %f",gps_heading_data);
       
     }
     
@@ -73,7 +73,7 @@ void gpsCallBack(const sensor_msgs::NavSatFixConstPtr& msg)
       
       if (gpsHeadingClient.call(req,res)){
       
-      gps_heading1 = res.gps_heading;
+      gps_heading_data = res.gps_heading;
       // ROS_INFO("Received GPS Heading : %f",gps_heading);
       
       }
