@@ -20,7 +20,7 @@ if __name__ == '__main__':
     
     log_file = open('gps_data.log', 'r')
     
-    rate = rospy.Rate(10)
+    rate = rospy.Rate(3)
     
     for line in log_file:
         
