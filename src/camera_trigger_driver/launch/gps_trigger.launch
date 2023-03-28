@@ -1,5 +1,5 @@
 <launch>
-    <node pkg="camera_trigger_driver" type="gps_log_parser.py" name="gps_node" output = "screen">
+    <node pkg="camera_trigger_driver" type="gps_log_parser.py" name="gps_node" output = "screen" required="true">
     </node>
     <node pkg="camera_trigger_driver" type="camera_trigger_driver" name="camera_trigger" output = "screen">
     </node>

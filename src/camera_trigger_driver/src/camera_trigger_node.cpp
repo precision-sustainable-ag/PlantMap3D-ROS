@@ -12,7 +12,8 @@
 
 double lastNorthing, lastEasting, lastRange;
 bool record;
-float gps_heading_data;
+float lGPSHeadingData;
+float totalDistance = 0;
 ros::WallTime previous_exposure_time;
 
 ros::Publisher triggerPub;
@@ -24,7 +25,6 @@ void gpsCallBack(const sensor_msgs::NavSatFixConstPtr& msg)
     double Northing, Easting, d;
     char z[4];
     std_msgs::Float64 distance;
-
     ros::NodeHandle srv_nh;
     ros::ServiceClient gpsHeadingClient = srv_nh.serviceClient<camera_trigger_driver::PM3DGPSHeading>("gps_heading_service");
     camera_trigger_driver::PM3DGPSData cameraTriggerMsg;
@@ -34,11 +34,11 @@ void gpsCallBack(const sensor_msgs::NavSatFixConstPtr& msg)
 
     // ROS_INFO("In UTM %f %f %s", Northing, Easting, z);
     d = sqrt(pow(lastNorthing-Northing,2) + pow(lastEasting-Easting,2));
-
+    totalDistance = d;
     distance.data = d;
     distancePub.publish(distance);
     float tempt_const = 0.07; // temporary variable changed from 10.0 (meters)
-
+    float gps_heading_data;
      ROS_INFO("Printing distance %f",d);
     /*
     If d > 10m, then trigger and update last, though only if record switch is active
@@ -55,16 +55,16 @@ void gpsCallBack(const sensor_msgs::NavSatFixConstPtr& msg)
       ROS_INFO("------------Triggering Camera to take image------------");
       lastNorthing = Northing; lastEasting = Easting;
       previous_exposure_time = ros::WallTime::now();
-      cameraTriggerMsg.latitude = 0.0;
-      cameraTriggerMsg.longitude = 0.5;
-      cameraTriggerMsg.gps_heading = gps_heading_data;
+      cameraTriggerMsg.latitude = msg->latitude;
+      cameraTriggerMsg.longitude = msg->longitude;
+      cameraTriggerMsg.gps_heading = lGPSHeadingData;
       cameraTriggerMsg.camera_trigger = true;
+      cameraTriggerMsg.distance = totalDistance;
       gpsTriggerPub.publish(cameraTriggerMsg);
-      ROS_INFO("Received GPS Heading : %f",gps_heading_data);
       
     }
     
-
+      ROS_INFO("Received GPS Heading : %f",lGPSHeadingData);
       req.northing = Northing;
       req.lnorthing = lastNorthing;
       req.easting = Easting;
@@ -74,6 +74,7 @@ void gpsCallBack(const sensor_msgs::NavSatFixConstPtr& msg)
       if (gpsHeadingClient.call(req,res)){
       
       gps_heading_data = res.gps_heading;
+      lGPSHeadingData = gps_heading_data;
       // ROS_INFO("Received GPS Heading : %f",gps_heading);
       
       }
