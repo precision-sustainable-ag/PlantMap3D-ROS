@@ -21,7 +21,7 @@ def callback(camera_data):
     rospy.loginfo("Publishing Camera Data with height array")
     print(camera_data)
     print("--------------------------")
-    pub = rospy.Publisher('camera_data/height_data',numpy_msg(PM3DCameraData),queue_size=4)
+    pub = rospy.Publisher('camera_data/height_data',numpy_msg(PM3DCameraData),queue_size=6)
     pub.publish(camera_data)
     
 

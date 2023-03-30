@@ -1,18 +1,15 @@
 #!/usr/bin/env python3
 
 import roslib; roslib.load_manifest('oakd_camera_driver')
+roslib.load_manifest('camera_trigger_driver')
 import rospy
 from rospy.numpy_msg import numpy_msg
 from oakd_camera_driver.msg import PM3DCameraData
-from std_msgs.msg import Bool, String
+from camera_trigger_driver.msg import PM3DGPSData
 import numpy as np
-import cv2
 import os 
 import sys
-import threading
-import sys
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-
 
 
 class TestImagePublisher():
@@ -38,10 +35,12 @@ class TestImagePublisher():
         msg.rgb_dims = array_data.shape
         msg.depth_map_dims = depth_data.shape
         msg.segmentation_label_dims = segmentation_label_arr.shape
-        msg.gps_data.lat_and_lon = 1.0
-        msg.gps_data.gps_heading = 50
 
-        if data.data == True:
+        msg.gps_data.latitude = data.latitude
+        msg.gps_data.longitude = data.longitude
+        msg.gps_data.gps_heading = data.gps_heading
+        msg.camera_id = self.node_name
+        if data.camera_trigger == True:
             """
             When camera trigger is true, publish camera image data
             """
@@ -53,35 +52,16 @@ class TestImagePublisher():
     def run(self):
 
         while not rospy.is_shutdown(): 
-            rospy.Subscriber('camera_trigger',Bool,callback=self.callback)
+            rospy.Subscriber('camera_trigger',PM3DGPSData,callback=self.callback)
             rospy.spin()
     
-    def sys_shutdown(self):
-
-        rospy.Subscriber('shutdown',String,callback=self.shutdown_callback)
-        rospy.spin()
-
-    def shutdown_callback(self,data):
-        """
-            The callback function to shutdown all active nodes
-        """
-        # rospy.loginfo(f"Printing data {data.data}")
-        if data.data == 'shutdown':
-            rospy.signal_shutdown("Shutting down GPS")
-            
-            
-        
+          
 
 if __name__ == '__main__':
 
     cmd_rec = sys.argv[1:]
     camera_obj = TestImagePublisher(cmd_rec[0],cmd_rec[1])
-
-    thread1 = threading.Thread(target=camera_obj.run())
-    thread2 = threading.Thread(target=camera_obj.sys_shutdown())
-    thread2.start()
-    thread1.start()
-
+    camera_obj.run()
     
 
     

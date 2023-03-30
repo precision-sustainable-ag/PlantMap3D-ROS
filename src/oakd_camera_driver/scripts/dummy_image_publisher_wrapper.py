@@ -2,8 +2,6 @@
 import os 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-from image_publisher import TestImagePublisher
-
 import roslib; roslib.load_manifest('oakd_camera_driver')
 import rospy
 from rospy.numpy_msg import numpy_msg
@@ -24,6 +22,4 @@ if __name__ == '__main__':
         process = subprocess.Popen(cam_data)
         processes.append(process)
 
-    # for process in processes:
-
-    #     #process.wait()
+    

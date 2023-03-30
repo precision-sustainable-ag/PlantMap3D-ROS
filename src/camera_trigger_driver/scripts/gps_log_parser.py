@@ -19,8 +19,8 @@ if __name__ == '__main__':
     test_pub = rospy.Publisher('gps_data_test',PM3DGPSData,queue_size=1)
     
     log_file = open('gps_data.log', 'r')
-    
-    rate = rospy.Rate(10)
+    rospy.sleep(7)
+    rate = rospy.Rate(3)
     
     for line in log_file:
         
@@ -30,7 +30,6 @@ if __name__ == '__main__':
                 
                 # Parse the RMC sentence into a NMEA object
                 rmc = pynmea2.parse(line)
-
                 
                 # Check if the GPS fix is valid
                 if rmc.status == 'A':
@@ -46,11 +45,7 @@ if __name__ == '__main__':
                     rospy.loginfo(f"Printing Lat : {gps_msg.latitude} and Lon : {gps_msg.longitude}")
                     # Publish the NavSatFix message
                     gps_pub.publish(gps_msg)
-                    # test_gps = PM3DGPSData()
-                    # test_gps.lat_and_lon = 1
-                    # test_gps.gps_heading = 1
-
-                    # test_pub.publish(test_gps)
+                    
                     rate.sleep()
             except pynmea2.ChecksumError:
                 continue

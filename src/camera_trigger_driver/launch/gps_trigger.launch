@@ -1,8 +1,11 @@
 <launch>
     <node pkg="camera_trigger_driver" type="gps_log_parser.py" name="gps_node" output = "screen" required="true">
     </node>
+    <!-- <node pkg="oakd_camera_driver" type="dummy_image_publisher_wrapper.py" name="camera_wrapper" required="true">
+    </node> -->
     <node pkg="camera_trigger_driver" type="camera_trigger_driver" name="camera_trigger" output = "screen">
     </node>
     <node pkg="camera_trigger_driver" type="gps_heading_server.py" name="gps_heading_interpreter" output = "screen">
     </node>
+    
 </launch>
