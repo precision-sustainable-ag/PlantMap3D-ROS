@@ -10,7 +10,7 @@
 
 ## Current working pipeline : 
 
-<img src="https://user-images.githubusercontent.com/71589098/222145418-b61845eb-078b-4856-8990-7fecf505570d.png" width=85%% height=75% />
+<img src="https://user-images.githubusercontent.com/71589098/229500208-06b18871-3812-44b6-901f-64430809140a.png" width=95%% height=95% />
 
 
 ## Some common erros
