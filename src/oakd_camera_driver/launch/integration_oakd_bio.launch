@@ -1,10 +1,9 @@
 <launch>
-    <!-- <node pkg="oakd_camera_driver" type="dummy_image_publisher_wrapper.py" name="camera_wrapper" required="true">
-    </node> -->
-    <command name="camera_wrapper" pkg="oakd_camera_driver" cwd="ROS_PACKAGE_PATH/oakd_camera_driver" args="python3 dummy_image_publisher_wrapper.py" />
-    <!-- <node pkg="height_map_driver" type="height_map_wrapper.py" name="height_map" output="screen">
-    </node> -->
-    <!-- <node pkg="biomass_estimator_driver" type="biomass_estimator_wrapper.py" name="biomass_estimate" output="screen">
-    </node> -->
+    <node pkg="oakd_camera_driver" type="dummy_image_publisher_wrapper.py" name="camera_wrapper" required="true">
+    </node>
+    <node pkg="height_map_driver" type="height_map_wrapper.py" name="height_map" output="screen">
+    </node> 
+    <node pkg="biomass_estimator_driver" type="biomass_estimator_wrapper.py" name="biomass_estimate" output="screen">
+    </node>
 </launch>
 
