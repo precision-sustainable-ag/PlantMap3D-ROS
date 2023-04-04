@@ -15,6 +15,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 class PM3DCameraDataPublisher():
     """
     This class is a driver for streaming the PM3DCamera Data driver for oakd cameras.
+    This function returns RGBD and segmentation labels.
     """
     def __init__(self,ip,node_name,topic_name):
         
@@ -92,6 +93,7 @@ class PM3DCameraDataPublisher():
         
 
     def enable_camera(self):
+        ## Start the camera stream
         depth_out = self.device.getOutputQueue("depth",1,False)
         segmentation_queue = self.device.getOutputQueue("seg out",1,False)
         rgb_queue = self.device.getOutputQueue("rgb",1,False)

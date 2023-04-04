@@ -8,6 +8,7 @@ def biomassCorrelation(pix_count: float) -> float:
 
 
 class BiomassEstimator:
+    
     def __init__(self, semantic_array: np.array, heights_array: np.array):
         self.semantic_array = semantic_array
         self.heights_array = heights_array

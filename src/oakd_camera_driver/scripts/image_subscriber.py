@@ -6,6 +6,10 @@ import rospy
 from rospy.numpy_msg import numpy_msg
 from oakd_camera_driver.msg import PM3DCameraData
 
+"""
+    This is part of the test scripts
+"""
+
 def callback(data):
 
     

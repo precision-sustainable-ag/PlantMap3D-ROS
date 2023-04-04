@@ -14,10 +14,11 @@ import os
 
 class StartCameraStream():
 
+	"""
+	This class will start a camera stream and output RGBD data
+	"""
 	def __init__(self,ip,node_name,topic_name):
 		
-		
-
 		self.ip = ip
 		self.node_name = node_name
 		self.topic_name = topic_name

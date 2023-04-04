@@ -8,6 +8,9 @@ from rospy.numpy_msg import numpy_msg
 from oakd_camera_driver.msg import PM3DCameraData
 import subprocess
 
+"""
+    This is part of the test scripts
+"""
 if __name__ == '__main__':
 
 
