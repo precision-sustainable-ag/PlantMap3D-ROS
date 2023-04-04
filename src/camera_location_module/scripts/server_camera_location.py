@@ -2,7 +2,7 @@
 
 import rospy 
 from camera_location_module import PM3DCameraLocation
-
+from camera_location import find_camera_gps_coordinates
 class CameraLocationInterpreter():
     """
     This class is a ROS server that takes in Camera Coords (lat and lon),

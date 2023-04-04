@@ -2,6 +2,8 @@ import yaml
 import utm
 import numpy as np
 from math import cos, sin, radians
+import os
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 def camera_vector_heading_correction(r_c_t_t: np.array, heading: float) -> np.array:
     heading_trans = radians(-1*heading)
@@ -9,7 +11,7 @@ def camera_vector_heading_correction(r_c_t_t: np.array, heading: float) -> np.ar
     r_c_t_w = rotation_matrix.dot(np.asarray(r_c_t_t))
     return r_c_t_w
 
-def translate_gps_to_camera(gps_coordinates_latlon: list[float, float], r_c_t_w: np.array) -> list[float, float]:
+def translate_gps_to_camera(gps_coordinates_latlon: list, r_c_t_w: np.array) -> list:
     easting, northing, zone_number, zone_letter = utm.from_latlon(gps_coordinates_latlon[0], gps_coordinates_latlon[1])
     easting += r_c_t_w[0]
     northing += r_c_t_w[1]
@@ -18,7 +20,7 @@ def translate_gps_to_camera(gps_coordinates_latlon: list[float, float], r_c_t_w:
     return [float(lat), float(long)]
 
 # Use this function.
-def find_camera_gps_coordinates(gps_coordinates: list[float, float], heading: float, camera_id: int, cam_config_path: str) -> list[float, float]:
+def find_camera_gps_coordinates(gps_coordinates: list, heading: float, camera_id: int, cam_config_path = "config/config.yaml") -> list:
     with open(cam_config_path, 'r') as file:
         camera_data = yaml.safe_load(file)
     r_c_t_t = np.array([camera_data['camera_displacement_right'][camera_id], camera_data['camera_displacement_forward']])
@@ -26,4 +28,9 @@ def find_camera_gps_coordinates(gps_coordinates: list[float, float], heading: fl
     return translate_gps_to_camera(gps_coordinates, r_c_t_w)
 
 
+## testing the code
+# if __name__ == '__main__':
 
+#     test_msg = find_camera_gps_coordinates([1.0,1.0],90.0,1)
+
+#     print(test_msg)
