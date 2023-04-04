@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 
 import rospy 
-
 from camera_trigger_driver.srv import  PM3DGPSHeading
-
 import math 
-import numpy as np
 
 class GPSHeadingInterpreter():
 
