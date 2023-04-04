@@ -10,7 +10,7 @@ class BiomassMap:
     def __init__(self, biomass_estimates: np.ndarray, gps_location: Tuple[float, float]):
         self.biomass_estimates = biomass_estimates
         self.gps_location = gps_location
-        # Opening JSON file
+        # Opening the species list
         with open("config/species_list.json", 'r') as species_file:
             self.species_data = json.load(species_file)
         self.num_categories = len(self.species_data["species"])

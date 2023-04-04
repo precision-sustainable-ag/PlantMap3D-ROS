@@ -8,7 +8,9 @@ import numpy as np
 from biomass_map import BiomassMap
 
 def biomass_map_wrapper_callback(biomass_estimate_data):
-
+    """
+    This function outputs the biomass map generally in the form of PNG or JPEG
+    """
     biomass_map_object = BiomassMap(biomass_estimate_data.biomass_estimate,[1.0,1.0])
     biomass_map = biomass_map_object.run()
     print(f"Biomass map is : {biomass_map}")

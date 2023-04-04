@@ -9,6 +9,10 @@ import numpy as np
 
 class GPSHeadingInterpreter():
 
+    """
+    This class computes the GPS heading in degrees
+    Return type float
+    """
 
     def __init__(self):
 
