@@ -7,5 +7,5 @@ int64[] segmentation_label_dims
 int64[] height_map
 int64[] height_map_dims
 float32[] biomass_estimate
-string camera_id
+int32 camera_id
 camera_trigger_driver/PM3DGPSData gps_data

@@ -10,7 +10,7 @@
 #include <iostream>
 #include <math.h>
 
-double lastNorthing, lastEasting, lastRange;
+double lastNorthing=0, lastEasting=0, lastRange=0;
 bool record;
 float lGPSHeadingData;
 float totalDistance = 0;

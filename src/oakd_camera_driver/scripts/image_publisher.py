@@ -39,7 +39,7 @@ class TestImagePublisher():
         msg.gps_data.latitude = data.latitude
         msg.gps_data.longitude = data.longitude
         msg.gps_data.gps_heading = data.gps_heading
-        msg.camera_id = self.node_name
+        msg.camera_id = 0
         if data.camera_trigger == True:
             """
             When camera trigger is true, publish camera image data
