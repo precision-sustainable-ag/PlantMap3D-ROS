@@ -22,7 +22,8 @@ ros::Publisher gpsTriggerPub;
 
 void gpsCallBack(const sensor_msgs::NavSatFixConstPtr& msg)
 {
-    double Northing, Easting, d;
+    double Northing, Easting;
+    double d = 0.0;
     char z[4];
     std_msgs::Float64 distance;
     ros::NodeHandle srv_nh;
