@@ -1,4 +1,5 @@
-float32 gpscoords #lat and lon as list
+float32[] gpscoords #lat and lon as list
 float32 gpsheading 
 int32 cameraid
-string cameraconfigpath
+---
+float32[] newgpscoords
