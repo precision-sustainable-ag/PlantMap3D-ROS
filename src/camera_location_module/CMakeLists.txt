@@ -5,7 +5,19 @@ project(camera_location_module)
 find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
+  sensor_msgs
+  message_generation
 )
+
+add_service_files(
+  FILES
+   PM3DCameraLocation.srv
+ )
+
+ generate_messages(
+   DEPENDENCIES
+   sensor_msgs#   std_msgs
+ )
 
 catkin_package(
 #  INCLUDE_DIRS include

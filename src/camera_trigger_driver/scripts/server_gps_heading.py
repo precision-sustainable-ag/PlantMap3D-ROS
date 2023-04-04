@@ -10,7 +10,7 @@ class GPSHeadingInterpreter():
     This class computes the GPS heading in degrees
     Return type float
     """
-
+ 
     def __init__(self):
 
         rospy.init_node("gps_heading_interpreter")

@@ -14,8 +14,9 @@ class CameraLocationInterpreter():
 
     def camera_location_callback(self,data):
 
-        pass 
-
+        rospy.loginfo(f"Printing GPS coords from camera location srv : {data.gpscoords}") 
+        return 0
+    
     def camera_location_server(self):
 
         rospy.loginfo(f"Camera Location service requested ")
