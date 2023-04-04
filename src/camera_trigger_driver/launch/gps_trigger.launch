@@ -5,7 +5,7 @@
     </node> -->
     <node pkg="camera_trigger_driver" type="camera_trigger_driver" name="camera_trigger" output = "screen">
     </node>
-    <node pkg="camera_trigger_driver" type="gps_heading_server.py" name="gps_heading_interpreter" output = "screen">
+    <node pkg="camera_trigger_driver" type="server_gps_heading.py" name="gps_heading_interpreter" output = "screen">
     </node>
     
 </launch>
