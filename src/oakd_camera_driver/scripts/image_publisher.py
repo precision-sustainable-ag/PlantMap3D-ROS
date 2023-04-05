@@ -6,6 +6,7 @@ import rospy
 from rospy.numpy_msg import numpy_msg
 from oakd_camera_driver.msg import PM3DCameraData
 from camera_trigger_driver.msg import PM3DGPSData
+from camera_location_module.srv import PM3DCameraLocation, PM3DCameraLocationRequest
 import numpy as np
 import os 
 import sys
@@ -18,15 +19,40 @@ class TestImagePublisher():
         
         self.node_name = node_name
         rospy.init_node(node_name)
+        rospy.wait_for_service("camera_location_service")
         self.topic_name = topic_name
         self.pub = rospy.Publisher(topic_name,numpy_msg(PM3DCameraData),queue_size=1)
         self.sub = None
+        self.cam_location = rospy.ServiceProxy("camera_location_service",PM3DCameraLocation)
+        self.cam_location_req = PM3DCameraLocationRequest()
+        self.camera_id = None
+
+    def get_camera_id(self,node_name:str):
+
+        if node_name == 'camera_1':
+            self.camera_id = 1
+        elif node_name == 'camera_2':
+            self.camera_id = 2
+        elif node_name == 'camera_3':
+            self.camera_id = 3
+        elif node_name == 'camera_4':
+            self.camera_id = 4
+        elif node_name == 'camera_5':
+            self.camera_id = 5
+        elif node_name == 'camera_6':
+            self.camera_id = 6
+        else:
+            rospy.logerr(f'Invalid camera node name {node_name}')
+            return None
+        return self.camera_id
 
     def callback(self,data):
         
         array_data = np.random.randint(0,30,(128,128,3),dtype=np.int64)
         depth_data = np.random.randint(0,30,(128,128,3),dtype=np.int64)
         segmentation_label_arr = np.random.randint(0,4,(128,128,3),dtype=np.int64)
+        
+        
         msg = PM3DCameraData()
         msg.rgb_data = array_data.flatten().tolist()
         msg.depth_map = depth_data.flatten().tolist()
@@ -36,10 +62,18 @@ class TestImagePublisher():
         msg.depth_map_dims = depth_data.shape
         msg.segmentation_label_dims = segmentation_label_arr.shape
 
-        msg.gps_data.latitude = data.latitude
-        msg.gps_data.longitude = data.longitude
+        msg.camera_id = self.get_camera_id(self.node_name)
+
+        # Updating camera  coordinates based on camera location 
+        self.cam_location_req.gpscoords = [data.latitude,data.longitude]
+        self.cam_location_req.gpsheading = data.gps_heading
+        self.cam_location_req.cameraid = msg.camera_id
+
+        cam_location_response = self.cam_location(self.cam_location_req)
+        msg.gps_data.latitude = cam_location_response.newgpscoords[0]
+        msg.gps_data.longitude = cam_location_response.newgpscoords[1]
         msg.gps_data.gps_heading = data.gps_heading
-        msg.camera_id = 0
+        
         if data.camera_trigger == True:
             """
             When camera trigger is true, publish camera image data
