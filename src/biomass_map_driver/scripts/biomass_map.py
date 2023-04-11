@@ -16,7 +16,7 @@ class BiomassMap:
         try :
 
             if not os.path.exists(self._species_data):
-                raise FileNotFoundError(f"Species list not found at path : {value}")
+                raise FileNotFoundError(f"Species list not found at path : {self._species_data}")
             else:
                 with open(self._species_data, 'r') as species_file:
                     self._species_data = json.load(species_file)
