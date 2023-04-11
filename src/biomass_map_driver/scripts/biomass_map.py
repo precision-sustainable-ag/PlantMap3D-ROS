@@ -5,7 +5,6 @@ import json
 import os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-import rospy
 class BiomassMap:
 
     def __init__(self, biomass_estimates: np.ndarray, gps_location: Tuple[float, float],species_list_path:str):
