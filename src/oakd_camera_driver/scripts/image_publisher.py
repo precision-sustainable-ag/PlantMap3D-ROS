@@ -9,6 +9,7 @@ from camera_trigger_driver.msg import PM3DGPSData
 from std_msgs.msg import Header
 from camera_location_module.srv import PM3DCameraLocation, PM3DCameraLocationRequest
 import numpy as np
+import cv2
 import os 
 import sys
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -36,7 +37,7 @@ class TestImagePublisher():
             When camera trigger is true, publish camera image data
             """
 
-            array_data = np.random.randint(0,30,(128,128,3),dtype=np.int64)
+            array_data = cv2.imread("mona_lisa.png")
             depth_data = np.random.randint(0,30,(128,128,3),dtype=np.int64)
             segmentation_label_arr = np.random.randint(0,4,(128,128,3),dtype=np.int64)
             
