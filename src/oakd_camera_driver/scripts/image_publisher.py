@@ -15,36 +15,18 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 class TestImagePublisher():
 
-    def __init__(self,node_name,topic_name):
+    def __init__(self,node_name:str,cameraid:str):
         
         self.node_name = node_name
         rospy.init_node(node_name)
         rospy.wait_for_service("camera_location_service")
-        self.topic_name = topic_name
-        self.pub = rospy.Publisher(topic_name,numpy_msg(PM3DCameraData),queue_size=1)
+        self.__topic_name = 'camera_data'
+        self.pub = rospy.Publisher(self.__topic_name,numpy_msg(PM3DCameraData),queue_size=1)
         self.sub = None
         self.cam_location = rospy.ServiceProxy("camera_location_service",PM3DCameraLocation)
         self.cam_location_req = PM3DCameraLocationRequest()
-        self.camera_id = None
+        self.camera_id = int(cameraid)
 
-    def get_camera_id(self,node_name:str):
-
-        if node_name == 'camera_1':
-            self.camera_id = 1
-        elif node_name == 'camera_2':
-            self.camera_id = 2
-        elif node_name == 'camera_3':
-            self.camera_id = 3
-        elif node_name == 'camera_4':
-            self.camera_id = 4
-        elif node_name == 'camera_5':
-            self.camera_id = 5
-        elif node_name == 'camera_6':
-            self.camera_id = 6
-        else:
-            rospy.logerr(f'Invalid camera node name {node_name}')
-            return None
-        return self.camera_id
 
     def callback(self,data):
         
@@ -62,8 +44,8 @@ class TestImagePublisher():
         msg.depth_map_dims = depth_data.shape
         msg.segmentation_label_dims = segmentation_label_arr.shape
 
-        msg.camera_id = self.get_camera_id(self.node_name)
-
+        # msg.camera_id = self.get_camera_id(self.node_name)
+        msg.camera_id = self.camera_id
         # Updating camera  coordinates based on camera location 
         self.cam_location_req.gpscoords = [data.latitude,data.longitude]
         self.cam_location_req.gpsheading = data.gps_heading

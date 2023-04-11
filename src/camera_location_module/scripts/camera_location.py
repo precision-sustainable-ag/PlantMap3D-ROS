@@ -20,7 +20,7 @@ def translate_gps_to_camera(gps_coordinates_latlon: list, r_c_t_w: np.array) -> 
     return [float(lat), float(long)]
 
 # Use this function.
-def find_camera_gps_coordinates(gps_coordinates: list, heading: float, camera_id: int, cam_config_path = "config/config.yaml") -> list:
+def find_camera_gps_coordinates(gps_coordinates: list, heading: float, camera_id: int, cam_config_path:str) -> list:
     with open(cam_config_path, 'r') as file:
         camera_data = yaml.safe_load(file)
     r_c_t_t = np.array([camera_data['camera_displacement_right'][camera_id], camera_data['camera_displacement_forward']])

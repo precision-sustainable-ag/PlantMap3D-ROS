@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-import rospy 
+import rospy
+import rospkg 
 from camera_location_module.srv import PM3DCameraLocation, PM3DCameraLocationResponse
 from camera_location import find_camera_gps_coordinates
 
@@ -12,12 +13,14 @@ class CameraLocationInterpreter():
     def __init__(self):
 
         rospy.init_node("camera_location_interpreter")
+        rospack = rospkg.RosPack()
+        self.__path = rospack.get_path('configs') + '/config/cam_location.yaml'
         self.camera_location_server()
 
     def camera_location_callback(self,data):
 
         rospy.loginfo(f"Printing GPS coords from camera location srv : {data.gpscoords}") 
-        camera_coords = find_camera_gps_coordinates(data.gpscoords,data.gpsheading,data.cameraid)
+        camera_coords = find_camera_gps_coordinates(data.gpscoords,data.gpsheading,data.cameraid,self.__path)
         return PM3DCameraLocationResponse(camera_coords)
     
     def camera_location_server(self):
