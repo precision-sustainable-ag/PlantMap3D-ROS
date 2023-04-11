@@ -8,7 +8,7 @@ import numpy as np
 
 from biomass_map import BiomassMap
 
-rospy.init_node("biomass_map_driver")
+
 
 rospack = rospkg.RosPack()
 __path = rospack.get_path('configs') + '/config/species_list.json'
@@ -23,10 +23,8 @@ def biomass_map_wrapper_callback(biomass_estimate_data):
     print(f"Biomass map is : {biomass_map}")
 
 if __name__ == '__main__':
-
     
+    rospy.init_node("biomass_map_driver")
     while not rospy.is_shutdown(): 
         rospy.Subscriber('camera_data/biomass_estimate',numpy_msg(PM3DCameraData),callback=biomass_map_wrapper_callback)
         rospy.spin()
-
-    
