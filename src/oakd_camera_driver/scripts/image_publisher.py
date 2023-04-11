@@ -15,7 +15,7 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 class TestImagePublisher():
 
-    def __init__(self,node_name:str,cameraid:int):
+    def __init__(self,node_name:str,cameraid:str):
         
         self.node_name = node_name
         rospy.init_node(node_name)
@@ -25,26 +25,8 @@ class TestImagePublisher():
         self.sub = None
         self.cam_location = rospy.ServiceProxy("camera_location_service",PM3DCameraLocation)
         self.cam_location_req = PM3DCameraLocationRequest()
-        self.camera_id = cameraid
+        self.camera_id = int(cameraid)
 
-    def get_camera_id(self,node_name:str):
-
-        if node_name == 'camera_1':
-            self.camera_id = 1
-        elif node_name == 'camera_2':
-            self.camera_id = 2
-        elif node_name == 'camera_3':
-            self.camera_id = 3
-        elif node_name == 'camera_4':
-            self.camera_id = 4
-        elif node_name == 'camera_5':
-            self.camera_id = 5
-        elif node_name == 'camera_6':
-            self.camera_id = 6
-        else:
-            rospy.logerr(f'Invalid camera node name {node_name}')
-            return None
-        return self.camera_id
 
     def callback(self,data):
         
