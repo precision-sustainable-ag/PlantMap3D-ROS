@@ -10,8 +10,14 @@ from biomass_map import BiomassMap
 
 
 
-rospack = rospkg.RosPack()
-__path = rospack.get_path('configs') + '/config/species_list.json'
+rospack_species = rospkg.RosPack()
+__path = rospack_species.get_path('configs') + '/config/species_list.json'
+
+def get_image_name():
+
+    image_name = "test string"
+    return image_name
+
 
 def biomass_map_wrapper_callback(biomass_estimate_data):
     """
