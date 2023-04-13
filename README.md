@@ -15,6 +15,39 @@
 
 <img src="https://user-images.githubusercontent.com/71589098/229500208-06b18871-3812-44b6-901f-64430809140a.png" width=95%% height=95% />
 
+## Setting up the repository
+
+Create a workspace
+
+```
+mkdir ROS_dev_ws
+cd ROS_dev_ws
+```
+
+Clone the repository
+
+```
+git clone https://github.com/precision-sustainable-ag/PlantMap3D-ROS.git
+```
+
+Build the project
+
+```
+cd PlantMap3D-ROS
+catkin_make
+```
+
+Source the repository
+
+```
+source devel/setup.bash
+```
+
+Add the setup.bash file to .bashrc file
+
+```
+echo "source ~/ROS_dev_ws/PlantMap3D-ROS/devel/setup.bash" >> ~/.bashrc
+```
 
 ## Some common erros
 
