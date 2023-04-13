@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 import rospy
-import rospkg 
+import rospkg
+import roslib; roslib.load_manifest('camera_location_module') 
 from camera_location_module.srv import PM3DCameraLocation, PM3DCameraLocationResponse
 from camera_location import find_camera_gps_coordinates
 
