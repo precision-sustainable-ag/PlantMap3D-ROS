@@ -1,0 +1,7 @@
+rgb_images: "rgb"
+left_images: "left"
+right_images: "right"
+depth_images: "depth"
+segmentation_images: "segmentation"
+colored_segmentation_images: "colored_segmentation"
+overlayed_images: "overlayed"
