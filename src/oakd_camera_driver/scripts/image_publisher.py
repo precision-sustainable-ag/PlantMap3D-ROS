@@ -16,14 +16,9 @@ import sys
 import glob
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-rospack_testset = rospkg.RosPack()
-__test_rgbpath = rospack_testset.get_path('oakd_camera_driver') + '/tests/rgb/'
-__test_depthpath = rospack_testset.get_path('oakd_camera_driver') + '/tests/depth/'
-
-
 class TestImagePublisher():
 
-    def __init__(self,node_name:str,cameraid:str):
+    def __init__(self,node_name:str,cameraid:int):
         
         self.node_name = node_name
         rospy.init_node(node_name)
