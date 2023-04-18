@@ -3,6 +3,7 @@
 import roslib; roslib.load_manifest('oakd_camera_driver')
 roslib.load_manifest('camera_trigger_driver')
 import rospy
+import rospkg
 from rospy.numpy_msg import numpy_msg
 from oakd_camera_driver.msg import PM3DCameraData
 from camera_trigger_driver.msg import PM3DGPSData
@@ -12,7 +13,12 @@ import numpy as np
 import cv2
 import os 
 import sys
+import glob
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+rospack_testset = rospkg.RosPack()
+__test_rgbpath = rospack_testset.get_path('oakd_camera_driver') + '/tests/rgb/'
+__test_depthpath = rospack_testset.get_path('oakd_camera_driver') + '/tests/depth/'
 
 
 class TestImagePublisher():
@@ -23,11 +29,46 @@ class TestImagePublisher():
         rospy.init_node(node_name)
         rospy.wait_for_service("camera_location_service")
         self.__topic_name = 'camera_data'
-        self.pub = rospy.Publisher(self.__topic_name,numpy_msg(PM3DCameraData),queue_size=1)
+        self.pub = rospy.Publisher(self.__topic_name,numpy_msg(PM3DCameraData),queue_size=10)
         self.sub = None
         self.cam_location = rospy.ServiceProxy("camera_location_service",PM3DCameraLocation)
         self.cam_location_req = PM3DCameraLocationRequest()
         self.camera_id = int(cameraid)
+        
+        rospack_testset = rospkg.RosPack()
+        __test_rgbpath = rospack_testset.get_path('oakd_camera_driver') + '/tests/rgb/'
+        __test_depthpath = rospack_testset.get_path('oakd_camera_driver') + '/tests/depth/'
+
+        
+        try :
+
+            def get_image_list(image_files):
+
+                image_list = []
+
+                for image_file in image_files:
+                    
+                    if not os.path.isfile(image_file):
+
+                        raise FileNotFoundError(f"Given {image_file} does not exists..")
+                    else:
+                        img = cv2.imread(image_file)
+                        image_list.append(img)
+                return image_list
+            
+            rgb_image_files = glob.glob(os.path.join(__test_rgbpath,'*.jpg'))
+            depth_image_file = glob.glob(os.path.join(__test_depthpath,'*.png'))
+            segmentation_image_file = glob.glob(os.path.join(__test_depthpath,'*.png'))
+
+            test_rgb_images = get_image_list(rgb_image_files)
+            test_depth_images = get_image_list(depth_image_file)
+            test_segmentation_images = get_image_list(segmentation_image_file)
+
+        except FileNotFoundError as e:
+            print(e)
+        self.test_rgb_images = test_rgb_images
+        self.test_depth_images = test_depth_images
+        self.test_segmentation_images = test_segmentation_images
 
 
     def callback(self,data):
@@ -36,10 +77,10 @@ class TestImagePublisher():
             """
             When camera trigger is true, publish camera image data
             """
-
-            array_data = cv2.imread("mona_lisa.png")
-            depth_data = np.random.randint(0,30,(128,128,3),dtype=np.int64)
-            segmentation_label_arr = np.random.randint(0,4,(128,128,3),dtype=np.int64)
+            image_size = 512
+            array_data = cv2.resize(np.array(self.test_rgb_images[1]),dsize=(image_size,image_size))
+            depth_data = cv2.resize(np.array(self.test_depth_images[1]),dsize=(image_size,image_size))
+            segmentation_label_arr = cv2.resize(np.array(self.test_segmentation_images[1]),dsize=(image_size,image_size))
             
             header = Header()
             header.stamp = rospy.Time.now()
