@@ -77,10 +77,10 @@ class TestImagePublisher():
             """
             When camera trigger is true, publish camera image data
             """
-            image_size = 512
+            image_size = 1024
             array_data = cv2.resize(np.array(self.test_rgb_images[1]),dsize=(image_size,image_size))
             depth_data = cv2.resize(np.array(self.test_depth_images[1]),dsize=(image_size,image_size))
-            segmentation_label_arr = cv2.resize(np.array(self.test_segmentation_images[1]),dsize=(image_size,image_size))
+            segmentation_label_arr = cv2.resize(np.array(self.test_segmentation_images[1]),dsize=(108,108))
             
             header = Header()
             header.stamp = rospy.Time.now()
