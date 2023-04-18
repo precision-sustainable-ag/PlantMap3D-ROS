@@ -17,7 +17,10 @@ import glob
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 class TestImagePublisher():
-
+    """
+    This class reads the synthetic data and acts as an image publisher
+    This node is subscribed to camera trigger and is subscribed by the height map pipeline
+    """
     def __init__(self,node_name:str,cameraid:int):
         
         self.node_name = node_name
@@ -33,7 +36,7 @@ class TestImagePublisher():
         rospack_testset = rospkg.RosPack()
         __test_rgbpath = rospack_testset.get_path('oakd_camera_driver') + '/tests/rgb/'
         __test_depthpath = rospack_testset.get_path('oakd_camera_driver') + '/tests/depth/'
-
+        __test_segmentationpath = rospack_testset.get_path('oakd_camera_driver') + '/tests/segmentation/'
         
         try :
 
@@ -53,7 +56,7 @@ class TestImagePublisher():
             
             rgb_image_files = glob.glob(os.path.join(__test_rgbpath,'*.jpg'))
             depth_image_file = glob.glob(os.path.join(__test_depthpath,'*.png'))
-            segmentation_image_file = glob.glob(os.path.join(__test_depthpath,'*.png'))
+            segmentation_image_file = glob.glob(os.path.join(__test_segmentationpath,'*.png'))
 
             test_rgb_images = get_image_list(rgb_image_files)
             test_depth_images = get_image_list(depth_image_file)
