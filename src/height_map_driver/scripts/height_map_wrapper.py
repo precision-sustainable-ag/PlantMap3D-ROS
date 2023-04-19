@@ -11,7 +11,7 @@ from height_map import HeightMap
 def callback(camera_data):
 
     depth_map = camera_data.depth_map.reshape((camera_data.depth_map_dims))
-    boom_height = int(10)
+    boom_height = float(75)
     height_map = HeightMap(depth_map,boom_height)
     height_map_array = height_map.run() # return type ndarray
     camera_data.height_map = height_map_array.flatten()

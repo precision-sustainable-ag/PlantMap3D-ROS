@@ -19,7 +19,8 @@ if __name__ == '__main__':
     test_pub = rospy.Publisher('gps_data_test',PM3DGPSData,queue_size=1)
     
     log_file = open('gps_data.log', 'r')
-    rospy.sleep(7)
+    rospy.loginfo("Waiting 13 secs to start all nodes")
+    rospy.sleep(13)
     rate = rospy.Rate(3)
     
     for line in log_file:
