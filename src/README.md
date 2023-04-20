@@ -118,6 +118,44 @@ int32 camera_id
 camera_trigger_driver/PM3DGPSData gps_data
 ```
 
+- To send a numpy array via the PM3DCameraData
+
+> Server side code
+1. Create a publisher object (example using rospy)
+
+```
+from oakd_camera_driver.msg import PM3DCameraData
+pub = rospy.Publisher(self.__topic_name,numpy_msg(PM3DCameraData),queue_size=10)
+msg = PM3DCameraData()
+```
+
+2. Flatten the array 
+```
+msg.rgb_data = array_data.flatten().tolist()
+```
+3. Pass in the array shape
+```
+msg.rgb_dims = array_data.shape
+```
+4. Publish the Data
+```
+pub.publish(msg)
+```
+
+> Client side code 
+
+1. Get published PM3DCameraData
+```
+from oakd_camera_driver.msg import PM3DCameraData
+
+def callback(data):
+
+    subscribed_rgb_data = data.rgb_data.reshape((data.rgb_dims))
+    return subscribed_rgb_data
+
+rospy.Subscriber('numpy_data',PM3DCameraData,callback=callback)
+rospy.spin()
+```
 Setting up the camera's :
 
 
