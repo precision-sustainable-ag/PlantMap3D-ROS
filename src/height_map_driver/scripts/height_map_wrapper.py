@@ -4,7 +4,6 @@
 """
 import roslib; roslib.load_manifest('oakd_camera_driver')
 import rospy
-from rospy.numpy_msg import numpy_msg
 from oakd_camera_driver.msg import PM3DCameraData
 from std_msgs.msg import Bool
 import numpy as np
@@ -24,7 +23,7 @@ def callback(camera_data):
     rospy.loginfo("Publishing Camera Data with height array")
     print(camera_data)
     print("--------------------------")
-    pub = rospy.Publisher('camera_data/height_data',numpy_msg(PM3DCameraData),queue_size=10)
+    pub = rospy.Publisher('camera_data/height_data',PM3DCameraData,queue_size=10)
     pub.publish(camera_data)
     
 

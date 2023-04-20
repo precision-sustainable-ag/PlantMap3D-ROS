@@ -5,7 +5,6 @@
 import roslib; roslib.load_manifest('oakd_camera_driver')
 import rospy
 import rospkg
-from rospy.numpy_msg import numpy_msg
 from oakd_camera_driver.msg import PM3DCameraData
 import numpy as np
 import os, sys 
@@ -44,5 +43,5 @@ if __name__ == '__main__':
     
     rospy.init_node("biomass_map_driver")
     while not rospy.is_shutdown(): 
-        rospy.Subscriber('camera_data/biomass_estimate',numpy_msg(PM3DCameraData),callback=biomass_map_wrapper_callback)
+        rospy.Subscriber('camera_data/biomass_estimate',PM3DCameraData,callback=biomass_map_wrapper_callback)
         rospy.spin()
