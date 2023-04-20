@@ -42,6 +42,7 @@ float32[] newgpscoords
 The camera location service is defined as 
 
 ```
+import rospy
 from camera_location_module.srv import PM3DCameraLocation, PM3DCameraLocationResponse
 cam_location_service = rospy.Service('camera_location_service',PM3DCameraLocation,self.camera_location_callback)
 ```
@@ -49,6 +50,7 @@ cam_location_service = rospy.Service('camera_location_service',PM3DCameraLocatio
 Example : calling the service 
 
 ```
+import rospy
 from camera_location_module.srv import PM3DCameraLocation, PM3DCameraLocationRequest
 cam_location = rospy.ServiceProxy("camera_location_service",PM3DCameraLocation)
         req = PM3DCameraLocationRequest()
@@ -124,6 +126,7 @@ camera_trigger_driver/PM3DGPSData gps_data
 1. Create a publisher object (example using rospy)
 
 ```
+import rospy
 from oakd_camera_driver.msg import PM3DCameraData
 pub = rospy.Publisher(self.__topic_name,numpy_msg(PM3DCameraData),queue_size=10)
 msg = PM3DCameraData()
@@ -146,6 +149,7 @@ pub.publish(msg)
 
 1. Get published PM3DCameraData
 ```
+import rospy
 from oakd_camera_driver.msg import PM3DCameraData
 
 def callback(data):
