@@ -51,17 +51,13 @@ This module translates GPS coordinates based on the camera offset given in 'conf
 This module is a ROS service with the PM3DCameraLocation.srv as the service message structure.
 
 > PM3DCameraLocation.srv 
-
->> float32[] gpscoords #lat and lon as list 
-
->> float32 gpsheading 
-
->> int32 cameraid
-
->> --- 
-
->> float32[] newgpscoords 
-
+```
+float32[] gpscoords #lat and lon as list 
+float32 gpsheading 
+int32 cameraid
+- - - 
+float32[] newgpscoords 
+```
 The camera location service is defined as 
 
 ```
@@ -95,14 +91,11 @@ There is a set distance variable ``` float totalDistance ``` which calculates th
 The camera trigger node publishes PM3DGPSData msg type.
 
 > PM3DGPSData.msg
-
->> float32 latitude
-
->> float32 longitude
-
->> float32 gps_heading
-
->> float32 distance 
-
->> bool camera_trigger
-
+```
+float32 latitude
+float32 longitude
+float32 gps_heading
+float32 distance 
+bool camera_trigger
+```
+Based on the previous GPS readings, the heading is computed in angles. A ```PM3DGPSHeading.srv``` service is called to get the GPS heading. 
