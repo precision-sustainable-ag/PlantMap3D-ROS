@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""
+@author: MathewAaron
+"""
 import os 
 import cv2
 import glob

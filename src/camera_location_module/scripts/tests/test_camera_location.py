@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from unittest import TestCase
 import numpy as np
 from camera_location import find_camera_gps_coordinates, translate_gps_to_camera, camera_vector_heading_correction

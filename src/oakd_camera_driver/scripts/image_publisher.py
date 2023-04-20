@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-
+"""
+@author: MathewAaron
+"""
 import roslib; roslib.load_manifest('oakd_camera_driver')
 roslib.load_manifest('camera_trigger_driver')
 import rospy

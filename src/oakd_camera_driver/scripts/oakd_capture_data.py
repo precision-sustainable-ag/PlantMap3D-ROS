@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-
+"""
+@author: MathewAaron
+"""
 import time
 import depthai as dai
 import numpy as np

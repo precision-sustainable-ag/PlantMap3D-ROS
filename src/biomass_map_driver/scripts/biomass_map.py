@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from typing import Tuple
 from PIL import Image
 import numpy as np

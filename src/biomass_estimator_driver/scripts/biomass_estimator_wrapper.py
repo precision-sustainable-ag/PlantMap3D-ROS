@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""
+@author: MathewAaron
+"""
 import roslib; roslib.load_manifest('oakd_camera_driver')
 import rospy
 from rospy.numpy_msg import numpy_msg

@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+"""
+@author: MathewAaron
+"""
 import roslib; roslib.load_manifest('oakd_camera_driver')
 import rospy
 import rospkg
@@ -35,7 +38,7 @@ def biomass_map_wrapper_callback(biomass_estimate_data):
     biomass_map = biomass_map_object.run()
     print(f"Biomass map is : {biomass_map}")
     biomass_map.save(image_save_name)
-    biomass_map.show(f"{image_name}")
+    # biomass_map.show(f"{image_name}")
 
 if __name__ == '__main__':
     

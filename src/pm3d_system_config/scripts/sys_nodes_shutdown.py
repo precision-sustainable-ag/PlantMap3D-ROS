@@ -1,5 +1,7 @@
 #!/usr/bin/env python3 
-
+"""
+@author: MathewAaron
+"""
 import rospy 
 from std_msgs.msg import String 
 from rosgraph_msgs.msg import Log
@@ -26,9 +28,9 @@ if __name__ == '__main__':
 
     pub = rospy.Publisher('shutdown',String,queue_size=10)
 
-    # Sending shutdown signal after 30 secs, just for testing.
-    rospy.loginfo("Sleeping for 30 secs")
-    rospy.sleep(30)
+    # Sending shutdown signal after 5 secs, just for testing.
+    rospy.logwarn("Shutting down in 5 secs")
+    rospy.sleep(5)
     #pub.publish("shutdown")
     shutdown_all_nodes()
     rospy.loginfo("Shutting down system...")

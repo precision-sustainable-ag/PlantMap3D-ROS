@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-
+"""
+@author: MathewAaron
+"""
 import rospy
 import rospkg
 import roslib; roslib.load_manifest('camera_location_module') 
