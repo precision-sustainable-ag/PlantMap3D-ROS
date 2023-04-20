@@ -28,10 +28,3 @@ def find_camera_gps_coordinates(gps_coordinates: list, heading: float, camera_id
     r_c_t_w = camera_vector_heading_correction(r_c_t_t, heading)
     return translate_gps_to_camera(gps_coordinates, r_c_t_w)
 
-
-## testing the code
-# if __name__ == '__main__':
-
-#     test_msg = find_camera_gps_coordinates([1.0,1.0],90.0,1)
-
-#     print(test_msg)
