@@ -120,8 +120,6 @@ class mapInterpolator:
                 plt.axis('off')
             
 
-                plt.savefig("map_" + str(clusterId) + ".png", bbox_inches='tight', dpi=300)
-
                 fig = plt.gcf()
                 plt.switch_backend('agg')
                 fig.tight_layout(pad=0)
@@ -208,7 +206,7 @@ class mapInterpolator:
             plt.clim(0, 1)  # manually setup the range of the colorscale and colorbar
         
             plt.plot(xk, yk, color='green', marker='o', label="input point", markersize=0.8, linestyle="None")
-            plt.plot(current_positionUTM[0], current_positionUTM[1], color='red', marker='o', label="You are here", markersize=2.4, linestyle="None")
+            plt.plot(current_positionUTM[0], current_positionUTM[1], color='red', marker='o', label="You are here", markersize=3, linestyle="None")
             #ax = nybb.plot()
             ax = plt.gca()
             ax.add_artist(ScaleBar(resolution))
@@ -225,9 +223,6 @@ class mapInterpolator:
             plt.axis("equal")
             plt.axis('off')
         
-
-            plt.savefig("map_" + str(clusterId) + ".png", bbox_inches='tight', dpi=300)
-
             fig = plt.gcf()
             plt.switch_backend('agg')
             fig.tight_layout(pad=0)
@@ -243,5 +238,5 @@ class mapInterpolator:
             imageio.imwrite(save_path, img_arr[:,:,0:4])
     
 if __name__ == "__main__":
-    mapInterpolator(csv_path='analysis_plantmap_2023-04-20.csv', data_column='live_biomass_pixels').generate_all_maps_from_today(save_directory='D:\post.doc\map_interpolation')
+    #mapInterpolator(csv_path='analysis_plantmap_2023-04-20.csv', data_column='live_biomass_pixels').generate_all_maps_from_today(save_directory='D:\post.doc\map_interpolation')
     mapInterpolator(csv_path='analysis_plantmap_2023-04-20.csv', data_column='live_biomass_pixels').generate_live_map(save_path='D:\post.doc\map_interpolation\live_map.png', lat=39.0127, lon=-76.822)
