@@ -91,6 +91,54 @@ float32 leasting
 ---
 float32 gps_heading
 ```
+### OakD camera driver
+
+#### 1. Working with the OakD cameras
+
+The OakD S2 PoE cameras are used, more info on cameras can be read here : 
+
+The camera_{1,2,,,8} nodes run parallely all the specified cameras and publish to a single topic called ```camera_data```. 
+>> Topic ```camera_data``` is subscribed by node ```height_map``
+
+The ```camera_data``` topic uses a custom message called PM3DCameraData.
+
+> PM3DCameraData.msg
+```
+Header header # this field contains time stamp 
+int64[] rgb_data
+int64[] depth_map
+int64[] segmentation_labels
+int64[] rgb_dims
+int64[] depth_map_dims
+int64[] segmentation_label_dims
+int64[] height_map
+int64[] height_map_dims
+float32[] biomass_estimate
+int32 camera_id
+camera_trigger_driver/PM3DGPSData gps_data
+```
+
+Setting up the camera's :
+
+
+- Setting up the config files :
+
+Navigate to 'configs/config/image_config.yaml' file , add or remove cameras.
+
+> Example :
+```
+camera_1:
+  node_name: "camera_1"
+  camera_id: 1
+  ip: "169.254.54.200"
+```
+- Test camera stream :
+
+Run the camera wrapper :
+
+```
+rosrun oakd_camera_driver oakd_camera_wrapper.py
+```
 
 ### BioMassEstimator module
 ROS wrapper will collect the output of the segmentation module for a segmentation array and a height above ground array from a height estimation module
