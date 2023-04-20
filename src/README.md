@@ -99,3 +99,15 @@ float32 distance
 bool camera_trigger
 ```
 Based on the previous GPS readings, the heading is computed in angles. A ```PM3DGPSHeading.srv``` service is called to get the GPS heading. 
+
+> PM3DGPSHeading.srv
+```
+float32 northing
+float32 lnorthing
+float32 easting
+float32 leasting
+---
+float32 gps_heading
+```
+
+
