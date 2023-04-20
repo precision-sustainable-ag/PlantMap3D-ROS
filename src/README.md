@@ -61,3 +61,25 @@ This module is a ROS service with the PM3DCameraLocation.srv as the service mess
 >> --- 
 
 >> float32[] newgpscoords 
+
+The camera location service is defined as 
+
+```
+from camera_location_module.srv import PM3DCameraLocation, PM3DCameraLocationResponse
+cam_location_service = rospy.Service('camera_location_service',PM3DCameraLocation,self.camera_location_callback)
+```
+
+Example : calling the service 
+
+```
+from camera_location_module.srv import PM3DCameraLocation, PM3DCameraLocationRequest
+cam_location = rospy.ServiceProxy("camera_location_service",PM3DCameraLocation)
+        req = PM3DCameraLocationRequest()
+        req.gpscoords = [1.0,50.0]
+        req.gpsheading = 90.0
+        req.cameraid = 4
+        
+        resp = cam_location(req)
+        
+        rospy.loginfo(f"Received Camera 2 Location : {resp.newgpscoords}")
+```
