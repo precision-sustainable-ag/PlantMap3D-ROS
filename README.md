@@ -1,19 +1,11 @@
 # PlantMap3D-ROS
 
+"""
+Add project introduction
 
+"""
 
 ## This branch acts as a beta development branch, create a new branch for feature development and create a pull request.
-
-
-## Intended System Flow-diagram : 
-
-[Note : This diagram is expected to be updated with design upgrades]
-<img src="https://user-images.githubusercontent.com/71589098/223761652-da859b3b-0a5c-4f2f-87a6-755c1b02e5df.png" width=95%% height=75% />
-
-## Current working pipeline : 
-
-
-<img src="https://user-images.githubusercontent.com/71589098/229500208-06b18871-3812-44b6-901f-64430809140a.png" width=95%% height=95% />
 
 ## Setting up the repository
 
@@ -55,6 +47,12 @@ Check if all requirements are installed
 pip3 install -r requirements.txt
 ```
 
+## Intended System Flow-diagram : 
+
+[Note : This diagram is expected to be updated with design upgrades]
+<img src="https://user-images.githubusercontent.com/71589098/223761652-da859b3b-0a5c-4f2f-87a6-755c1b02e5df.png" width=95%% height=75% />
+
+
 ## Some common erros
 
 1. To run camera trigger node
@@ -63,7 +61,7 @@ pip3 install -r requirements.txt
 
 2.
 
-<img src="https://user-images.githubusercontent.com/71589098/218086068-499a5122-87de-429d-a2ca-c7f20ace9aa5.png" width=50%% height=50% />
+<img src="https://user-images.githubusercontent.com/71589098/218086068-499a5122-87de-429d-a2ca-c7f20ace9aa5.png" width=80% height=85% />
 
 Answer : Try the following command line :
 
