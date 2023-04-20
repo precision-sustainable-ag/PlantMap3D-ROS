@@ -85,6 +85,7 @@ cam_location = rospy.ServiceProxy("camera_location_service",PM3DCameraLocation)
 The ```camera_trigger_node.cpp```file executes to read GPSRMC data published by the GPS sensor.
 
 > The 'camera_trigger' node is subscribed to ``` /fix ``` topic from the 'nmea_serial_driver'
+> The 'camera_trigger' node publishes PM3DGPSData at ``` /camera_trigger ``` topic 
 
 There is a set distance variable ``` float totalDistance ``` which calculates the total distance travelled between the two data collection points. This variable resets after each iteration.
 
