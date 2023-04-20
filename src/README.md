@@ -46,7 +46,7 @@ Roadmap:
 
 ### Camera location module
 
-This module translates GPS coordinates based on the camera offset given in '/config/cam_location.yaml' file.
+This module translates GPS coordinates based on the camera offset given in 'configs/config/cam_location.yaml' file.
 
 This module is a ROS service with the PM3DCameraLocation.srv as the service message structure.
 
@@ -83,3 +83,26 @@ cam_location = rospy.ServiceProxy("camera_location_service",PM3DCameraLocation)
         
         rospy.loginfo(f"Received Camera 2 Location : {resp.newgpscoords}")
 ```
+
+### Camera Trigger Driver
+
+The ```camera_trigger_node.cpp```file executes to read GPSRMC data published by the GPS sensor.
+
+> The 'camera_trigger' node is subscribed to ``` /fix ``` topic from the 'nmea_serial_driver'
+
+There is a set distance variable ``` float totalDistance ``` which calculates the total distance travelled between the two data collection points. This variable resets after each iteration.
+
+The camera trigger node publishes PM3DGPSData msg type.
+
+> PM3DGPSData.msg
+
+>> float32 latitude
+
+>> float32 longitude
+
+>> float32 gps_heading
+
+>> float32 distance 
+
+>> bool camera_trigger
+
