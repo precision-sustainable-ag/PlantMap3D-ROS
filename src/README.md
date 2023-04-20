@@ -50,9 +50,14 @@ This module translates GPS coordinates based on the camera offset given in '/con
 
 This module is a ROS service with the PM3DCameraLocation.srv as the service message structure.
 
->> PM3DCameraLocation.srv 
-    float32[] gpscoords #lat and lon as list
-    float32 gpsheading 
-    int32 cameraid
-    ---
-    float32[] newgpscoords
+> PM3DCameraLocation.srv 
+
+>> float32[] gpscoords #lat and lon as list 
+
+>> float32 gpsheading 
+
+>> int32 cameraid
+
+>> --- 
+
+>> float32[] newgpscoords 
