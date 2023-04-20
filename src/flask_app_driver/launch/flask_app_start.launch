@@ -1,0 +1,4 @@
+<launch>
+    <node name="flask_app_node" type="app.py" pkg="flask_app_driver" output="screen">
+    </node>
+</launch>
