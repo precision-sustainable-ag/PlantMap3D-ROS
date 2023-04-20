@@ -36,4 +36,23 @@ Roadmap:
 1. Version 1 release date: 2/10/2023
 2. Version 2: change biomass estimation to include height information to calculate volume per species. Then the biomass estimate would be a correlation between species volume and biomass. No release date yet.
 3. Version 3: change biomass correlation method to be either more statistically sophisticated, or introduce a neural network for biomass estimation.
-p
+
+
+### Biomass map module
+
+"""
+    Enter Biomass map module description
+"""
+
+### Camera location module
+
+This module translates GPS coordinates based on the camera offset given in '/config/cam_location.yaml' file.
+
+This module is a ROS service with the PM3DCameraLocation.srv as the service message structure.
+
+>> PM3DCameraLocation.srv 
+    float32[] gpscoords #lat and lon as list
+    float32 gpsheading 
+    int32 cameraid
+    ---
+    float32[] newgpscoords
