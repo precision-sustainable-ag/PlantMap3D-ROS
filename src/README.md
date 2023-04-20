@@ -43,6 +43,10 @@ Roadmap:
 """
     Enter Biomass map module description
 """
+### GPS Module 
+
+The GPS module uses the ```nmea_navsat_driver``` package to read GPSRMC messages from ublox gps sensor. The sensor is connected through serial-UART on the Jetson AGX orin.
+
 
 ### Camera location module
 
