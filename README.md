@@ -49,6 +49,12 @@ Add the setup.bash file to .bashrc file
 echo "source ~/ROS_dev_ws/PlantMap3D-ROS/devel/setup.bash" >> ~/.bashrc
 ```
 
+Check if all requirements are installed
+
+```
+pip3 install -r requirements.txt
+```
+
 ## Some common erros
 
 1. To run camera trigger node
