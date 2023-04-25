@@ -17,11 +17,6 @@ import os
 import sys
 import glob
 
-rospack_datapath = rospkg.RosPack()
-__rgbpath = rospack_datapath.get_path('data_saver_driver') + '/camera_data/rgb/'
-__depthpath = rospack_datapath.get_path('data_saver_driver') + '/camera_data/depth/'
-__segmentationpath = rospack_datapath.get_path('data_saver_driver') + '/camera_data/segmentation/'
-
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
