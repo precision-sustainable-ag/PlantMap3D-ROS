@@ -1,10 +1,15 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Mon Mar 13 10:16:25 2023
+#!/usr/bin/env python3
 
-@author: skovsen
-"""
 
+import roslib; roslib.load_manifest('oakd_camera_driver')
+import rospy
+import rospkg
+
+rospack_species = rospkg.RosPack()
+__test_data_path = rospack_species.get_path('configs') + '/config/test_plantmap_2023-04-20.csv'
+
+rospack_datasave = rospkg.RosPack()
+__biomass_data_save_path = rospack_datasave.get_path('data_saver_driver') + '/biomass_estimation/'
 
 import numpy as np
 import matplotlib
@@ -19,7 +24,6 @@ import io
 from sklearn.cluster import AgglomerativeClustering
 from matplotlib_scalebar.scalebar import ScaleBar
 import imageio
-
 
 class LinearNDInterpolatorExt(object):
     def __init__(self, points, values):
@@ -238,5 +242,6 @@ class mapInterpolator:
             imageio.imwrite(save_path, img_arr[:,:,0:4])
     
 if __name__ == "__main__":
+    rospy.loginfo("biomass_visualization_node")
     #mapInterpolator(csv_path='analysis_plantmap_2023-04-20.csv', data_column='live_biomass_pixels').generate_all_maps_from_today(save_directory='D:\post.doc\map_interpolation')
-    mapInterpolator(csv_path='analysis_plantmap_2023-04-20.csv', data_column='live_biomass_pixels').generate_live_map(save_path='D:\post.doc\map_interpolation\live_map.png', lat=39.0127, lon=-76.822)
+    mapInterpolator(csv_path=__test_data_path, data_column='live_biomass_pixels').generate_live_map(save_path=__biomass_data_save_path+'live_map.png', lat=39.0127, lon=-76.822)

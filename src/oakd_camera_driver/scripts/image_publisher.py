@@ -16,6 +16,13 @@ import cv2
 import os 
 import sys
 import glob
+
+rospack_datapath = rospkg.RosPack()
+__rgbpath = rospack_datapath.get_path('data_saver_driver') + '/camera_data/rgb/'
+__depthpath = rospack_datapath.get_path('data_saver_driver') + '/camera_data/depth/'
+__segmentationpath = rospack_datapath.get_path('data_saver_driver') + '/camera_data/segmentation/'
+
+
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 class TestImagePublisher():
@@ -35,11 +42,18 @@ class TestImagePublisher():
         self.cam_location_req = PM3DCameraLocationRequest()
         self.camera_id = int(cameraid)
         
+        # Getting file path for test image set
         rospack_testset = rospkg.RosPack()
         __test_rgbpath = rospack_testset.get_path('oakd_camera_driver') + '/tests/rgb/'
         __test_depthpath = rospack_testset.get_path('oakd_camera_driver') + '/tests/depth/'
         __test_segmentationpath = rospack_testset.get_path('oakd_camera_driver') + '/tests/segmentation/'
         
+        # Getting file path for image save set
+        rospack_datapath = rospkg.RosPack()
+        self.__rgbpath = rospack_datapath.get_path('data_saver_driver') + '/camera_data/rgb/'
+        self.__depthpath = rospack_datapath.get_path('data_saver_driver') + '/camera_data/depth/'
+        self.__segmentationpath = rospack_datapath.get_path('data_saver_driver') + '/camera_data/segmentation/'
+
         try :
 
             def get_image_list(image_files):
@@ -69,7 +83,7 @@ class TestImagePublisher():
         self.test_rgb_images = test_rgb_images
         self.test_depth_images = test_depth_images
         self.test_segmentation_images = test_segmentation_images
-
+    
 
     def callback(self,data):
         
@@ -81,9 +95,11 @@ class TestImagePublisher():
             array_data = cv2.resize(np.array(self.test_rgb_images[1]),dsize=(image_size,image_size))
             depth_data = cv2.resize(np.array(self.test_depth_images[1]),dsize=(image_size,image_size))
             segmentation_label_arr = cv2.resize(np.array(self.test_segmentation_images[1]),dsize=(108,108))
+
             
+            time_stamp = rospy.Time.now()
             header = Header()
-            header.stamp = rospy.Time.now()
+            header.stamp = time_stamp
             msg = PM3DCameraData()
             msg.header = header
             msg.rgb_data = array_data.flatten().tolist()
@@ -107,11 +123,22 @@ class TestImagePublisher():
             msg.gps_data.longitude = cam_location_response.newgpscoords[1]
             msg.gps_data.gps_heading = data.gps_heading
 
+            # saving image data
+            self.__image_save(array_data,self.__rgbpath,self.camera_id,time_stamp)
+            self.__image_save(depth_data,self.__depthpath,self.camera_id,time_stamp)
+            self.__image_save(segmentation_label_arr,self.__segmentationpath,self.camera_id,time_stamp)
+
             rospy.loginfo(f"Publishing {self.node_name} Data")
             self.pub.publish(msg)
         else:
             rospy.loginfo("Not Publishing")
 
+
+    def __image_save(self,data,__path,cameraid, timestamp):
+
+        image_name = "image_"+str(cameraid)+"_"+str(timestamp)+".png"
+        cv2.imwrite(__path+image_name,data)
+    
     def run(self):
 
         while not rospy.is_shutdown(): 
