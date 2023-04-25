@@ -24,6 +24,7 @@ class Status(Resource):
         #     # cd = CameraDevice()
         #     if cd.status == 'active':
         #         # cd.close_pipeline()
+            os.system("roslaunch pm3d_system_config system_shutdown.launch")
             return {'status': "Successful stop"}, 200
         #     else:
         #         return {'status': 'error', 'info': 'pipeline not uploaded!'}, 400
