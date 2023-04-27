@@ -3,6 +3,7 @@
 @author: MathewAaron
 """
 import time
+import threading
 import depthai as dai
 import numpy as np
 import cv2
@@ -19,11 +20,12 @@ class PM3DCameraDataPublisher():
     This class is a driver for streaming the PM3DCamera Data driver for oakd cameras.
     This function returns RGBD and segmentation labels.
     """
-    def __init__(self,ip,node_name,topic_name):
+    def __init__(self,ip,node_name,topic_name,test_flag):
         
         self.ip = ip
         self.node_name = node_name
         self.topic_name = topic_name
+        self.test_flag = test_flag
 
         rospy.init_node(node_name)
         rospy.loginfo('Creating new camera node')
@@ -133,6 +135,13 @@ class PM3DCameraDataPublisher():
 
         rospy.Subscriber('camera_trigger',Bool,callback=self.callback)
         rospy.spin()
+
+    def dummy_function(self):
+
+        return test_flag
+    
+    def run_threads():
+        t1 = threading.Thread(target=self.resolve_domain)
 
 if __name__ == "__main__":
     
