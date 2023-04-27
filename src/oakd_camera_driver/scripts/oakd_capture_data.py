@@ -16,6 +16,7 @@ from camera_trigger_driver.msg import PM3DGPSData
 from std_msgs.msg import Header
 from camera_location_module.srv import PM3DCameraLocation, PM3DCameraLocationRequest
 from std_msgs.msg import Bool
+import glob
 import os, sys
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -30,12 +31,17 @@ class PM3DCameraDataPublisher():
         self.node_name = node_name
         self.topic_name = topic_name
         self.test_flag = False
-
+        self.gps_data = None
         rospy.init_node(node_name)
         rospy.loginfo('Creating new camera node')
 
         self.pub = rospy.Publisher(topic_name,numpy_msg(PM3DCameraData),queue_size=6)
         self.camera_data_msg = PM3DCameraData()
+        self.cam_location = rospy.ServiceProxy("camera_location_service",PM3DCameraLocation)
+        self.cam_location_req = PM3DCameraLocationRequest()
+
+        # Temporary camera id
+        self.camera_id = 1
         
         self.__blob_path = "/small1024_2021_4_8shaves_only_dt_and_is.blob"
 
@@ -122,16 +128,18 @@ class PM3DCameraDataPublisher():
                 self.out[1] = segmentation_labels 
                 self.out[2] = depth_img 
 
-                self.camera_data_msg.rgb_data = rgb_img.flatten().tolist()
-                self.camera_data_msg.depth_map = depth_img.flatten().tolist()
-                self.camera_data_msg.segmentation_labels = segmentation_labels.flatten().tolist()
-
-                self.camera_data_msg.rgb_dims = rgb_img.shape 
-                self.camera_data_msg.depth_map_dims = depth_img.shape 
-                self.camera_data_msg.segmentation_label_dims = segmentation_labels.shape
 
                 if self.test_flag:
-                    
+                    # Preparing PM3DCameraData
+                    self.camera_data_msg.rgb_data = rgb_img.flatten().tolist()
+                    self.camera_data_msg.depth_map = depth_img.flatten().tolist()
+                    self.camera_data_msg.segmentation_labels = segmentation_labels.flatten().tolist()
+
+                    self.camera_data_msg.rgb_dims = rgb_img.shape 
+                    self.camera_data_msg.depth_map_dims = depth_img.shape 
+                    self.camera_data_msg.segmentation_label_dims = segmentation_labels.shape
+
+                    self.camera_data_msg.camera_id = self.camera_id
                     self.pub.publish(self.camera_data_msg)
                     self.test_flag = False
                     rospy.loginfo(f"{self.camera_data_msg}")
@@ -155,7 +163,11 @@ class PM3DCameraDataPublisher():
 
     def oakd_callback(self,data):
 
+        self.gps_data = data
         self.test_flag = True
+        
+
+
     
     def run_camera_trigger_subscriber(self):
 
