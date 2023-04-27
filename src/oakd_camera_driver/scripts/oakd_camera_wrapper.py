@@ -25,3 +25,5 @@ if __name__ == '__main__':
         
         process = subprocess.Popen(cam_data)
         processes.append(process)
+
+    rospy.spin()

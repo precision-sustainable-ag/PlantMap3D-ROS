@@ -101,66 +101,49 @@ class PM3DCameraDataPublisher():
         
 
     def enable_camera(self):
+        with dai.Device(self.pipeline,self.cam) as self.device:
         ## Start the camera stream
-        depth_out = self.device.getOutputQueue("depth",1,False)
-        segmentation_queue = self.device.getOutputQueue("seg out",1,False)
-        rgb_queue = self.device.getOutputQueue("rgb",1,False)
-        while True:
-            segmentation_labels = segmentation_queue.get()
-        
-            segmentation_labels = np.array(segmentation_labels.getFirstLayerInt32()).reshape(self.nn_shape[0],self.nn_shape[1])
-        
-            self.out = [None,None,None]
-            rgb_data = rgb_queue.get()
-            rgb_img = np.array(rgb_data.getCvFrame())
-            depth_data = depth_out.get()
-            depth_img = np.array(depth_data.getCvFrame())
-            depth_img = (depth_img * (255/self.depth.initialConfig.getMaxDisparity())).astype(np.uint8)
-
-            self.out[0] = rgb_img 
-            self.out[1] = segmentation_labels 
-            self.out[2] = depth_img 
-
-            cv2.imshow(f"{self.node_name}",rgb_img)
+            depth_out = self.device.getOutputQueue("depth",1,False)
+            segmentation_queue = self.device.getOutputQueue("seg out",1,False)
+            rgb_queue = self.device.getOutputQueue("rgb",1,False)
+            while True:
+                segmentation_labels = segmentation_queue.get()
             
-            self.camera_data_msg.rgb_data = rgb_img.flatten().tolist()
-            self.camera_data_msg.depth_map = depth_img.flatten().tolist()
-            self.camera_data_msg.segmentation_labels = segmentation_labels.flatten().tolist()
+                segmentation_labels = np.array(segmentation_labels.getFirstLayerInt32()).reshape(self.nn_shape[0],self.nn_shape[1])
+            
+                self.out = [None,None,None]
+                rgb_data = rgb_queue.get()
+                rgb_img = np.array(rgb_data.getCvFrame())
+                depth_data = depth_out.get()
+                depth_img = np.array(depth_data.getCvFrame())
+                depth_img = (depth_img * (255/self.depth.initialConfig.getMaxDisparity())).astype(np.uint8)
 
-            self.camera_data_msg.rgb_dims = rgb_img.shape 
-            self.camera_data_msg.depth_map_dims = depth_img.shape 
-            self.camera_data_msg.segmentation_label_dims = segmentation_labels.shape
+                self.out[0] = rgb_img 
+                self.out[1] = segmentation_labels 
+                self.out[2] = depth_img 
 
-            self.pub.publish(self.camera_data_msg)
+                self.camera_data_msg.rgb_data = rgb_img.flatten().tolist()
+                self.camera_data_msg.depth_map = depth_img.flatten().tolist()
+                self.camera_data_msg.segmentation_labels = segmentation_labels.flatten().tolist()
 
-            if cv2.waitKey(1) == ord('q'):
-                break
+                self.camera_data_msg.rgb_dims = rgb_img.shape 
+                self.camera_data_msg.depth_map_dims = depth_img.shape 
+                self.camera_data_msg.segmentation_label_dims = segmentation_labels.shape
 
-    def camera_trigger_listener(self):
+                if self.test_flag:
+                    
+                    self.pub.publish(self.camera_data_msg)
+                    self.test_flag = False
+                    rospy.loginfo(f"{self.camera_data_msg}")
+                    # cv2.imshow(f"{self.node_name}",rgb_img)
 
-        rospy.Subscriber('camera_trigger',Bool,callback=self.callback)
-        rospy.spin()
-
-    def dummy_function(self):
-        while True:
-            self.test_flag = True
-            if self.test_flag:
-                print("flag is true dummy")
-            time.sleep(2)
-        
-    def dummy_function2(self):
-        while True:
-            if self.test_flag:
-                print("flag is true")
-                self.test_flag = False
-            if not self.test_flag:
-                print("flag is false")
-            time.sleep(0.5)
+                if cv2.waitKey(1) == ord('q'):
+                    break
 
     
     def run_threads(self):
-        t1 = threading.Thread(target=self.dummy_function)
-        t2 = threading.Thread(target=self.dummy_function2)
+        t1 = threading.Thread(target=self.enable_camera)
+        t2 = threading.Thread(target=self.run_camera_trigger_subscriber)
 
         # starting thread 1
         t1.start()
@@ -172,7 +155,7 @@ class PM3DCameraDataPublisher():
 
     def oakd_callback(self,data):
 
-        return 0 
+        self.test_flag = True
     
     def run_camera_trigger_subscriber(self):
 
