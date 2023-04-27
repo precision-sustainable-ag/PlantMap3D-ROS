@@ -20,12 +20,12 @@ class PM3DCameraDataPublisher():
     This class is a driver for streaming the PM3DCamera Data driver for oakd cameras.
     This function returns RGBD and segmentation labels.
     """
-    def __init__(self,ip,node_name,topic_name,test_flag):
+    def __init__(self,ip,node_name,topic_name):
         
         self.ip = ip
         self.node_name = node_name
         self.topic_name = topic_name
-        self.test_flag = test_flag
+        self.test_flag = False
 
         rospy.init_node(node_name)
         rospy.loginfo('Creating new camera node')
@@ -92,8 +92,8 @@ class PM3DCameraDataPublisher():
 
         
         self.cam = dai.DeviceInfo(ip)
-        with dai.Device(self.pipeline,self.cam) as self.device:
-            self.enable_camera()
+        # with dai.Device(self.pipeline,self.cam) as self.device:
+        #     self.enable_camera()
         
 
     def enable_camera(self):
@@ -128,6 +128,7 @@ class PM3DCameraDataPublisher():
             self.camera_data_msg.segmentation_label_dims = segmentation_labels.shape
 
             self.pub.publish(self.camera_data_msg)
+
             if cv2.waitKey(1) == ord('q'):
                 break
 
@@ -137,14 +138,37 @@ class PM3DCameraDataPublisher():
         rospy.spin()
 
     def dummy_function(self):
+        while True:
+            self.test_flag = True
+            if self.test_flag:
+                print("flag is true dummy")
+            time.sleep(2)
+        
+    def dummy_function2(self):
+        while True:
+            if self.test_flag:
+                print("flag is true")
+                self.test_flag = False
+            if not self.test_flag:
+                print("flag is false")
+            time.sleep(0.5)
 
-        return test_flag
     
-    def run_threads():
-        t1 = threading.Thread(target=self.resolve_domain)
+    def run_threads(self):
+        t1 = threading.Thread(target=self.dummy_function)
+        t2 = threading.Thread(target=self.dummy_function2)
+
+        # starting thread 1
+        t1.start()
+        # starting thread 2
+        t2.start()
+        # wait until all threads finish
+        t1.join()
+        t2.join()
 
 if __name__ == "__main__":
     
     cmd_rec = sys.argv[1:]
     seg_pipeline = PM3DCameraDataPublisher(cmd_rec[0],cmd_rec[1],cmd_rec[2])
-    seg_pipeline.enable_camera()
+    # seg_pipeline.enable_camera()
+    seg_pipeline.run_threads()
