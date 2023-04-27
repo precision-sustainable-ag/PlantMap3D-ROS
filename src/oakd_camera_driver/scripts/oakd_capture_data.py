@@ -8,9 +8,13 @@ import depthai as dai
 import numpy as np
 import cv2
 import roslib; roslib.load_manifest('oakd_camera_driver')
+roslib.load_manifest('camera_trigger_driver')
 import rospy
 from rospy.numpy_msg import numpy_msg
 from oakd_camera_driver.msg import PM3DCameraData
+from camera_trigger_driver.msg import PM3DGPSData
+from std_msgs.msg import Header
+from camera_location_module.srv import PM3DCameraLocation, PM3DCameraLocationRequest
 from std_msgs.msg import Bool
 import os, sys
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -165,6 +169,16 @@ class PM3DCameraDataPublisher():
         # wait until all threads finish
         t1.join()
         t2.join()
+
+    def oakd_callback(self,data):
+
+        return 0 
+    
+    def run_camera_trigger_subscriber(self):
+
+        while not rospy.is_shutdown(): 
+            rospy.Subscriber('camera_trigger',PM3DGPSData,callback=self.oakd_callback)
+            rospy.spin()
 
 if __name__ == "__main__":
     
