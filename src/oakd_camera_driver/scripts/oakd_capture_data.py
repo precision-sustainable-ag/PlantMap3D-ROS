@@ -36,6 +36,7 @@ class PM3DCameraDataPublisher():
         rospy.init_node(node_name)
         rospy.loginfo('Creating new camera node')
         rospy.wait_for_service("camera_location_service")
+        rospy.on_shutdown(self.__shutdown)
         self.pub = rospy.Publisher(self.topic_name,numpy_msg(PM3DCameraData),queue_size=6)
         self.camera_data_msg = PM3DCameraData()
         self.cam_location = rospy.ServiceProxy("camera_location_service",PM3DCameraLocation)
@@ -106,10 +107,12 @@ class PM3DCameraDataPublisher():
         self.__depthpath = rospack_datapath.get_path('data_saver_driver') + '/camera_data/depth/'
         self.__segmentationpath = rospack_datapath.get_path('data_saver_driver') + '/camera_data/segmentation/'
         
+        self.shutdown_flag = False
         self.cam = dai.DeviceInfo(ip)
-        # with dai.Device(self.pipeline,self.cam) as self.device:
-        #     self.enable_camera()
         
+    def __shutdown(self):
+
+        self.shutdown_flag = True
 
     def enable_camera(self):
         with dai.Device(self.pipeline,self.cam) as self.device:
@@ -167,7 +170,8 @@ class PM3DCameraDataPublisher():
                     self.__image_save(depth_img,self.__depthpath,self.camera_id,time_stamp)
                     self.__image_save(segmentation_labels,self.__segmentationpath,self.camera_id,time_stamp)
 
-                if cv2.waitKey(1) == ord('q'):
+                if cv2.waitKey(1) == ord('q') or (self.shutdown_flag == True):
+                    # shutdown camera pipeline
                     break
 
     def __image_save(self,data,__path,cameraid, timestamp):
