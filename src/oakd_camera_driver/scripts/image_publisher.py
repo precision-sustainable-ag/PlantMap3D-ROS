@@ -54,7 +54,7 @@ class TestImagePublisher():
             def get_image_list(image_files):
 
                 image_list = []
-
+                
                 for image_file in image_files:
                     
                     if not os.path.isfile(image_file):
@@ -110,7 +110,7 @@ class TestImagePublisher():
             # Updating camera  coordinates based on camera location 
             self.cam_location_req.gpscoords = [data.latitude,data.longitude]
             self.cam_location_req.gpsheading = data.gps_heading
-            self.cam_location_req.cameraid = msg.camera_id
+            self.cam_location_req.cameraid = self.camera_id
 
             cam_location_response = self.cam_location(self.cam_location_req)
             # updating coordinates

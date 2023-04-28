@@ -191,10 +191,7 @@ class PM3DCameraDataPublisher():
 
         self.gps_data = data
         self.test_flag = True
-        
-
-
-    
+            
     def run_camera_trigger_subscriber(self):
 
         while not rospy.is_shutdown(): 
