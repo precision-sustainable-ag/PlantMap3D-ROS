@@ -1,5 +1,6 @@
 # PlantMap3D-ROS
 
+
 """
 Add project introduction
 
@@ -46,6 +47,12 @@ Check if all requirements are installed
 ```
 pip3 install -r requirements.txt
 ```
+
+## Current development branch : ```setup/ros_drivers```
+### Initial source code PR link : https://github.com/precision-sustainable-ag/PlantMap3D-ROS/pull/38
+
+## Creating a ROS workspace
+
 
 ## Intended System Flow-diagram : 
 
