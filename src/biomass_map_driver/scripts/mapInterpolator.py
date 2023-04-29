@@ -243,5 +243,6 @@ class mapInterpolator:
     
 if __name__ == "__main__":
     rospy.loginfo("biomass_visualization_node")
+    rospy.init_node("map_interpolator")
     #mapInterpolator(csv_path='analysis_plantmap_2023-04-20.csv', data_column='live_biomass_pixels').generate_all_maps_from_today(save_directory='D:\post.doc\map_interpolation')
     mapInterpolator(csv_path=__test_data_path, data_column='live_biomass_pixels').generate_live_map(save_path=__biomass_data_save_path+'live_map.png', lat=39.0127, lon=-76.822)
