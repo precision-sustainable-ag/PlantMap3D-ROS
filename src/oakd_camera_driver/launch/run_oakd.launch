@@ -1,0 +1,4 @@
+<launch>
+    <node pkg="oakd_camera_driver" type="oakd_camera_wrapper.py" name="camera_wrapper" output= "screen" required="true">
+    </node>
+</launch>
