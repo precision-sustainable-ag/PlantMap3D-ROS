@@ -15,7 +15,6 @@ rospack_testset = rospkg.RosPack()
 __biomass_summary_path= rospack_testset.get_path('data_saver_driver') + '/biomass_estimation/biomass_save_summary/'
 
 import datetime, pytz
-from os import path
 current_time = datetime.datetime.now(pytz.timezone('US/Eastern'))
 
 

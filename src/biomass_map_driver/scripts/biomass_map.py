@@ -12,7 +12,7 @@ import rospkg
 from rospy.numpy_msg import numpy_msg
 from oakd_camera_driver.msg import PM3DCameraData
 from biomass_map_driver.srv import PM3DBiomassDataSaver, PM3DBiomassDataSaverResponse
-
+from os import path
 """
 # Test input data directly below - should be replaced with something from ros
 # im_filename = "test.jpg"
@@ -30,18 +30,28 @@ from biomass_map_driver.srv import PM3DBiomassDataSaver, PM3DBiomassDataSaverRes
 # total_biomass = 10
 """
 
-# if(not path.exists(summary_path_and_name)):
-#     biomass_header = ["im_filename", "latitude", "longitude", "grass_pixels", "grass_biomass", "clover_pixels", "clover_biomass", "brassica_pixels", "brassica_biomass", "weed_pixels", "weed_biomass", "total_vegetation_pixels", "total_biomass"]
-#     fd = open(summary_path_and_name,'w', newline='')
-#     fd.write((';'.join(map(str, biomass_header)))+'\r\n')
-#     fd.close()
 
 
-# biomass_data = [im_filename, latitude, longitude, grass_pixels, grass_biomass, clover_pixels, clover_biomass, brassica_pixels, brassica_biomass, weed_pixels, weed_biomass, total_vegetation_pixels, total_biomass]
-# fd = open(summary_path_and_name,'a', newline='')
-# fd.write((';'.join(map(str, biomass_data)))+'\r\n')
-# fd.close()
+def biomass_data_saver_callabck(biomass_estimate_data):
+
+    if(not path.exists(biomass_estimate_data.summary_path_and_name)):
+        biomass_header = ["im_filename", "latitude", "longitude", "grass_pixels", "grass_biomass", "clover_pixels", "clover_biomass", "brassica_pixels", "brassica_biomass", "weed_pixels", "weed_biomass", "total_vegetation_pixels", "total_biomass"]
+        fd = open(biomass_estimate_data.summary_path_and_name,'w', newline='')
+        fd.write((';'.join(map(str, biomass_header)))+'\r\n')
+        fd.close()
+    
+    biomass_data = [biomass_estimate_data.image_name, biomass_estimate_data.latitude, 
+                    biomass_estimate_data.longitude, biomass_estimate_data.grass_pixels, 
+                    biomass_estimate_data.grass_biomass, biomass_estimate_data.clover_pixels, 
+                    biomass_estimate_data.clover_biomass, biomass_estimate_data.brassica_pixels, 
+                    biomass_estimate_data.brassica_biomass, biomass_estimate_data.weed_pixels, 
+                    biomass_estimate_data.weed_biomass, biomass_estimate_data.total_vegetation_pixels, biomass_estimate_data.total_biomass]
+    fd = open(biomass_estimate_data.summary_path_and_name,'a', newline='')
+    fd.write((';'.join(map(str, biomass_data)))+'\r\n')
+    fd.close() 
 
 if __name__ == "__main__":
 
     rospy.init_node("biomass_csv_server")
+
+    biomass_saver_srv = rospy.Service('biomass_data_saver',PM3DBiomassDataSaver,biomass_data_saver_callabck)
