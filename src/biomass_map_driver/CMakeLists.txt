@@ -192,11 +192,17 @@ include
 ## Testing ##
 #############
 
-## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_biomass_map_driver.cpp)
-# if(TARGET ${PROJECT_NAME}-test)
-#   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
-# endif()
 
+# catkin_install_python(
+#     PROGRAMS
+#       scripts/test_biomass_map.py
+#     DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
+# catkin_python_setup()
+
+# if (CATKIN_ENABLE_TESTING)
+#   find_package(rostest REQUIRED)
+#   catkin_add_nosetests(test)
+# endif()
 ## Add folders to be run by python nosetests
-# catkin_add_nosetests(test)
+catkin_add_nosetests(test/test_biomass_map.py)

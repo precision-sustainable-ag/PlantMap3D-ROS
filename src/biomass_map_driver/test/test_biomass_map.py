@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from unittest import TestCase
 import rostest 
-
+import csv
 import roslib; roslib.load_manifest('biomass_map_driver')
 import rospy 
 import rospkg
@@ -18,7 +18,19 @@ class TestBiomassMap(TestCase):
 
         rospy.init_node('biomass_saver_test')
 
-    def test_append_csv_file(self):
+    def get_last_csv_line(self,summary_complete_path_name:str)->list:
+
+        with open(summary_complete_path_name,'r') as csvfile:
+            contents = csvfile.read()
+
+        last_line = contents.strip().split('\n')[-1]
+
+        last_row = list(csv.reader([last_line]))[0]
+        last_row = last_row[0].split(';')
+
+        return last_row
+    
+    def test_check_append_length(self):
 
         rospy.wait_for_service('biomass_data_saver')
         rospack_testset = rospkg.RosPack()
@@ -45,11 +57,21 @@ class TestBiomassMap(TestCase):
             req.weed_biomass = 8
             req.total_vegetation_pixels = 9
             req.total_biomass = 10
-
+            
+            testbiomass_data = ["test.jpg", -39.1, 
+                                71.2, 1, 
+                                2, 3, 
+                                4, 5, 
+                                6, 7, 
+                                8, 9, 
+                                10]
             resp = data_saver(req)
 
-            rospy.loginfo(f"Saving {req} data to biomass summary...")
-            rospy.loginfo(f"Response from server : {resp}")
+            biomass_srv_output = self.get_last_csv_line(__biomass_summary_path)
+            print(biomass_srv_output)
+            # check if right number of elements are put in
+            self.assertEqual(len(testbiomass_data),len(biomass_srv_output),"File append lenght not equal")
+            
 
         except rospy.ServiceException as e :
             rospy.logerr("Camera location service call failed..")
