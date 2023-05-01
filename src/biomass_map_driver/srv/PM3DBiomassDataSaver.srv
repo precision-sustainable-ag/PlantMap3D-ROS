@@ -14,3 +14,5 @@ int32 weed_pixels
 int32 weed_biomass
 int32 total_vegetation_pixels
 int32 total_biomass
+---
+bool success 
