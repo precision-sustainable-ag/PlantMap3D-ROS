@@ -96,7 +96,23 @@ class TestBiomassMap(TestCase):
             except rospy.ServiceException as e :
                 rospy.logerr("Camera location service call failed..")
             
-        
+    
+    def test_each_elements(self):
+
+            try :
+
+                data_saver = rospy.ServiceProxy('biomass_data_saver',PM3DBiomassDataSaver)
+    
+                resp = data_saver(self.req)
+
+                biomass_srv_output = self.get_last_csv_line(self.__biomass_summary_path)
+                # check if corresponding elements are of same data type
+                for i in range(len(self.testbiomass_data)):
+
+                    self.assertAlmostEqual(self.testbiomass_data[i],biomass_srv_output[i],3,"Data appending not as desired")
+            
+            except rospy.ServiceException as e :
+                rospy.logerr("Camera location service call failed..")
             
 
 if __name__ == '__main__':
