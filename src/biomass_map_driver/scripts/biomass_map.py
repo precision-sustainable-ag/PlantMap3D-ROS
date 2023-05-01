@@ -45,7 +45,8 @@ def biomass_data_saver_callabck(biomass_estimate_data):
                     biomass_estimate_data.grass_biomass, biomass_estimate_data.clover_pixels, 
                     biomass_estimate_data.clover_biomass, biomass_estimate_data.brassica_pixels, 
                     biomass_estimate_data.brassica_biomass, biomass_estimate_data.weed_pixels, 
-                    biomass_estimate_data.weed_biomass, biomass_estimate_data.total_vegetation_pixels, biomass_estimate_data.total_biomass]
+                    biomass_estimate_data.weed_biomass, biomass_estimate_data.total_vegetation_pixels, 
+                    biomass_estimate_data.total_biomass]
     fd = open(biomass_estimate_data.summary_path_and_name,'a', newline='')
     fd.write((';'.join(map(str, biomass_data)))+'\r\n')
     fd.close()
