@@ -15,15 +15,19 @@ import datetime, pytz
 class TestBiomassMap(TestCase):
 
     def __init__(self,*args):
-         super(TestBiomassMap,self).__init__(*args)
-         self.req = PM3DBiomassDataSaverRequest()
-         self.testbiomass_data = ["test.jpg", -39.1, 
-                                71.2, 1, 
-                                2, 3, 
-                                4, 5, 
-                                6, 7, 
-                                8, 9, 
-                                10]
+        super(TestBiomassMap,self).__init__(*args)
+        self.req = PM3DBiomassDataSaverRequest()
+        self.testbiomass_data = ["test.jpg", -39.1, 
+                            71.2, 1, 
+                            2, 3, 
+                            4, 5, 
+                            6, 7, 
+                            8, 9, 
+                            10]
+        self.resp = None
+        self.data_saver = None
+        self.biomass_srv_output = None
+
 
     def setup(self):
          
@@ -46,7 +50,7 @@ class TestBiomassMap(TestCase):
         self.req.weed_biomass = 8
         self.req.total_vegetation_pixels = 9
         self.req.total_biomass = 10
-        
+
 
     def get_last_csv_line(self,summary_complete_path_name:str)->list:
 
@@ -69,16 +73,32 @@ class TestBiomassMap(TestCase):
             resp = data_saver(self.req)
 
             biomass_srv_output = self.get_last_csv_line(self.__biomass_summary_path)
-            print(biomass_srv_output)
             # check if right number of elements are put in
             self.assertEqual(len(self.testbiomass_data),len(biomass_srv_output),"File append lenght not equal")
         
         except rospy.ServiceException as e :
             rospy.logerr("Camera location service call failed..")
 
-    # def test_element_type(self):
+    def test_elements_type(self):
 
-    #         for i in range(len)
+            try :
+
+                data_saver = rospy.ServiceProxy('biomass_data_saver',PM3DBiomassDataSaver)
+    
+                resp = data_saver(self.req)
+
+                biomass_srv_output = self.get_last_csv_line(self.__biomass_summary_path)
+                # check if corresponding elements are of same data type
+                for i in range(len(self.testbiomass_data)):
+
+                    self.assertTrue(type(self.testbiomass_data[i]),type(biomass_srv_output[i]),"Data type not same as appended")
+            
+            except rospy.ServiceException as e :
+                rospy.logerr("Camera location service call failed..")
+            
+        
+            
+
 if __name__ == '__main__':
     rospy.init_node('biomass_saver_test')
     rostest.rosrun('biomass_map_driver','test_biomass_map.py',TestBiomassMap)
