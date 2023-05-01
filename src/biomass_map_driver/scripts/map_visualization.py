@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
+"""
+Created on Fri Apr 28 19:53:57 2023
 
+@author: skovsen
+"""
 
 import roslib; roslib.load_manifest('oakd_camera_driver')
 import rospy

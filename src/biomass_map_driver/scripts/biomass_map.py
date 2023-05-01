@@ -51,6 +51,4 @@ fd.close()
 
 if __name__ == "__main__":
 
-    rospy.init_node("biomass_csv_saver")
-
-    rospy.spin()
+    rospy.init_node("biomass_csv_server")
