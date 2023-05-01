@@ -1,0 +1,16 @@
+string summary_directory
+string summary_filename
+string summary_path_and_name
+string image_name
+float32 latitude
+float32 longitude
+int32 grass_pixels
+int32 grass_biomass 
+int32 clover_pixels
+int32 clover_biomass
+int32 brassica_pixels
+int32 brassica_biomass
+int32 weed_pixels
+int32 weed_biomass
+int32 total_vegetation_pixels
+int32 total_biomass
