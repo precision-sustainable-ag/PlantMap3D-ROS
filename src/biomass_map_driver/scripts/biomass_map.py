@@ -48,10 +48,13 @@ def biomass_data_saver_callabck(biomass_estimate_data):
                     biomass_estimate_data.weed_biomass, biomass_estimate_data.total_vegetation_pixels, biomass_estimate_data.total_biomass]
     fd = open(biomass_estimate_data.summary_path_and_name,'a', newline='')
     fd.write((';'.join(map(str, biomass_data)))+'\r\n')
-    fd.close() 
+    fd.close()
+
+    return PM3DBiomassDataSaverResponse(True) 
 
 if __name__ == "__main__":
 
     rospy.init_node("biomass_csv_server")
-
+    rospy.loginfo("Biomass Data Saver Service Requested")
     biomass_saver_srv = rospy.Service('biomass_data_saver',PM3DBiomassDataSaver,biomass_data_saver_callabck)
+    rospy.spin()
