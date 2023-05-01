@@ -44,7 +44,18 @@ The camera location service is defined as
 ```
 import rospy
 from camera_location_module.srv import PM3DCameraLocation, PM3DCameraLocationResponse
-cam_location_service = rospy.Service('camera_location_service',PM3DCameraLocation,self.camera_location_callback)
+cam_location_service = rospy.Service('camera_location_service',PM3DCameraLocation,camera_location_callback)
+
+def gps_heading_callback(gps_msg):
+
+        # rospy.loginfo(f"GPS MSG from server : {gps_msg}")
+
+        diff_northing = gps_msg.northing - gps_msg.lnorthing
+        diff_easting = gps_msg.easting - gps_msg.leasting
+    
+        gps_heading = self.compute_heading(diff_northing,diff_easting)
+        # rospy.loginfo(f"GPS Heading computed is : {gps_heading}")
+        return gps_heading
 ```
 
 Example : calling the service 
