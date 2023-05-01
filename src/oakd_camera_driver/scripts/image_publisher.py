@@ -36,7 +36,7 @@ class TestImagePublisher():
         self.cam_location = rospy.ServiceProxy("camera_location_service",PM3DCameraLocation)
         self.cam_location_req = PM3DCameraLocationRequest()
         self.camera_id = int(cameraid)
-        
+        self.camera_name = node_name
         # Getting file path for test image set
         rospack_testset = rospkg.RosPack()
         __test_rgbpath = rospack_testset.get_path('oakd_camera_driver') + '/tests/rgb/'
@@ -97,6 +97,7 @@ class TestImagePublisher():
             header.stamp = time_stamp
             msg = PM3DCameraData()
             msg.header = header
+            msg.camera_name = self.camera_name
             msg.rgb_data = array_data.flatten().tolist()
             msg.depth_map = depth_data.flatten().tolist()
             msg.segmentation_labels = segmentation_label_arr.flatten().tolist()

@@ -24,7 +24,7 @@ def biomass_map_wrapper_callback(biomass_estimate_data):
     __biomass_summary_path= rospack_testset.get_path('data_saver_driver') + '/biomass_estimation/biomass_save_summary/'
     __summary_filename = "biomass_data_" + str(current_time.year) + "-" + str(current_time.month) + "-" + str(current_time.day) + ".csv"
     summary_complete_path_name = __biomass_summary_path + __summary_filename
-    image_name = "image_" + str(biomass_estimate_data.camera_id) + "_" +  str(current_time.year) + "_" + str(current_time.month) + "_" + str(current_time.day)+".jpg" 
+    image_name = "image_" + str(biomass_estimate_data.camera_name) + "_" +  str(current_time.year) + "_" + str(current_time.month) + "_" + str(current_time.day)+".jpg" 
     counter_biomass = Counter(biomass_estimate_data.biomass_estimate)
     counter_segmentation = Counter(biomass_estimate_data.segmentation_labels)
     print(f"Biomass estimate counter : {counter_biomass}")
@@ -38,8 +38,8 @@ def biomass_map_wrapper_callback(biomass_estimate_data):
         req = PM3DBiomassDataSaverRequest()
         req.summary_path_and_name = summary_complete_path_name
         req.image_name = image_name
-        req.latitude = -39.1
-        req.longitude = 71.2
+        req.latitude = biomass_estimate_data.gps_data.latitude
+        req.longitude = biomass_estimate_data.gps_data.longitude
         req.grass_pixels = 1
         req.grass_biomass = 2
         req.clover_pixels = 3

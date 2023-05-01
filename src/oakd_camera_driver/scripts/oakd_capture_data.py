@@ -28,15 +28,17 @@ class PM3DCameraDataPublisher():
     """
     def __init__(self,ip,node_name:str,cameraid:int):
         
+        rospy.init_node(node_name)
+        rospy.loginfo('Creating new camera node')
+        rospy.wait_for_service("camera_location_service")
+        rospy.on_shutdown(self.__shutdown)
         self.ip = ip
         self.node_name = node_name
         self.topic_name = 'camera_data'
         self.test_flag = False
         self.gps_data = None
-        rospy.init_node(node_name)
-        rospy.loginfo('Creating new camera node')
-        rospy.wait_for_service("camera_location_service")
-        rospy.on_shutdown(self.__shutdown)
+        self.camera_name = node_name
+
         self.pub = rospy.Publisher(self.topic_name,numpy_msg(PM3DCameraData),queue_size=6)
         self.camera_data_msg = PM3DCameraData()
         self.cam_location = rospy.ServiceProxy("camera_location_service",PM3DCameraLocation)
@@ -142,6 +144,7 @@ class PM3DCameraDataPublisher():
                     time_stamp = rospy.Time.now()
                     header = Header()
                     header.stamp = time_stamp
+                    self.camera_data_msg.camera_name = self.camera_name
                     self.camera_data_msg.header = header
                     self.camera_data_msg.rgb_data = rgb_img.flatten().tolist()
                     self.camera_data_msg.depth_map = depth_img.flatten().tolist()
