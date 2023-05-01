@@ -16,7 +16,7 @@ import datetime, pytz
 
 def biomass_map_wrapper_callback(biomass_estimate_data):
     """
-    This function outputs the biomass map generally in the form of PNG or JPEG
+    This function outputs the biomass estimation outputs in a csv file located (default) at /data_saver_driver/biomass_estimation/biomass_save_summary/
     """
     current_time = datetime.datetime.now(pytz.timezone('US/Eastern'))
     rospack_testset = rospkg.RosPack()
