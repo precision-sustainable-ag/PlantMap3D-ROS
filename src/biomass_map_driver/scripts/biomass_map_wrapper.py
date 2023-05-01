@@ -10,32 +10,61 @@ import numpy as np
 import os, sys 
 from collections import Counter
 from biomass_map_driver.srv import PM3DBiomassDataSaver, PM3DBiomassDataSaverRequest
-
-rospack_testset = rospkg.RosPack()
-__biomass_summary_path= rospack_testset.get_path('data_saver_driver') + '/biomass_estimation/biomass_save_summary/'
-
 import datetime, pytz
-current_time = datetime.datetime.now(pytz.timezone('US/Eastern'))
+
 
 
 def biomass_map_wrapper_callback(biomass_estimate_data):
     """
     This function outputs the biomass map generally in the form of PNG or JPEG
     """
-    summary_directory = __biomass_summary_path #ADD the actual path here, but keep the date-based filename
-    summary_filename = "biomass_data_" + str(current_time.year) + "-" + str(current_time.month) + "-" + str(current_time.day) + ".csv"
-    summary_path_and_name = summary_directory + "/" + summary_filename 
+    current_time = datetime.datetime.now(pytz.timezone('US/Eastern'))
+    rospack_testset = rospkg.RosPack()
+    #ADD the actual path here, but keep the date-based filename
+    __biomass_summary_path= rospack_testset.get_path('data_saver_driver') + '/biomass_estimation/biomass_save_summary/'
+    __summary_filename = "biomass_data_" + str(current_time.year) + "-" + str(current_time.month) + "-" + str(current_time.day) + ".csv"
+    summary_complete_path_name = __biomass_summary_path + __summary_filename
+    image_name = "image_" + str(biomass_estimate_data.camera_id) + "_" +  str(current_time.year) + "_" + str(current_time.month) + "_" + str(current_time.day)+".jpg" 
     counter_biomass = Counter(biomass_estimate_data.biomass_estimate)
     counter_segmentation = Counter(biomass_estimate_data.segmentation_labels)
     print(f"Biomass estimate counter : {counter_biomass}")
     print(f"Segmentation labes counter : {counter_segmentation}")
     print(biomass_estimate_data.biomass_estimate)
 
+    try :
+
+        data_saver = rospy.ServiceProxy('biomass_data_saver',PM3DBiomassDataSaver)
+
+        req = PM3DBiomassDataSaverRequest()
+        req.summary_path_and_name = summary_complete_path_name
+        req.image_name = image_name
+        req.latitude = -39.1
+        req.longitude = 71.2
+        req.grass_pixels = 1
+        req.grass_biomass = 2
+        req.clover_pixels = 3
+        req.clover_biomass = 4
+        req.brassica_pixels = 5
+        req.brassica_biomass = 6
+        req.weed_pixels = 7
+        req.weed_biomass = 8
+        req.total_vegetation_pixels = 9
+        req.total_biomass = 10
+
+        resp = data_saver(req)
+
+        rospy.loginfo(f"Saving {req} data to biomass summary...")
+        rospy.loginfo(f"Response from server : {resp}")
+
+    except rospy.ServiceException as e :
+        rospy.logerr("Camera location service call failed..")
+
 
 
 if __name__ == '__main__':
     
-    rospy.init_node("biomass_map_driver")
+    rospy.init_node("biomass_map")
     while not rospy.is_shutdown(): 
+        rospy.wait_for_service('biomass_data_saver')
         rospy.Subscriber('camera_data/biomass_estimate',PM3DCameraData,callback=biomass_map_wrapper_callback)
         rospy.spin()
