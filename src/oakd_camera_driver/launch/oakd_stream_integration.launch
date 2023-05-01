@@ -5,6 +5,4 @@
     </node> 
     <node pkg="biomass_estimator_driver" type="biomass_estimator_wrapper.py" name="biomass_estimate" output="screen">
     </node>
-    <node pkg="biomass_map_driver" type="biomass_map_wrapper.py" name="biomass_map_driver" output="screen">
-    </node>
 </launch>
