@@ -1,5 +1,3 @@
-string summary_directory
-string summary_filename
 string summary_path_and_name
 string image_name
 float32 latitude

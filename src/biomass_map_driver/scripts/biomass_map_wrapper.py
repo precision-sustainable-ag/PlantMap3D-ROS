@@ -8,36 +8,31 @@ import rospkg
 from oakd_camera_driver.msg import PM3DCameraData
 import numpy as np
 import os, sys 
-from biomass_map import BiomassMap
+from collections import Counter
+from biomass_map_driver.srv import PM3DBiomassDataSaver, PM3DBiomassDataSaverRequest
 
+rospack_testset = rospkg.RosPack()
+__biomass_summary_path= rospack_testset.get_path('data_saver_driver') + '/biomass_estimation/biomass_save_summary/'
 
-
-rospack_species = rospkg.RosPack()
-__path = rospack_species.get_path('configs') + '/config/species_list.json'
-
-rospack_datasave = rospkg.RosPack()
-__biomass_data_save_path = rospack_datasave.get_path('data_saver_driver') + '/biomass_estimation/'
-
-
-def get_image_name(cameraid, timestamp):
-
-    image_name = "image_"+str(cameraid)+"_"+str(timestamp)+".png"
-    return image_name
+import datetime, pytz
+from os import path
+current_time = datetime.datetime.now(pytz.timezone('US/Eastern'))
 
 
 def biomass_map_wrapper_callback(biomass_estimate_data):
     """
     This function outputs the biomass map generally in the form of PNG or JPEG
     """
-    global __path , __biomass_data_save_path
+    summary_directory = __biomass_summary_path #ADD the actual path here, but keep the date-based filename
+    summary_filename = "biomass_data_" + str(current_time.year) + "-" + str(current_time.month) + "-" + str(current_time.day) + ".csv"
+    summary_path_and_name = summary_directory + "/" + summary_filename 
+    counter_biomass = Counter(biomass_estimate_data.biomass_estimate)
+    counter_segmentation = Counter(biomass_estimate_data.segmentation_labels)
+    print(f"Biomass estimate counter : {counter_biomass}")
+    print(f"Segmentation labes counter : {counter_segmentation}")
+    print(biomass_estimate_data.biomass_estimate)
 
-    image_name = get_image_name(biomass_estimate_data.camera_id,biomass_estimate_data.header.stamp)
-    image_save_name = __biomass_data_save_path + image_name
-    biomass_map_object = BiomassMap(biomass_estimate_data.biomass_estimate,[biomass_estimate_data.gps_data.latitude,biomass_estimate_data.gps_data.longitude],__path)
-    biomass_map = biomass_map_object.run()
-    print(f"Biomass map is : {biomass_map}")
-    biomass_map.save(image_save_name)
-    # biomass_map.show(f"{image_name}")
+
 
 if __name__ == '__main__':
     
