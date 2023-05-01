@@ -2,6 +2,7 @@
 
 import os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
+import signal
 import rospy
 from sensor_msgs.msg import NavSatFix, NavSatStatus
 import pynmea2
@@ -14,8 +15,7 @@ from camera_trigger_driver.msg import PM3DGPSData
 def shutdown():
     
     rospy.signal_shutdown("Shutting down GPS publisher")
-    log_file.close()
-    sys.exit()
+    rospy.signal_shutdown("Shutting down publisher...")
     
     
 if __name__ == '__main__':
@@ -65,4 +65,4 @@ if __name__ == '__main__':
         log_file.close()
 
         os.system("roslaunch pm3d_system_config system_shutdown.launch")
-        
+
