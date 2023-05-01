@@ -1,14 +1,25 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
 """
 Created on Fri Apr 28 19:53:57 2023
 
-@author: skovsen
+@author: skovsen, MathewAaron
 """
+
+import roslib; roslib.load_manifest('oakd_camera_driver')
+roslib.load_manifest('camera_trigger_driver')
+import rospy
+import rospkg
+from rospy.numpy_msg import numpy_msg
+from oakd_camera_driver.msg import PM3DCameraData
+
+rospack_testset = rospkg.RosPack()
+__biomass_summary_path= rospack_testset.get_path('data_saver_driver') + '/biomass_estimation/biomass_save_summary/'
+
 import datetime, pytz
 from os import path
 current_time = datetime.datetime.now(pytz.timezone('US/Eastern'))
 
-summary_directory = "" #ADD the actual path here, but keep the date-based filename
+summary_directory = __biomass_summary_path #ADD the actual path here, but keep the date-based filename
 summary_filename = "biomass_data_" + str(current_time.year) + "-" + str(current_time.month) + "-" + str(current_time.day) + ".csv"
 summary_path_and_name = summary_directory + "/" + summary_filename 
 
@@ -37,3 +48,9 @@ biomass_data = [im_filename, latitude, longitude, grass_pixels, grass_biomass, c
 fd = open(summary_path_and_name,'a', newline='')
 fd.write((';'.join(map(str, biomass_data)))+'\r\n')
 fd.close()
+
+if __name__ == "__main__":
+
+    rospy.init_node("biomass_csv_saver")
+
+    rospy.spin()
