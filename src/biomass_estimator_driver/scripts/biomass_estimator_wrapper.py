@@ -8,7 +8,7 @@ from rospy.numpy_msg import numpy_msg
 from std_msgs.msg import Bool
 from oakd_camera_driver.msg import PM3DCameraData
 import numpy as np
-
+from collections import Counter
 from biomass_estimator import BiomassEstimator
 
 """
@@ -26,7 +26,11 @@ def biomass_estimator_callback(camera_data):
     biomass_estimator_data = BiomassEstimator(semantic_array,height_array)
     biomass_estimate_res = biomass_estimator_data.run()
     camera_data.biomass_estimate = biomass_estimate_res
-    print(camera_data)
+    counter_biomass = Counter(camera_data.biomass_estimate)
+    counter_segmentation = Counter(camera_data.segmentation_labels)
+    print(f"Biomass estimate counter : {counter_biomass}")
+    print(f"Segmentation labes counter : {counter_segmentation}")
+    print(camera_data.biomass_estimate)
     print("----------------------------")
     rospy.loginfo("Publishing biomass estimates")
     pub = rospy.Publisher('camera_data/biomass_estimate',numpy_msg(PM3DCameraData),queue_size=10)
