@@ -29,8 +29,8 @@ if __name__ == '__main__':
     
     
     # log_file = open('gps_data.log', 'r')
-    rospy.loginfo("Waiting 13 secs to start all nodes")
-    rospy.sleep(13)
+    rospy.logwarn_once("Waiting 10 secs to start all nodes")
+    rospy.sleep(10)
     rate = rospy.Rate(3)
     while not rospy.is_shutdown():
         
@@ -63,4 +63,6 @@ if __name__ == '__main__':
                     continue
 
         log_file.close()
-        rospy.spin()
+
+        os.system("roslaunch pm3d_system_config system_shutdown.launch")
+        
