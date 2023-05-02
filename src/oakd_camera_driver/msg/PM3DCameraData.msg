@@ -1,13 +1,15 @@
 Header header # this field contains time stamp 
 string camera_name
-int64[] rgb_data
-int64[] depth_map
-int64[] segmentation_labels
-int64[] rgb_dims
-int64[] depth_map_dims
-int64[] segmentation_label_dims
-int64[] height_map
-int64[] height_map_dims
-float32[] biomass_estimate
 int32 camera_id
-camera_trigger_driver/PM3DGPSData gps_data
+int32[] rgb_data
+int32[] depth_map
+int32[] segmentation_labels
+int32[] rgb_dims
+int32[] depth_map_dims
+int32[] segmentation_label_dims
+int32[] height_map
+int32[] height_map_dims
+int32[] biomass_estimate
+float64 latitude
+float64 longitude
+float64 gps_heading

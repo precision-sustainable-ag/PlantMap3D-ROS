@@ -153,6 +153,7 @@ class PM3DCameraDataPublisher():
                     self.camera_data_msg.rgb_dims = rgb_img.shape 
                     self.camera_data_msg.depth_map_dims = depth_img.shape 
                     self.camera_data_msg.segmentation_label_dims = segmentation_labels.shape
+                    self.camera_data_msg.height_map_dims = depth_img.shape 
 
                     self.camera_data_msg.camera_id = self.camera_id
                     self.cam_location_req.gpscoords = [self.gps_data.latitude,self.gps_data.longitude]
@@ -161,9 +162,9 @@ class PM3DCameraDataPublisher():
 
                     cam_location_response = self.cam_location(self.cam_location_req)
 
-                    self.camera_data_msg.gps_data.latitude = cam_location_response.newgpscoords[0]
-                    self.camera_data_msg.gps_data.longitude = cam_location_response.newgpscoords[1]
-                    self.camera_data_msg.gps_data.gps_heading = self.gps_data.gps_heading
+                    self.camera_data_msg.latitude = cam_location_response.newgpscoords[0]
+                    self.camera_data_msg.longitude = cam_location_response.newgpscoords[1]
+                    self.camera_data_msg.gps_heading = self.gps_data.gps_heading
 
                     self.pub.publish(self.camera_data_msg)
                     self.test_flag = False

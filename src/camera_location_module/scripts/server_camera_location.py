@@ -22,7 +22,7 @@ class CameraLocationInterpreter():
 
     def camera_location_callback(self,data):
 
-        rospy.loginfo(f"Printing GPS coords from camera location srv : {data.gpscoords}") 
+        # rospy.loginfo(f"Printing GPS coords from camera location srv : {data.gpscoords}") 
         camera_coords = find_camera_gps_coordinates(data.gpscoords,data.gpsheading,data.cameraid,self.__path)
         return PM3DCameraLocationResponse(camera_coords)
     

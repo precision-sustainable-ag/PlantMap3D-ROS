@@ -2,8 +2,8 @@
 """
 @author: MathewAaron
 """
-import roslib; roslib.load_manifest('oakd_camera_driver')
-roslib.load_manifest('camera_trigger_driver')
+# import roslib; roslib.load_manifest('oakd_camera_driver')
+# roslib.load_manifest('camera_trigger_driver')
 import rospy
 import rospkg
 from rospy.numpy_msg import numpy_msg
@@ -89,7 +89,7 @@ class TestImagePublisher():
             image_size = 518
             array_data = cv2.resize(np.array(self.test_rgb_images[1]),dsize=(image_size,image_size))
             depth_data = cv2.resize(np.array(self.test_depth_images[1]),dsize=(image_size,image_size))
-            segmentation_label_arr = cv2.resize(np.array(self.test_segmentation_images[1]),dsize=(108,108))
+            segmentation_label_arr = cv2.resize(np.array(self.test_segmentation_images[1]),dsize=(518,518))
 
             
             time_stamp = rospy.Time.now()
@@ -105,7 +105,7 @@ class TestImagePublisher():
             msg.rgb_dims = array_data.shape
             msg.depth_map_dims = depth_data.shape
             msg.segmentation_label_dims = segmentation_label_arr.shape
-
+            msg.height_map_dims = depth_data.shape
             # msg.camera_id = self.get_camera_id(self.node_name)
             msg.camera_id = self.camera_id
             # Updating camera  coordinates based on camera location 
@@ -115,9 +115,10 @@ class TestImagePublisher():
 
             cam_location_response = self.cam_location(self.cam_location_req)
             # updating coordinates
-            msg.gps_data.latitude = cam_location_response.newgpscoords[0]
-            msg.gps_data.longitude = cam_location_response.newgpscoords[1]
-            msg.gps_data.gps_heading = data.gps_heading
+            msg.latitude = float(cam_location_response.newgpscoords[0])
+            msg.longitude = float(cam_location_response.newgpscoords[1])
+            msg.gps_heading = float(data.gps_heading)
+
 
             # saving image data
             self.__image_save(array_data,self.__rgbpath,self.camera_id,time_stamp)
