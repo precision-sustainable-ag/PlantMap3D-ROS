@@ -19,19 +19,7 @@ def callback(camera_data):
     height_map_array = height_map.run() # return type ndarray
     camera_data.height_map = height_map_array.flatten()
     
-    camera_data.height_map_dims =np.shape(height_map_array)
-
-    print(camera_data)
-    # print('-------------------')
-    # # print(type(camera_data.height_map))
-    # # print('-------------------')
-    # print(camera_data.height_map_dims)
-    # print(f"height map : {height_map_array}")
-    # print('-------------------')
-    # print(f"Height map shape {height_map_array.shape}")
-    # rospy.loginfo("Publishing Camera Data with height array")
-    # print(camera_data)
-    # print("--------------------------")
+    # camera_data.height_map_dims = np.shape(height_map_array)
     pub = rospy.Publisher('camera_data/height_data',numpy_msg(PM3DCameraData),queue_size=10)
     pub.publish(camera_data)
     

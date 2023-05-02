@@ -89,7 +89,7 @@ class TestImagePublisher():
             image_size = 518
             array_data = cv2.resize(np.array(self.test_rgb_images[1]),dsize=(image_size,image_size))
             depth_data = cv2.resize(np.array(self.test_depth_images[1]),dsize=(image_size,image_size))
-            segmentation_label_arr = cv2.resize(np.array(self.test_segmentation_images[1]),dsize=(108,108))
+            segmentation_label_arr = cv2.resize(np.array(self.test_segmentation_images[1]),dsize=(518,518))
 
             
             time_stamp = rospy.Time.now()
@@ -105,7 +105,7 @@ class TestImagePublisher():
             msg.rgb_dims = array_data.shape
             msg.depth_map_dims = depth_data.shape
             msg.segmentation_label_dims = segmentation_label_arr.shape
-
+            msg.height_map_dims = depth_data.shape
             # msg.camera_id = self.get_camera_id(self.node_name)
             msg.camera_id = self.camera_id
             # Updating camera  coordinates based on camera location 
