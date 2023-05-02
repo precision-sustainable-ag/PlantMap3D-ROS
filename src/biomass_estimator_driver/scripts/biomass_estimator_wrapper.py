@@ -21,17 +21,17 @@ def biomass_estimator_callback(camera_data):
     Callback function to listen to data published from the height map driver and compute the biomass estimation.
     """
 
-    # semantic_array = camera_data.segmentation_labels.reshape(camera_data.segmentation_label_dims)
-    # height_array = camera_data.height_map.reshape(camera_data.height_map_dims)
-    # biomass_estimator_data = BiomassEstimator(semantic_array,height_array)
-    # biomass_estimate_res = biomass_estimator_data.run()
-    # camera_data.biomass_estimate = biomass_estimate_res
+    semantic_array = camera_data.segmentation_labels.reshape(camera_data.segmentation_label_dims)
+    height_array = camera_data.height_map.reshape(camera_data.height_map_dims)
+    biomass_estimator_data = BiomassEstimator(semantic_array,height_array)
+    biomass_estimate_res = biomass_estimator_data.run()
+    camera_data.biomass_estimate = biomass_estimate_res
     print(camera_data)
     # print(f"biomass_estimate : {camera_data.biomass_estimate}")
     # print('-------------------')
     # print(f"biomass_estimate  shape {camera_data.biomass_estimate.shape}")
-    # pub = rospy.Publisher('camera_data/biomass_estimate',numpy_msg(PM3DCameraData),queue_size=10)
-    # pub.publish(camera_data)  
+    pub = rospy.Publisher('camera_data/biomass_estimate',numpy_msg(PM3DCameraData),queue_size=10)
+    pub.publish(camera_data)  
 
 if __name__ == '__main__':
 

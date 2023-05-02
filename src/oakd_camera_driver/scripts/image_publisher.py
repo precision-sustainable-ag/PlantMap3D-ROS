@@ -115,8 +115,8 @@ class TestImagePublisher():
 
             cam_location_response = self.cam_location(self.cam_location_req)
             # updating coordinates
-            msg.latitude = float(data.latitude)
-            msg.longitude = float(data.longitude)
+            msg.latitude = float(cam_location_response.newgpscoords[0])
+            msg.longitude = float(cam_location_response.newgpscoords[1])
             msg.gps_heading = float(data.gps_heading)
 
 

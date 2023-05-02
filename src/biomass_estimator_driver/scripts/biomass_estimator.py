@@ -4,7 +4,7 @@ import os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 def biomass_correlation(pix_count: int) -> int:
-    return pix_count
+    return int(pix_count)
 
 
 class BiomassEstimator:
@@ -22,4 +22,4 @@ class BiomassEstimator:
     def run(self) -> np.array:
         for i in range(1, self.num_categories):
             self.biomass_estimates[i] = biomass_correlation(np.sum(self.semantic_array == i))
-        return self.biomass_estimates
+        return np.array(self.biomass_estimates,dtype=np.int32)

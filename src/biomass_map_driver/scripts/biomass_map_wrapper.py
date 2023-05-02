@@ -4,6 +4,7 @@
 """
 import roslib; roslib.load_manifest('oakd_camera_driver')
 import rospy
+from rospy.numpy_msg import numpy_msg
 import rospkg
 from oakd_camera_driver.msg import PM3DCameraData
 import numpy as np
@@ -27,12 +28,8 @@ def biomass_map_wrapper_callback(biomass_estimate_data):
     image_name = "image_" + str(biomass_estimate_data.camera_name) + "_" +  str(current_time.year) + "_" + str(current_time.month) + "_" + str(current_time.day)+".jpg" 
     counter_biomass = Counter(biomass_estimate_data.biomass_estimate)
     counter_segmentation = Counter(biomass_estimate_data.segmentation_labels)
-    # print(f"Biomass estimate counter : {counter_biomass}")
-    # print(f"Segmentation labes counter : {counter_segmentation}")
     # print(biomass_estimate_data)
-    # rospy.loginfo("Publishing Camera Data at biomass estimation")
-    # print(biomass_estimate_data)
-    # print("--------------------------")
+   
 
     # try :
 
@@ -69,5 +66,5 @@ if __name__ == '__main__':
     rospy.init_node("biomass_map")
     while not rospy.is_shutdown(): 
         rospy.wait_for_service('biomass_data_saver')
-        rospy.Subscriber('camera_data/biomass_estimate',PM3DCameraData,callback=biomass_map_wrapper_callback)
+        rospy.Subscriber('camera_data/biomass_estimate',numpy_msg(PM3DCameraData),callback=biomass_map_wrapper_callback)
         rospy.spin()
