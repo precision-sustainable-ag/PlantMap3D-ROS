@@ -39,9 +39,9 @@ class TestImagePublisher():
         self.camera_name = node_name
         # Getting file path for test image set
         rospack_testset = rospkg.RosPack()
-        __test_rgbpath = rospack_testset.get_path('oakd_camera_driver') + '/tests/rgb/'
-        __test_depthpath = rospack_testset.get_path('oakd_camera_driver') + '/tests/depth/'
-        __test_segmentationpath = rospack_testset.get_path('oakd_camera_driver') + '/tests/segmentation/'
+        __test_rgbpath = rospack_testset.get_path('oakd_camera_driver') + '/test/rgb/'
+        __test_depthpath = rospack_testset.get_path('oakd_camera_driver') + '/test/depth/'
+        __test_segmentationpath = rospack_testset.get_path('oakd_camera_driver') + '/test/segmentation/'
         
         # Getting file path for image save set
         rospack_datapath = rospkg.RosPack()
