@@ -1,7 +1,7 @@
 string summary_path_and_name
 string image_name
-float32 latitude
-float32 longitude
+float64 latitude
+float64 longitude
 int32 grass_pixels
 int32 grass_biomass 
 int32 clover_pixels

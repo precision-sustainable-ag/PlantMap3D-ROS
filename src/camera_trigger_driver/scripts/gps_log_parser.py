@@ -47,8 +47,8 @@ if __name__ == '__main__':
                     if rmc.status == 'A':
                         # Create NavSatFix message and fill in data
                         gps_msg = NavSatFix()
-                        gps_msg.latitude = rmc.latitude
-                        gps_msg.longitude = rmc.longitude
+                        gps_msg.latitude = float(rmc.latitude)
+                        gps_msg.longitude = float(rmc.longitude)
                         gps_msg.altitude = 0.0
                         gps_msg.status.status = NavSatStatus.STATUS_FIX
                         gps_msg.status.service = NavSatStatus.SERVICE_GPS

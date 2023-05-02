@@ -27,37 +27,40 @@ def biomass_map_wrapper_callback(biomass_estimate_data):
     image_name = "image_" + str(biomass_estimate_data.camera_name) + "_" +  str(current_time.year) + "_" + str(current_time.month) + "_" + str(current_time.day)+".jpg" 
     counter_biomass = Counter(biomass_estimate_data.biomass_estimate)
     counter_segmentation = Counter(biomass_estimate_data.segmentation_labels)
-    print(f"Biomass estimate counter : {counter_biomass}")
-    print(f"Segmentation labes counter : {counter_segmentation}")
-    print(biomass_estimate_data.biomass_estimate)
+    # print(f"Biomass estimate counter : {counter_biomass}")
+    # print(f"Segmentation labes counter : {counter_segmentation}")
+    # print(biomass_estimate_data)
+    # rospy.loginfo("Publishing Camera Data at biomass estimation")
+    # print(biomass_estimate_data)
+    # print("--------------------------")
 
-    try :
+    # try :
 
-        data_saver = rospy.ServiceProxy('biomass_data_saver',PM3DBiomassDataSaver)
+    #     data_saver = rospy.ServiceProxy('biomass_data_saver',PM3DBiomassDataSaver)
 
-        req = PM3DBiomassDataSaverRequest()
-        req.summary_path_and_name = summary_complete_path_name
-        req.image_name = image_name
-        req.latitude = biomass_estimate_data.gps_data.latitude
-        req.longitude = biomass_estimate_data.gps_data.longitude
-        req.grass_pixels = 1
-        req.grass_biomass = 2
-        req.clover_pixels = 3
-        req.clover_biomass = 4
-        req.brassica_pixels = 5
-        req.brassica_biomass = 6
-        req.weed_pixels = 7
-        req.weed_biomass = 8
-        req.total_vegetation_pixels = 9
-        req.total_biomass = 10
+    #     req = PM3DBiomassDataSaverRequest()
+    #     req.summary_path_and_name = summary_complete_path_name
+    #     req.image_name = image_name
+    #     req.latitude = float(biomass_estimate_data.latitude)
+    #     req.longitude = float(biomass_estimate_data.longitude)
+    #     req.grass_pixels = 1
+    #     req.grass_biomass = 2
+    #     req.clover_pixels = 3
+    #     req.clover_biomass = 4
+    #     req.brassica_pixels = 5
+    #     req.brassica_biomass = 6
+    #     req.weed_pixels = 7
+    #     req.weed_biomass = 8
+    #     req.total_vegetation_pixels = 9
+    #     req.total_biomass = 10
 
-        resp = data_saver(req)
+    #     resp = data_saver(req)
 
-        rospy.loginfo(f"Saving {req} data to biomass summary...")
-        rospy.loginfo(f"Response from server : {resp}")
+    #     rospy.loginfo(f"Saving {req} data to biomass summary...")
+    #     rospy.loginfo(f"Response from server : {resp}")
 
-    except rospy.ServiceException as e :
-        rospy.logerr("Camera location service call failed..")
+    # except rospy.ServiceException as e :
+    #     rospy.logerr("Camera location service call failed..")
 
 
 

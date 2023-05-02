@@ -2,8 +2,8 @@
 """
 @author: MathewAaron
 """
-import roslib; roslib.load_manifest('oakd_camera_driver')
-roslib.load_manifest('camera_trigger_driver')
+# import roslib; roslib.load_manifest('oakd_camera_driver')
+# roslib.load_manifest('camera_trigger_driver')
 import rospy
 import rospkg
 from rospy.numpy_msg import numpy_msg
@@ -115,9 +115,10 @@ class TestImagePublisher():
 
             cam_location_response = self.cam_location(self.cam_location_req)
             # updating coordinates
-            msg.gps_data.latitude = cam_location_response.newgpscoords[0]
-            msg.gps_data.longitude = cam_location_response.newgpscoords[1]
-            msg.gps_data.gps_heading = data.gps_heading
+            msg.latitude = float(data.latitude)
+            msg.longitude = float(data.longitude)
+            msg.gps_heading = float(data.gps_heading)
+
 
             # saving image data
             self.__image_save(array_data,self.__rgbpath,self.camera_id,time_stamp)

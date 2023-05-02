@@ -40,8 +40,8 @@ def biomass_data_saver_callabck(biomass_estimate_data):
         fd.write((';'.join(map(str, biomass_header)))+'\r\n')
         fd.close()
     
-    biomass_data = [biomass_estimate_data.image_name, biomass_estimate_data.latitude, 
-                    biomass_estimate_data.longitude, biomass_estimate_data.grass_pixels, 
+    biomass_data = [biomass_estimate_data.image_name, float(biomass_estimate_data.latitude), 
+                    float(biomass_estimate_data.longitude), biomass_estimate_data.grass_pixels, 
                     biomass_estimate_data.grass_biomass, biomass_estimate_data.clover_pixels, 
                     biomass_estimate_data.clover_biomass, biomass_estimate_data.brassica_pixels, 
                     biomass_estimate_data.brassica_biomass, biomass_estimate_data.weed_pixels, 

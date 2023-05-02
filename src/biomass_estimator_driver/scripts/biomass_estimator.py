@@ -3,7 +3,7 @@ import json
 import os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-def biomass_correlation(pix_count: float) -> float:
+def biomass_correlation(pix_count: int) -> int:
     return pix_count
 
 
