@@ -34,5 +34,4 @@
 
 import libnmea_navsat_driver.nodes.nmea_serial_driver
 
-
 libnmea_navsat_driver.nodes.nmea_serial_driver.main()

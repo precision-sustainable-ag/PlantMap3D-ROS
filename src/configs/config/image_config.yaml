@@ -6,20 +6,20 @@ camera_2:
   node_name: "camera_2"
   camera_id: 2
   ip: "169.254.54.201"
-# camera_3:
-#   node_name: "camera_3"
-#   camera_id: 3
-#   ip: "169.254.54.202"
-# camera_4:
-#   node_name: "camera_4"
-#   camera_id: 4
-#   ip: "169.254.54.203"
-# camera_5:
-#   node_name: "camera_5"
-#   camera_id: 5
-#   ip: "169.254.54.204"
-# camera_6:
-#   node_name: "camera_6"
-#   camera_id: 6
-#   ip: "169.254.54.205"
+camera_3:
+  node_name: "camera_3"
+  camera_id: 3
+  ip: "169.254.54.202"
+camera_4:
+  node_name: "camera_4"
+  camera_id: 4
+  ip: "169.254.54.203"
+camera_5:
+  node_name: "camera_5"
+  camera_id: 5
+  ip: "169.254.54.204"
+camera_6:
+  node_name: "camera_6"
+  camera_id: 6
+  ip: "169.254.54.205"
 

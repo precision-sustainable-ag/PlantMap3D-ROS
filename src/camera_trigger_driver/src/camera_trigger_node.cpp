@@ -38,7 +38,7 @@ void gpsCallBack(const sensor_msgs::NavSatFixConstPtr& msg)
     totalDistance = d;
     distance.data = d;
     distancePub.publish(distance);
-    float tempt_const = 0.07; // temporary variable changed from 10.0 (meters)
+    float tempt_const = 1.0; // temporary variable changed from 10.0 (meters)
     float gps_heading_data;
      ROS_INFO("Printing distance %f",d);
     /*

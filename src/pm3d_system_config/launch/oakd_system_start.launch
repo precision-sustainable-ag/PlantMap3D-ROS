@@ -1,5 +1,5 @@
 <launch>
     <include file="$(find oakd_camera_driver)/launch/oakd_stream_integration.launch"/>
-    <include file="$(find camera_trigger_driver)/launch/gps_trigger.launch"/>
+    <include file="$(find camera_trigger_driver)/launch/true_gps_trigger.launch"/>
     <include file="$(find oakd_camera_driver)/launch/run_oakd.launch"/>
 </launch>

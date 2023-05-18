@@ -19,7 +19,9 @@ if __name__ == '__main__':
         This method will parallely start the defined cameras.
     """
     rospy.init_node("camera_wrapper")
-    camera_data = [["python3","oakd_capture_data.py","169.254.54.205","camera_1","1"],["python3","oakd_capture_data.py","169.254.54.200","camera_2","2"]]
+    # camera_data = [["python3","oakd_capture_data.py","169.254.54.205","camera_1","1"],["python3","oakd_capture_data.py","169.254.54.200","camera_2","2"]]
+    camera_data = [["python3","oakd_capture_data.py","169.254.54.191","camera_1","1"],["python3","oakd_capture_data.py","169.254.54.194","camera_2","2"]]
+
     processes = []
     for cam_data in camera_data:
         
