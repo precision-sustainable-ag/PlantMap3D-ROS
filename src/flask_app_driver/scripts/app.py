@@ -4,32 +4,26 @@
 """
 
 import rospy
-
 from flask import Flask, send_file
 from flask_restful import Resource, Api
 import io
-
-# from common.image_collector import Collector
-# from common.device_maker import CameraDevice
 import os 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 from resources.status import Status
+from resources.cameras import Cameras
 from resources.preview import Preview
-# from resources.rgb import RGB
-# from resources.depth import Depth
-# from resources.mono import Mono
-
-
+# from resources.biomap import Biomap
+# from resources.segmentation import Segmentation
 
 def register_endpoints(api):
   api.add_resource(Status, '/status', '/status/<string:action>')
-  api.add_resource(Preview, '/preview')
-#   api.add_resource(RGB, '/rgb')
-#   api.add_resource(Depth, '/depth')
-#   api.add_resource(Mono, '/mono', '/mono/<string:side>')
+  api.add_resource(Cameras, '/cameras')
+  api.add_resource(Preview, '/preview/<string:camera_id>')
+  # api.add_resource(Segmentation, '/segmentation/<string:camera_id>')
+  # api.add_resource(Biomap, '/biomap')
 
-def create_app(debug=True):
+def create_app():
     # Create app
     app = Flask(__name__)
 
@@ -40,9 +34,9 @@ def create_app(debug=True):
 
     return app
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
+  app = create_app()
+  app.run(debug=True)
 
-#     rospy.init_node("flask_app_node")
-    # os.system("roslaunch pm3d_system_config system_start.launch")
 
     

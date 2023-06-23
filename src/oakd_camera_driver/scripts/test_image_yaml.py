@@ -6,7 +6,6 @@ import os
 import cv2
 import glob
 import yaml 
-
 import roslib; roslib.load_manifest('oakd_camera_driver')
 import rospy
 import rospkg

@@ -1,33 +1,44 @@
 #!/usr/bin/env python3
-from flask_restful import Resource
+from flask import Flask, request, jsonify
+from flask_restful import Resource, reqparse
 import os 
-# from common.device_maker import CameraDevice
-# from common.image_collector import Collector
+import time
 
 class Status(Resource):
-    def get(self, action):
-        if action == 'start':
-            # cd = CameraDevice()
-            # c = Collector()
-           
-            # if cd.status == 'inactive':
-            #     # cd.upload_pipeline()
-            #     # c.initialize_queues(cd)
-           
+
+    def post(self, action):
+
+        parser = reqparse.RequestParser()
+        parser.add_argument("TypeOfCrop", type = str)
+        parser.add_argument("TypeOfCashCrop",type=str)
+        parser.add_argument("TypeOfCoverCrops",type=str)
+
+        data = parser.parse_args()
+
+        type_of_crop = data['TypeOfCrop']
+        type_of_cash_crop = data['TypeOfCashCrop']
+        type_of_cover_crop = data['TypeOfCoverCrops']
+        
+        if action == 'start':      
+            start_time= time.time()
             os.system("roslaunch pm3d_system_config system_start.launch")
             print("Starting ros")
-            return {'status': "Successful start"}, 200
-            # else:
-            #     return {'status': 'error', 'info': 'pipeline already uploaded!'}, 400
+            print(data)
+            response =  {
+                "status": "Successful start",
+                "args": data,
+                # 'args': {'TypeOfCrop': type_of_crop,
+                # 'TypeOfCashCrop': type_of_cash_crop,
+                # 'TypeOfCoverCrops':type_of_cover_crop},
+                "time_elapsed":  time.time() - start_time
+                }
+            return response, 200
 
         elif action == 'stop':
-        #     # cd = CameraDevice()
-        #     if cd.status == 'active':
-        #         # cd.close_pipeline()
+
             os.system("roslaunch pm3d_system_config system_shutdown.launch")
             return {'status': "Successful stop"}, 200
-        #     else:
-        #         return {'status': 'error', 'info': 'pipeline not uploaded!'}, 400
 
         else:
             return {'status': 'error', 'info': 'invalid option specified. use start or stop!'}, 400
+        

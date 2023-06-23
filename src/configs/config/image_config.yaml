@@ -5,21 +5,28 @@ camera_1:
 camera_2:
   node_name: "camera_2"
   camera_id: 2
-  ip: "169.254.54.201"
+  ip: "169.254.54.190"
 camera_3:
   node_name: "camera_3"
   camera_id: 3
-  ip: "169.254.54.202"
+  ip: "169.254.54.196"
 camera_4:
   node_name: "camera_4"
   camera_id: 4
-  ip: "169.254.54.203"
+  ip: "169.254.54.205"
 camera_5:
   node_name: "camera_5"
   camera_id: 5
-  ip: "169.254.54.204"
+  ip: "169.254.54.191"
 camera_6:
   node_name: "camera_6"
   camera_id: 6
-  ip: "169.254.54.205"
-
+  ip: "169.254.54.192"
+camera_7:
+  node_name: "camera_7"
+  camera_id: 7
+  ip: "169.254.54.193"
+camera_8:
+  node_name: "camera_8"
+  camera_id: 8
+  ip: "169.254.54.194"

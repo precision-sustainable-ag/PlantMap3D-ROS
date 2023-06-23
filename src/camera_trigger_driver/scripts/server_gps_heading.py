@@ -18,8 +18,6 @@ class GPSHeadingInterpreter():
         
 
     def compute_heading(self,diff_northing, diff_easting):
-
-        
         gps_heading_1 = math.atan2(diff_easting,diff_northing)
         gps_heading = math.degrees(gps_heading_1)
         

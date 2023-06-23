@@ -21,6 +21,8 @@ import glob
 import os, sys
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
+from IPython import embed
+
 class PM3DCameraDataPublisher():
     """
     This class is a driver for streaming the PM3DCamera Data driver for oakd cameras.
@@ -57,6 +59,9 @@ class PM3DCameraDataPublisher():
         self.pipeline = dai.Pipeline()
 
         self.pipeline.setOpenVINOVersion(version=dai.OpenVINO.VERSION_2021_4)
+
+        self.camera_connected = False
+        self.cam = dai.DeviceInfo(ip)
         
         print("Creating color camera node...")
         self.RGB_Node = self.pipeline.createColorCamera()
@@ -110,7 +115,7 @@ class PM3DCameraDataPublisher():
         self.__segmentationpath = rospack_datapath.get_path('data_saver_driver') + '/camera_data/segmentation/'
         
         self.shutdown_flag = False
-        self.cam = dai.DeviceInfo(ip)
+
         
     def __shutdown(self):
 
@@ -211,4 +216,5 @@ if __name__ == "__main__":
     cmd_rec = sys.argv[1:]
     seg_pipeline = PM3DCameraDataPublisher(cmd_rec[0],cmd_rec[1],cmd_rec[2])
     # seg_pipeline.enable_camera()
-    seg_pipeline.run_threads()
+    print(seg_pipeline.check_connection())
+    # seg_pipeline.run_threads()

@@ -54,7 +54,7 @@ if __name__ == '__main__':
                         gps_msg.status.service = NavSatStatus.SERVICE_GPS
                         gps_msg.header.stamp = rospy.Time.now()
 
-                        rospy.loginfo(f"Printing Lat : {gps_msg.latitude} and Lon : {gps_msg.longitude}")
+                        # rospy.loginfo(f"Printing Lat : {gps_msg.latitude} and Lon : {gps_msg.longitude}")
                         # Publish the NavSatFix message
                         gps_pub.publish(gps_msg)
                         
