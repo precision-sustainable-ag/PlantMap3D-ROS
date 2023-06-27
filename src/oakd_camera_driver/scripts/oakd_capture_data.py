@@ -21,8 +21,6 @@ import glob
 import os, sys
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-from IPython import embed
-
 class PM3DCameraDataPublisher():
     """
     This class is a driver for streaming the PM3DCamera Data driver for oakd cameras.

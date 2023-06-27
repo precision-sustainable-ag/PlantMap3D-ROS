@@ -13,15 +13,15 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 from resources.status import Status
 from resources.cameras import Cameras
 from resources.preview import Preview
-# from resources.biomap import Biomap
-# from resources.segmentation import Segmentation
+from resources.biomap import Biomap
+from resources.segmentation import Segmentation
 
 def register_endpoints(api):
   api.add_resource(Status, '/status', '/status/<string:action>')
   api.add_resource(Cameras, '/cameras')
   api.add_resource(Preview, '/preview/<string:camera_id>')
-  # api.add_resource(Segmentation, '/segmentation/<string:camera_id>')
-  # api.add_resource(Biomap, '/biomap')
+  api.add_resource(Segmentation, '/segmentation/<string:camera_id>')
+  api.add_resource(Biomap, '/biomap')
 
 def create_app():
     # Create app
