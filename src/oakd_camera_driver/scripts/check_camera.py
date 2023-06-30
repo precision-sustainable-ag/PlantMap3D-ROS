@@ -8,7 +8,7 @@ def check_camera_connection(ip_address):
 
     if ret == 0:
         # If the device connection is successful, the camera is connected
-        print("Camera is connected.")
+        print("\n--------Camera is connected.---------\n")
         return True
     else:
         # If an error occurs during the connection, the camera is not connected

@@ -11,9 +11,17 @@ RUN apt-get update \
  && apt-get install -y --no-install-recommends ros-noetic-desktop-full  
 RUN apt-get install -y --no-install-recommends python3-rosdep
 RUN apt-get update && apt-get install -y \
-    python3-pip  
-RUN apt-get update && apt-get install -y ros-noetic-catkin-virtualenv
+    python3-pip  \ 
+    git \
+    iputils-ping
+RUN apt-get update && apt-get install -y ros-noetic-catkin-virtualenv \
+    ros-noetic-nmea-navsat-driver \
+    libgps-dev
 
+# WORKDIR /app
+RUN git clone https://github.com/luxonis/depthai.git
+# WORKDIR /app/depthai
+# RUN pip install -r requirements.txt
 
 RUN /bin/bash -c "source /opt/ros/noetic/setup.bash"
 RUN echo "source /opt/ros/noetic/setup.bash" >> ~/.bashrc
@@ -24,10 +32,8 @@ WORKDIR /ROS_ws
 RUN /bin/bash -c '. /opt/ros/noetic/setup.bash; cd /ROS_ws ; catkin_make'
 
 RUN /bin/bash -c "source devel/setup.bash" 
-RUN echo "source ~/ROS_ws/devel/setup.bash" >> ~/.bashrc
+RUN echo "source /ROS_ws/devel/setup.bash" >> ~/.bashrc
+RUN pip install -r requirements.txt
 
-# RUN pip install -r requirements.txt
-
-
-
-
+# sudo docker build . -t <image_name>
+# sudo docker run -it --name <conatiner_name> --network=host --privileged -v /dev/:/dev/  -v /home/plantmap3d/Desktop/PlantMap3D-ROS/:/ROS_ws <image_name> 

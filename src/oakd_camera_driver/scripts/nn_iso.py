@@ -29,7 +29,7 @@ ISO = np.logspace(1.25, 2, num=nISO+1, endpoint=True, base=40, dtype=int)
 SS = [313, 400, 500, 625, 800, 1000]
 T = 15
 B = 12
-dT = 0    #1.99
+dT = 1    #1.99
 nQ = 4
 w = np.flip(np.logspace(1, 0, num=nQ, endpoint=True))
 
@@ -64,13 +64,11 @@ class PM3DCameraDataPublisher():
         self.pipeline = dai.Pipeline()
         self.pipeline.setOpenVINOVersion(version=dai.OpenVINO.VERSION_2021_4)
 
-        self.__blob_path = "/model.blob"
+        self.__blob_path = "/larger.blob"
         self.nn_shape = (1024,1024)
         self.nn_path = os.path.join(os.getcwd() +'/models' + self.__blob_path)
         print(self.nn_path)
 
-        
-        print("Creating color camera node...")
         self.RGB_Node = self.pipeline.createColorCamera()
         self.RGB_Node.setResolution(dai.ColorCameraProperties.SensorResolution.THE_12_MP)
         self.RGB_Node.setBoardSocket(dai.CameraBoardSocket.RGB)
@@ -84,7 +82,6 @@ class PM3DCameraDataPublisher():
         self.RGB_Out=self.pipeline.create(dai.node.XLinkOut)
         self.RGB_Out.setStreamName("rgb")
         self.RGB_Node.video.link(self.RGB_Out.input)
-        print("Done")
 
         self.nn_node = self.pipeline.create(dai.node.NeuralNetwork)
         self.nn_node.setBlobPath(self.nn_path)
@@ -96,7 +93,6 @@ class PM3DCameraDataPublisher():
         self.seg_out.setStreamName("seg out")
         self.nn_node.out.link(self.seg_out.input)
 
-        print("Creating depth channel...")
         self.monoL = self.pipeline.create(dai.node.MonoCamera)
         self.monoL.setResolution(dai.MonoCameraProperties.SensorResolution.THE_800_P)
         self.monoL.setBoardSocket(dai.CameraBoardSocket.LEFT)
@@ -112,9 +108,7 @@ class PM3DCameraDataPublisher():
         self.depth.setSubpixel(False)
         self.monoL.out.link(self.depth.left)
         self.monoR.out.link(self.depth.right)
-        print("Done")
-        
-        print("Seting up right mono camera...")
+
         self.xoutRight = self.pipeline.create(dai.node.XLinkOut)
         self.xoutRight.setStreamName("right")
         self.monoR.out.link(self.xoutRight.input)
@@ -127,12 +121,10 @@ class PM3DCameraDataPublisher():
         self.depth_out.setStreamName("depth")
         self.depth.depth.link(self.depth_out.input)
 
-        print("Done")
-
-        fps = 1
-        self.RGB_Node.setFps(2)
-        self.monoR.setFps(2)
-        self.monoL.setFps(2)
+        fps = 2
+        self.RGB_Node.setFps(fps)
+        self.monoR.setFps(fps)
+        self.monoL.setFps(fps)
 
         self.RGB_Node.setIsp3aFps(1)
         self.monoR.setIsp3aFps(1)
@@ -159,13 +151,23 @@ class PM3DCameraDataPublisher():
         self.shutdown_flag = False
         self.cam = dai.DeviceInfo(ip)
         self.bridge =  CvBridge()
+
+        print("\n\n !!!!! CAMERA SETUP COMPLETE !!!!! \n\n")
         
     def __shutdown(self):
 
         self.shutdown_flag = True
 
     def enable_camera(self):
-        with dai.Device(self.pipeline,self.cam) as self.device:
+
+        config = dai.Device.Config()
+        config.board.network.mtu = 9000
+        config.board.network.xlinkTcpNoDelay = False
+        with dai.Device(config, self.cam) as self.device:
+            self.device.startPipeline(self.pipeline)
+
+
+        # with dai.Device(self.pipeline,self.cam) as self.device:
             # self.device.setLogLevel(dai.LogLevel.DEBUG)
             # self.device.setLogOutputLevel(dai.LogLevel.DEBUG)
         ## Start the camera stream
@@ -188,15 +190,17 @@ class PM3DCameraDataPublisher():
             self.fetchdiffs = np.array([])
             stamp = time.time()
 
-            for z in range(10):
+            for z in range(20):
                 c, r, d = rgb_queue.get(), right_queue.get(), depth_queue.get()
             for z in range(10):
                 c, r, d = rgb_queue.get(), right_queue.get(), depth_queue.get()
                 img = c.getCvFrame()
                 self.add_frame(img, True)
                 self.add_frame(r.getFrame(), False)
+                # if( time.time()-stamp > dT ):
                 self.iso, self.ss = self.adjust_exposure(self.iso, self.ss, True)
                 self.miso, self.mss = self.adjust_exposure(self.miso, self.mss, False)
+                    # stamp = time.time()
 
             while True:
                 strt = dai.Clock.now()
@@ -209,14 +213,16 @@ class PM3DCameraDataPublisher():
                 # rgb_img = np.array(rgb_data.getCvFrame())
                 depth_in = depth_queue.get()
                 depth_out = depth_in.getFrame()
-                print("\n------- FETCHED IMAGE! ---------\n")
+                # print("\n------- FETCHED IMAGE! ---------\n")
                 # depth_img = np.array(depth_data.getCvFrame())
                 
                 segmentation_labels = segmentation_queue.get()
                 fetchLatencyMs = (dai.Clock.now() - strt).total_seconds() * 1000
                 self.fetchdiffs = np.append(self.fetchdiffs, fetchLatencyMs)
 
-                seg_labels = (np.array(segmentation_labels.getFirstLayerFp16()).reshape(128,128)).astype(np.uint8)
+                # seg_labels = (np.array(segmentation_labels.getFirstLayerFp16()).reshape(128,128)).astype(np.uint8)
+                seg_labels = (np.array(segmentation_labels.getFirstLayerFp16()).reshape(64,64)).astype(np.uint8)
+                # seg_labels = (np.array(segmentation_labels.getFirstLayerInt32()).reshape(1024,1024)).astype(np.uint8)
 
                 self.add_frame(rgb_out, True)
                 self.add_frame(right_out, False)
@@ -227,11 +233,11 @@ class PM3DCameraDataPublisher():
                     stamp = time.time()
 
                 
-                print("\n------- AE ADJUSTED! ---------\n")
+                # print("\n------- AE ADJUSTED! ---------\n")
 
                 if self.test_flag:
                     print("\n------- TAKING IMAGE! ---------\n")
-                    last = dai.Clock.now()
+                    # last = dai.Clock.now()
                     # Preparing PM3DCameraData
                     time_stamp = rospy.Time.now()
                     header = Header()
@@ -241,10 +247,10 @@ class PM3DCameraDataPublisher():
                     self.camera_data_msg.rgb_data = self.bridge.cv2_to_imgmsg(rgb_out,"bgr8")
                     self.camera_data_msg.depth_map = self.bridge.cv2_to_imgmsg(depth_out,"mono16")
                     self.camera_data_msg.segmentation_labels = self.bridge.cv2_to_imgmsg(seg_labels,"mono8")
-                    print("\n------- CONVERTED IMAGE! ---------\n")
+                    # print("\n------- CONVERTED IMAGE! ---------\n")
 
-                    latencyMs = (dai.Clock.now() - last).total_seconds() * 1000
-                    self.diffs = np.append(self.diffs, latencyMs)
+                    # latencyMs = (dai.Clock.now() - last).total_seconds() * 1000
+                    # self.diffs = np.append(self.diffs, latencyMs)
 
                     #self.camera_data_msg.rgb_dims = rgb_out.shape 
                     #self.camera_data_msg.depth_map_dims = depth_out.shape 
@@ -262,13 +268,14 @@ class PM3DCameraDataPublisher():
                     self.camera_data_msg.longitude = cam_location_response.newgpscoords[1]
                     self.camera_data_msg.gps_heading = self.gps_data.gps_heading
 
-                    last = dai.Clock.now()
+                    # last = dai.Clock.now()
                     self.pub.publish(self.camera_data_msg)
                     self.image_pub.publish(self.camera_data_msg.rgb_data)
-                    print("\n------- PUBLISHED IMAGE! ---------\n")
-                    latencyMs = (dai.Clock.now() - last).total_seconds() * 1000
-                    self.diffs2 = np.append(self.diffs2, latencyMs)
+                    # print("\n------- PUBLISHED IMAGE! ---------\n")
+                    # latencyMs = (dai.Clock.now() - last).total_seconds() * 1000
+                    # self.diffs2 = np.append(self.diffs2, latencyMs)
                     self.test_flag = False
+
                     # rospy.loginfo(f"{self.camera_data_msg}")
                     # cv2.imshow(f"{self.node_name}",rgb_img)
                     # last = dai.Clock.now()
@@ -279,7 +286,8 @@ class PM3DCameraDataPublisher():
                     # latencyMs = (dai.Clock.now() - last).total_seconds() * 1000
                     # self.diffs3 = np.append(self.diffs3, latencyMs)
 
-                    print("\n------- TOOK IMAGE! ---------\n")
+                    # print("\n------- TOOK IMAGE! ---------\n")
+                
                 latencyMs = (dai.Clock.now() - strt).total_seconds() * 1000
                 self.diffs3 = np.append(self.diffs3, latencyMs)
 
@@ -287,10 +295,11 @@ class PM3DCameraDataPublisher():
                 if cv2.waitKey(1) == ord('q') or (self.shutdown_flag == True):
                     # shutdown camera pipeline
                     break
-            print('\n\nFlatten:\n\n', self.diffs, '\n\n')
-            print('\nPublish:\n', self.diffs2, '\n\n')
-            print('\nFull Loop:\n', self.diffs3, '\n\n')
+            # print('\nConversion:\n', self.diffs, '\n\n')
+            # print('\nPublish:\n', self.diffs2, '\n\n')
             print('\nFetch:\n', self.fetchdiffs, '\n\n')
+            print('\nFull Loop:\n', self.diffs3, '\n\n')
+            
     def setisoss(self, fi, fs, col):
         ctr1 = dai.CameraControl()
         ctr1.setManualExposure(SS[fs], ISO[fi])
