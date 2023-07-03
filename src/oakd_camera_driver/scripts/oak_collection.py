@@ -79,6 +79,8 @@ class PM3DCameraDataPublisher():
         # script = self.pipeline.createScript()
         # self.RGB_Node.isp.link(script.inputs['isp'])
 
+        self.RGB_Node.setVideoSize(1024, 1024)
+
         # script.setScript("""
         #     import time
         #     while True:
@@ -91,24 +93,27 @@ class PM3DCameraDataPublisher():
 
 
         # modifying isp frame and then feeding it to encoder
-        self.manip = self.pipeline.create(dai.node.ImageManip)
-        self.manip.initialConfig.setCropRect(0.006, 0, 1, 1)
+        # self.manip = self.pipeline.create(dai.node.ImageManip)
+        # self.manip.initialConfig.setCropRect(0.006, 0, 1, 1)
         # self.manip.setNumFramesPool(2)
-        self.manip.setMaxOutputFrameSize(18385920)
-        self.manip.initialConfig.setFrameType(dai.ImgFrame.Type.NV12)
-        self.RGB_Node.isp.link(self.manip.inputImage)
+        # self.manip.setMaxOutputFrameSize(18385920)
+        # self.manip.initialConfig.setFrameType(dai.ImgFrame.Type.NV12)
+        # self.RGB_Node.isp.link(self.manip.inputImage)
         # script.outputs['frame'].link(self.manip.inputImage)
-        self.manip.inputImage.setBlocking(False)
+        # self.manip.inputImage.setBlocking(False)
 
         self.videoEnc = self.pipeline.create(dai.node.VideoEncoder)
         self.videoEnc.setDefaultProfilePreset(1, dai.VideoEncoderProperties.Profile.MJPEG)
-        self.manip.out.link(self.videoEnc.input)
+        # self.manip.out.link(self.videoEnc.input)
+        self.RGB_Node.video.link(self.videoEnc.input)
         self.videoEnc.input.setBlocking(False)
 
         self.RGB_Out=self.pipeline.create(dai.node.XLinkOut)
         self.RGB_Out.setStreamName("rgb")
         self.videoEnc.bitstream.link(self.RGB_Out.input)
         print("Done")
+
+        
 
         print("Creating depth channel...")
         self.monoL = self.pipeline.create(dai.node.MonoCamera)
@@ -166,14 +171,14 @@ class PM3DCameraDataPublisher():
 
         print("Done")
 
-        fps = 8
+        fps = 3
         self.RGB_Node.setFps(fps)
         self.monoR.setFps(fps)
         self.monoL.setFps(fps)
 
-        self.RGB_Node.setIsp3aFps(2)
-        self.monoR.setIsp3aFps(2)
-        self.monoL.setIsp3aFps(2)
+        # self.RGB_Node.setIsp3aFps(2)
+        # self.monoR.setIsp3aFps(2)
+        # self.monoL.setIsp3aFps(2)
 
         self.xin1 = self.pipeline.create(dai.node.XLinkIn)
         self.xin1.setNumFrames(1)   

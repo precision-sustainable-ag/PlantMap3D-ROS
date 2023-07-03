@@ -47,7 +47,7 @@ if __name__ == '__main__':
     for node_name in node_names :
         cameraid = node_data[node_name]['camera_id']
         camera_ip = node_data[node_name]['ip']
-        process_file = "nn_iso.py"
+        process_file = "oak_collection.py"
         if check_camera_connection(camera_ip):
             camera_data.append(["python3",process_file,camera_ip,node_name,str(cameraid)])
     

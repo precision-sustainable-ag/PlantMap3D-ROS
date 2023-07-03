@@ -13,7 +13,6 @@ __path = rospack.get_path('configs') + '/config/image_config.yaml'
 from check_camera import check_camera_connection
 
 
-
 try:
     if not os.path.exists(__path):
         raise FileNotFoundError(f"File not found at path : {__path}")
@@ -37,7 +36,8 @@ for node_name in node_names:
         new_path = parent_dir + f"/images_{camera_id}"
         if not os.path.exists(new_path):
             os.makedirs(new_path)
-        command = ["rosrun", "image_view", "image_saver", f"image:=/camera{camera_id}_image"]
+        # command = ["rosrun", "image_view", "image_saver", f"image:=/camera{camera_id}_image"]
+        command = ["rosrun", "image_view", "image_view", f"image:=/camera{camera_id}_image"]
         processes += [subprocess.Popen(command, cwd=new_path)]
 for p in processes:
     p.wait()

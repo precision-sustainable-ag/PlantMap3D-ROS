@@ -72,16 +72,42 @@ class PM3DCameraDataPublisher():
         self.RGB_Node = self.pipeline.createColorCamera()
         self.RGB_Node.setResolution(dai.ColorCameraProperties.SensorResolution.THE_12_MP)
         self.RGB_Node.setBoardSocket(dai.CameraBoardSocket.RGB)
-        self.RGB_Node.setVideoSize(2048,2048)
         self.RGB_Node.setPreviewSize(1024,1024)
+        self.RGB_Node.setVideoSize(2048, 2048)
         self.RGB_Node.setInterleaved(False)
         # self.RGB_Node.setSharpness(0)     # range: 0..4, default: 1    
         # self.RGB_Node.setLumaDenoise(0)   # range: 0..4, default: 1    
         # self.RGB_Node.setChromaDenoise(4) # range: 0..4, default: 1
+
+        script = self.pipeline.createScript()
+        self.RGB_Node.video.link(script.inputs['isp'])
+        script.inputs['isp'].setBlocking(False)
+
+        script.setScript("""
+            import datetime
+            import time
+            mark = datetime.datetime.now()
+            while True:
+                frame = node.io['isp'].get()
+                now = datetime.datetime.now()
+                if (now - mark).total_seconds() > 5:
+                    mark = now
+                    num = frame.getSequenceNum()
+                    node.io['frame'].send(frame)
+                time.sleep(0.01)
+        """)
+
+        
+        # manip = self.pipeline.create(dai.node.ImageManip)
+        # manip.initialConfig.setResize(400,400)
+        # manip.initialConfig.setFrameType(dai.ImgFrame.Type.BGR888p)
+        # self.RGB_Node.preview.link(manip.inputImage)
         
         self.RGB_Out=self.pipeline.create(dai.node.XLinkOut)
         self.RGB_Out.setStreamName("rgb")
-        self.RGB_Node.video.link(self.RGB_Out.input)
+        # self.RGB_Node.video.link(self.RGB_Out.input)
+        # manip.out.link(self.RGB_Out.input)
+        script.outputs['frame'].link(self.RGB_Out.input)
 
         self.nn_node = self.pipeline.create(dai.node.NeuralNetwork)
         self.nn_node.setBlobPath(self.nn_path)
@@ -121,14 +147,14 @@ class PM3DCameraDataPublisher():
         self.depth_out.setStreamName("depth")
         self.depth.depth.link(self.depth_out.input)
 
-        fps = 2
+        fps = 3
         self.RGB_Node.setFps(fps)
         self.monoR.setFps(fps)
         self.monoL.setFps(fps)
 
-        self.RGB_Node.setIsp3aFps(1)
-        self.monoR.setIsp3aFps(1)
-        self.monoL.setIsp3aFps(1)
+        #self.RGB_Node.setIsp3aFps(1)
+        #self.monoR.setIsp3aFps(1)
+        #self.monoL.setIsp3aFps(1)
 
         self.xin1 = self.pipeline.create(dai.node.XLinkIn)
         self.xin1.setNumFrames(1)   
@@ -161,7 +187,7 @@ class PM3DCameraDataPublisher():
     def enable_camera(self):
 
         config = dai.Device.Config()
-        config.board.network.mtu = 9000
+        #config.board.network.mtu = 9000
         config.board.network.xlinkTcpNoDelay = False
         with dai.Device(config, self.cam) as self.device:
             self.device.startPipeline(self.pipeline)
@@ -173,8 +199,8 @@ class PM3DCameraDataPublisher():
         ## Start the camera stream
 
             segmentation_queue = self.device.getOutputQueue("seg out",10,False)
-            left_queue = self.device.getOutputQueue(name="left", maxSize=2, blocking=False)
             depth_queue = self.device.getOutputQueue("depth",1,False)
+            left_queue = self.device.getOutputQueue(name="left", maxSize=2, blocking=False)
             right_queue = self.device.getOutputQueue("right",1,False)
             rgb_queue = self.device.getOutputQueue("rgb",1,False)
             self.qControl1 = self.device.getInputQueue(name="controlr")  
@@ -187,44 +213,82 @@ class PM3DCameraDataPublisher():
             self.diffs = np.array([])
             self.diffs2 = np.array([])
             self.diffs3 = np.array([])
+            self.diffs4 = np.array([])
+            self.fulldiffs = np.array([])
             self.fetchdiffs = np.array([])
             stamp = time.time()
 
             for z in range(20):
-                c, r, d = rgb_queue.get(), right_queue.get(), depth_queue.get()
+                # c, r, d = rgb_queue.get(), right_queue.get(), depth_queue.get()
+                c, r, d = rgb_queue.tryGet(), right_queue.get(), depth_queue.get()
+                # r, d = right_queue.get(), depth_queue.get()
+                # d = depth_queue.get()
             for z in range(10):
-                c, r, d = rgb_queue.get(), right_queue.get(), depth_queue.get()
-                img = c.getCvFrame()
-                self.add_frame(img, True)
+                c, r, d = rgb_queue.tryGet(), right_queue.get(), depth_queue.get()
+                if c is not None:
+                    rgb_out = c.getCvFrame()
+                    self.add_frame(rgb_out, True)
                 self.add_frame(r.getFrame(), False)
-                # if( time.time()-stamp > dT ):
-                self.iso, self.ss = self.adjust_exposure(self.iso, self.ss, True)
-                self.miso, self.mss = self.adjust_exposure(self.miso, self.mss, False)
-                    # stamp = time.time()
+                if( time.time()-stamp > dT ):
+                    self.iso, self.ss = self.adjust_exposure(self.iso, self.ss, True)
+                    self.miso, self.mss = self.adjust_exposure(self.miso, self.mss, False)
+                    stamp = time.time()
 
+            rgb_out = None
+            # right_out = None
+            # depth_out = None
             while True:
                 strt = dai.Clock.now()
 
+                # rgb_in = rgb_queue.get()
+                # rgb_out = rgb_in.getCvFrame()
+
+                rgb_in = rgb_queue.tryGet()
+                if rgb_in is not None:
+                    rgb_out = rgb_in.getCvFrame()
+
+                # fetchLatencyMs = (dai.Clock.now() - strt).total_seconds() * 1000
+                # self.fetchdiffs = np.append(self.fetchdiffs, fetchLatencyMs)
+
+                # last = dai.Clock.now()
                 right_in = right_queue.get()
                 right_out = right_in.getFrame()
-                rgb_in = rgb_queue.get()
-                rgb_out = rgb_in.getCvFrame()
+                # LatencyMs = (dai.Clock.now() - last).total_seconds() * 1000
+                # self.diffs = np.append(self.diffs, LatencyMs)
+                
+                # last = dai.Clock.now()
                 left_in = left_queue.get()
+                # latencyMs = (dai.Clock.now() - last).total_seconds() * 1000
+                # self.diffs2 = np.append(self.diffs2, latencyMs)
                 # rgb_img = np.array(rgb_data.getCvFrame())
+
+                # last = dai.Clock.now()
                 depth_in = depth_queue.get()
                 depth_out = depth_in.getFrame()
+                # latencyMs = (dai.Clock.now() - last).total_seconds() * 1000
+                # self.diffs3 = np.append(self.diffs3, latencyMs)
                 # print("\n------- FETCHED IMAGE! ---------\n")
                 # depth_img = np.array(depth_data.getCvFrame())
                 
+                last = dai.Clock.now()
                 segmentation_labels = segmentation_queue.get()
-                fetchLatencyMs = (dai.Clock.now() - strt).total_seconds() * 1000
-                self.fetchdiffs = np.append(self.fetchdiffs, fetchLatencyMs)
+                latencyMs = (dai.Clock.now() - last).total_seconds() * 1000
+                self.diffs4 = np.append(self.diffs4, latencyMs)
 
+                print("segmentation_labels", sys.getsizeof(segmentation_labels))
+                
+
+                # original model
                 # seg_labels = (np.array(segmentation_labels.getFirstLayerFp16()).reshape(128,128)).astype(np.uint8)
+                # larger model
                 seg_labels = (np.array(segmentation_labels.getFirstLayerFp16()).reshape(64,64)).astype(np.uint8)
+                # smaller model
                 # seg_labels = (np.array(segmentation_labels.getFirstLayerInt32()).reshape(1024,1024)).astype(np.uint8)
 
-                self.add_frame(rgb_out, True)
+                print("seg_labels", sys.getsizeof(segmentation_labels.getFirstLayerFp16()))
+
+                if rgb_out is not None:
+                    self.add_frame(rgb_out, True)
                 self.add_frame(right_out, False)
 
                 if( time.time()-stamp > dT ):
@@ -244,8 +308,8 @@ class PM3DCameraDataPublisher():
                     header.stamp = time_stamp
                     self.camera_data_msg.camera_name = self.camera_name
                     self.camera_data_msg.header = header
-                    self.camera_data_msg.rgb_data = self.bridge.cv2_to_imgmsg(rgb_out,"bgr8")
-                    self.camera_data_msg.depth_map = self.bridge.cv2_to_imgmsg(depth_out,"mono16")
+                    self.camera_data_msg.rgb_data = self.bridge.cv2_to_imgmsg(rgb_out,"bgr8") if rgb_out is not None else None
+                    self.camera_data_msg.depth_map = self.bridge.cv2_to_imgmsg(depth_out,"mono16") if depth_out is not None else None
                     self.camera_data_msg.segmentation_labels = self.bridge.cv2_to_imgmsg(seg_labels,"mono8")
                     # print("\n------- CONVERTED IMAGE! ---------\n")
 
@@ -270,7 +334,7 @@ class PM3DCameraDataPublisher():
 
                     # last = dai.Clock.now()
                     self.pub.publish(self.camera_data_msg)
-                    self.image_pub.publish(self.camera_data_msg.rgb_data)
+                    if rgb_out is not None: self.image_pub.publish(self.camera_data_msg.rgb_data)
                     # print("\n------- PUBLISHED IMAGE! ---------\n")
                     # latencyMs = (dai.Clock.now() - last).total_seconds() * 1000
                     # self.diffs2 = np.append(self.diffs2, latencyMs)
@@ -289,16 +353,18 @@ class PM3DCameraDataPublisher():
                     # print("\n------- TOOK IMAGE! ---------\n")
                 
                 latencyMs = (dai.Clock.now() - strt).total_seconds() * 1000
-                self.diffs3 = np.append(self.diffs3, latencyMs)
+                self.fulldiffs = np.append(self.fulldiffs, latencyMs)
 
 
                 if cv2.waitKey(1) == ord('q') or (self.shutdown_flag == True):
                     # shutdown camera pipeline
                     break
-            # print('\nConversion:\n', self.diffs, '\n\n')
-            # print('\nPublish:\n', self.diffs2, '\n\n')
-            print('\nFetch:\n', self.fetchdiffs, '\n\n')
-            print('\nFull Loop:\n', self.diffs3, '\n\n')
+            # print('\nRGB Fetch:\n', self.fetchdiffs, '\n\n')
+            # print('\nRight Fetch:\n', self.diffs, '\n\n')
+            # print('\nLeft Fetch:\n', self.diffs2, '\n\n')
+            # print('\nDepth Fetch:\n', self.diffs3, '\n\n')
+            print('\nSeg Fetch:\n', self.diffs4, '\n\n')
+            print('\nFull Loop:\n', self.fulldiffs, '\n\n')
             
     def setisoss(self, fi, fs, col):
         ctr1 = dai.CameraControl()
