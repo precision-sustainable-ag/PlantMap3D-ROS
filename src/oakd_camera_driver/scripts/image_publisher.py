@@ -10,13 +10,15 @@ from rospy.numpy_msg import numpy_msg
 from oakd_camera_driver.msg import PM3DCameraData
 from camera_trigger_driver.msg import PM3DGPSData
 from std_msgs.msg import Header
+from std_msgs.msg import Bool
+from sensor_msgs.msg import Image
 from camera_location_module.srv import PM3DCameraLocation, PM3DCameraLocationRequest
 import numpy as np
 import cv2
 import os 
 import sys
 import glob
-
+from cv_bridge import CvBridge
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -30,8 +32,10 @@ class TestImagePublisher():
         self.node_name = node_name
         rospy.init_node(node_name)
         rospy.wait_for_service("camera_location_service")
-        self.__topic_name = 'camera_data'
+        self.__topic_name = 'camera{}_data'.format(cameraid)
+        self.__image_topic_name = 'camera{}_image'.format(cameraid)
         self.pub = rospy.Publisher(self.__topic_name,numpy_msg(PM3DCameraData),queue_size=10)
+        self.image_pub = rospy.Publisher(self.__image_topic_name,numpy_msg(Image),queue_size=6)
         self.sub = None
         self.cam_location = rospy.ServiceProxy("camera_location_service",PM3DCameraLocation)
         self.cam_location_req = PM3DCameraLocationRequest()
@@ -49,6 +53,7 @@ class TestImagePublisher():
         self.__depthpath = rospack_datapath.get_path('data_saver_driver') + '/camera_data/depth/'
         self.__segmentationpath = rospack_datapath.get_path('data_saver_driver') + '/camera_data/segmentation/'
 
+        self.bridge =  CvBridge()
         try :
 
             def get_image_list(image_files):
@@ -97,16 +102,23 @@ class TestImagePublisher():
             header.stamp = time_stamp
             msg = PM3DCameraData()
             msg.header = header
-            msg.camera_name = self.camera_name
-            msg.rgb_data = array_data.flatten().tolist()
-            msg.depth_map = depth_data.flatten().tolist()
-            msg.segmentation_labels = segmentation_label_arr.flatten().tolist()
+            # msg.camera_name = self.camera_name
+            # msg.rgb_data = array_data.flatten().tolist()
+            # msg.depth_map = depth_data.flatten().tolist()
+            # msg.segmentation_labels = segmentation_label_arr.flatten().tolist()
 
-            msg.rgb_dims = array_data.shape
-            msg.depth_map_dims = depth_data.shape
-            msg.segmentation_label_dims = segmentation_label_arr.shape
-            msg.height_map_dims = depth_data.shape
+            # msg.rgb_dims = array_data.shape
+            # msg.depth_map_dims = depth_data.shape
+            # msg.segmentation_label_dims = segmentation_label_arr.shape
+            # msg.height_map_dims = depth_data.shape
             # msg.camera_id = self.get_camera_id(self.node_name)
+            
+            msg.camera_name = self.camera_name
+            msg.header = header
+            msg.rgb_data = self.bridge.cv2_to_imgmsg(array_data,"bgr8") if array_data is not None else None
+            msg.depth_map = self.bridge.cv2_to_imgmsg(depth_data,"mono16") if depth_data is not None else None
+            msg.segmentation_labels = self.bridge.cv2_to_imgmsg(segmentation_label_arr,"mono8")
+            
             msg.camera_id = self.camera_id
             # Updating camera  coordinates based on camera location 
             self.cam_location_req.gpscoords = [data.latitude,data.longitude]
@@ -127,6 +139,7 @@ class TestImagePublisher():
 
             rospy.loginfo(f"Publishing {self.node_name} Data")
             self.pub.publish(msg)
+            self.image_pub.publish(msg.rgb_data)
         else:
             rospy.loginfo("Not Publishing")
 
