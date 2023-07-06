@@ -30,6 +30,7 @@ def biomass_estimator_callback(camera_data):
     # print(f"biomass_estimate : {camera_data.biomass_estimate}")
     # print('-------------------')
     # print(f"biomass_estimate  shape {camera_data.biomass_estimate.shape}")
+    rospy.loginfo(camera_data.biomass_estimate)
     pub = rospy.Publisher('camera_data/biomass_estimate',numpy_msg(PM3DCameraData),queue_size=10)
     pub.publish(camera_data)  
 
