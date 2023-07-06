@@ -32,7 +32,7 @@ class TestImagePublisher():
         self.node_name = node_name
         rospy.init_node(node_name)
         rospy.wait_for_service("camera_location_service")
-        self.__topic_name = 'camera{}_data'.format(cameraid)
+        self.__topic_name = 'camera_data'
         self.__image_topic_name = 'camera{}_image'.format(cameraid)
         self.pub = rospy.Publisher(self.__topic_name,numpy_msg(PM3DCameraData),queue_size=10)
         self.image_pub = rospy.Publisher(self.__image_topic_name,numpy_msg(Image),queue_size=6)
