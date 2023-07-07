@@ -1,64 +1,62 @@
 #!/usr/bin/env python3
 """
 @author: MathewAaron
+
+TO RUN THIS FILE
+
+PlantMap3D/ 
+
+catkin_make run_tests_oakd_camera_driver
 """
-import unittest
+from unittest import TestCase
+import cv2
 import rostest
 import os 
 import time
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-
+import rospkg
 import roslib; roslib.load_manifest('oakd_camera_driver')
 import rospy
 from rospy.numpy_msg import numpy_msg
 from oakd_camera_driver.msg import PM3DCameraData
 from std_msgs.msg import String
-
+from cv_bridge import CvBridge 
+from sensor_msgs.msg import Image
 import numpy as np
 np.random.seed(45)
 
 
-class TestImageSubscriber(unittest.TestCase):
+class TestImageSubscriber(TestCase):
 
-    def setUp(self):
-
-        # initializing dummy camera data
-        rospy.init_node("camera_data_subscriber")
-        self.rgb_data = np.random.randint(0,30,(128,128,3),dtype=np.int64)
-        self.depth_data = np.random.randint(0,30,(128,128,3),dtype=np.int64)
-        self.segmentation_label_arr = np.random.randint(0,4,(128,128,3),dtype=np.int64)
+    def __init__(self, *args) :
+        super(TestImageSubscriber,self).__init__(*args)
         
-        self.subscribed_rgb_data = None
-        self.subscribed_depth_data = None 
-        self.subscribed_segmentation_labels = None 
-        
-        self.subscribed_rgb_data_dims = None 
-        self.subscribed_depth_data_dims = None 
-        self.subscribed_segmentation_data_dims = None
-
-        self.subscribed_data = None
-
         self.success = False
-        self.sub = rospy.Subscriber("camera_1",numpy_msg(PM3DCameraData),callback=self.callback)
-       
-        self.msg = PM3DCameraData()
+        self.bridge = CvBridge() 
 
-    def tearDown(self):
-        self.sub.unregister()
-   
+        rospack_testset = rospkg.RosPack() 
+        
+        self.__test_rgbdatapath = rospack_testset.get_path('oakd_camera_driver') + '/test/rgb/1674584672.191502.jpg'
+        self.__test_depthdatapath = rospack_testset.get_path('oakd_camera_driver') + '/test/depth/1674592342.1574855.png'
+
+        self.__test_segmentationpath = rospack_testset.get_path('oakd_camera_driver') + '/test/segmentation/1674584672.191502.png'
+        rospy.init_node('camera_data_test')
+        self.subscribed_depth_data = None
+        self.subscribed_rgb_data = None 
+        self.subscribed_segmentation_labels = None
+
+        self.sub = rospy.Subscriber("camera_1",numpy_msg(PM3DCameraData),callback=self.callback)
+        self.pub = rospy.Publisher("camera_1",numpy_msg(PM3DCameraData),queue_size=3)
+
+
     def callback(self,data):
         rospy.loginfo("Appending Camera Data")
-        self.subscribed_rgb_data = data.rgb_data
-        self.subscribed_depth_data = data.depth_map
+        
+        self.subscribed_rgb_data = data.rgb_data 
+        self.subscribed_depth_data = data.depth_map 
         self.subscribed_segmentation_labels = data.segmentation_labels
-        self.subscribed_rgb_data_dims = data.rgb_dims
-        self.subscribed_depth_data_dims = data.depth_map_dims
-        self.subscribed_segmentation_data_dims = data.segmentation_label_dims
-
-        
-        self.subscribed_data = data
-        self.success = True
-        
+        self.success = True 
+    
 
 
     def test_check_rgb_data(self):
@@ -66,34 +64,37 @@ class TestImageSubscriber(unittest.TestCase):
         """
             Testing RGB data that is published
         """
-        self.msg.rgb_data = self.rgb_data.flatten().tolist()
+        rgb_msg = PM3DCameraData()
+        
 
-        self.msg.rgb_dims = self.rgb_data.shape
+        rgb_data = cv2.imread(self.__test_rgbdatapath)
 
-        pub = rospy.Publisher("camera_1",numpy_msg(PM3DCameraData),queue_size=10)
+        rgb_msg.rgb_data = self.bridge.cv2_to_imgmsg(rgb_data,"bgr8")
+        
         rospy.sleep(1)
-        pub.publish(self.msg)
+        self.pub.publish(rgb_msg)
         rospy.sleep(1)
-        test_data = self.subscribed_rgb_data.reshape((self.subscribed_rgb_data_dims))
-        rospy.loginfo(f"The variable is  {self.subscribed_rgb_data}")
-        assert((test_data == self.rgb_data).all()), "Arrays are not same"
+        test_rgb_data = self.bridge.imgmsg_to_cv2(self.subscribed_rgb_data)
+
+        # checking rgb
+        assert((test_rgb_data == rgb_data).all()), "Arrays are not same"
 
     def test_check_depth_data(self):
 
         """
             Testing Depth data that is published
         """
+        depth_msg = PM3DCameraData()
+        depthdata = cv2.imread(self.__test_depthdatapath)
         
-        self.msg.depth_map = self.depth_data.flatten().tolist()
-        
-        self.msg.depth_map_dims = self.depth_data.shape
-        pub = rospy.Publisher("camera_1",numpy_msg(PM3DCameraData),queue_size=10)
+        depth_msg.depth_map = self.bridge.cv2_to_imgmsg(depthdata,"bgr8") 
+
         rospy.sleep(1)
-        pub.publish(self.msg)
+        self.pub.publish(depth_msg)
         rospy.sleep(1)
-        test_data = self.subscribed_depth_data.reshape((self.subscribed_depth_data_dims))
-        rospy.loginfo(f"The variable is  {self.subscribed_rgb_data}")
-        assert((test_data == self.depth_data).all()), "Arrays are not same"
+
+        test_data = self.bridge.imgmsg_to_cv2(self.subscribed_depth_data)
+        assert((test_data == depthdata).all()), "Arrays are not same"
 
     def test_check_segmentation_data(self):
 
@@ -101,23 +102,21 @@ class TestImageSubscriber(unittest.TestCase):
             Testing Segmentation data that is published
         """
         
-        self.msg.segmentation_labels = self.segmentation_label_arr.flatten().tolist()
+        segmentation_msg = PM3DCameraData()
+        segmentation_data = cv2.imread(self.__test_segmentationpath)
         
-        self.msg.segmentation_label_dims = self.segmentation_label_arr.shape
-        pub = rospy.Publisher("camera_1",numpy_msg(PM3DCameraData),queue_size=10)
+        segmentation_msg.segmentation_labels = self.bridge.cv2_to_imgmsg(segmentation_data,"bgr8") 
+
         rospy.sleep(1)
-        pub.publish(self.msg)
+        self.pub.publish(segmentation_msg)
         rospy.sleep(1)
-        test_data =self.subscribed_segmentation_labels.reshape((self.subscribed_segmentation_data_dims))
-        rospy.loginfo(f"The variable is  {self.subscribed_rgb_data}")
-        assert((test_data == self.segmentation_label_arr ).all()), "Arrays are not same"
+
+        test_data = self.bridge.imgmsg_to_cv2(self.subscribed_segmentation_labels)
+        assert((test_data == segmentation_data).all()), "Arrays are not same"
         
 
-        
 
-
-if __name__ == '__main__':
-    
-    rostest.rosrun('oakd_camera_driver','oakd_camera_test',TestImageSubscriber)
+if __name__ == '__main__':    
+    rostest.rosrun('oakd_camera_driver','test_oakd_publisher.py',TestImageSubscriber)
     
     

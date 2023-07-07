@@ -56,3 +56,4 @@ include
   ${catkin_INCLUDE_DIRS}
 )
 
+catkin_add_nosetests(test/test_oakd_publisher.py)
