@@ -27,9 +27,7 @@ def biomass_map_wrapper_callback(biomass_estimate_data):
     summary_complete_path_name = __biomass_summary_path + __summary_filename
     image_name = "image_" + str(biomass_estimate_data.camera_name) + "_" +  str(current_time.year) + "_" + str(current_time.month) + "_" + str(current_time.day)+".jpg" 
     counter_biomass = Counter(biomass_estimate_data.biomass_estimate)
-    counter_segmentation = Counter(biomass_estimate_data.segmentation_labels)
-    print(biomass_estimate_data)
-   
+    counter_segmentation = Counter(biomass_estimate_data.segmentation_labels)  
 
     try :
 

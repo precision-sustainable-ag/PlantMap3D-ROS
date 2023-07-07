@@ -3,9 +3,9 @@
     </node>
     <node pkg="biomass_map_driver" type="biomass_map.py" name="biomass_csv_server" required="true" output="screen">
     </node>
-    <node pkg="oakd_camera_driver" type="dummy_image_publisher_wrapper.py" name="camera_wrapper" required="true" output="screen">
+    <node pkg="oakd_camera_driver" type="dummy_image_publisher_wrapper.py" name="camera_wrapper" required="true">
     </node>
-    <node pkg="height_map_driver" type="height_map_wrapper.py"  name="height_map" output="screen" >
+    <node pkg="height_map_driver" type="height_map_wrapper.py"  name="height_map">
     </node> 
     <node pkg="biomass_estimator_driver" type="biomass_estimator_wrapper.py"  name="biomass_estimate" output="screen" >
     </node>
