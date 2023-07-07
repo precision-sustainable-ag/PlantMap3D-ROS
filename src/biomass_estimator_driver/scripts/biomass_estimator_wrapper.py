@@ -8,7 +8,8 @@ from rospy.numpy_msg import numpy_msg
 from std_msgs.msg import Bool
 from oakd_camera_driver.msg import PM3DCameraData
 import numpy as np
-
+from cv_bridge import CvBridge 
+from sensor_msgs.msg import Image
 from biomass_estimator import BiomassEstimator
 
 """
@@ -20,16 +21,14 @@ def biomass_estimator_callback(camera_data):
     """
     Callback function to listen to data published from the height map driver and compute the biomass estimation.
     """
+    bridge = CvBridge()
 
-    semantic_array = camera_data.segmentation_labels.reshape(camera_data.segmentation_label_dims)
-    height_array = camera_data.height_map.reshape(camera_data.height_map_dims)
+    semantic_array = bridge.imgmsg_to_cv2(camera_data.segmentation_labels)
+    height_array = bridge.imgmsg_to_cv2(camera_data.height_map)
     biomass_estimator_data = BiomassEstimator(semantic_array,height_array)
     biomass_estimate_res = biomass_estimator_data.run()
+    biomass_estimate_res = biomass_estimate_res.flatten().tolist()
     camera_data.biomass_estimate = biomass_estimate_res
-    
-    # print(f"biomass_estimate : {camera_data.biomass_estimate}")
-    # print('-------------------')
-    # print(f"biomass_estimate  shape {camera_data.biomass_estimate.shape}")
     pub = rospy.Publisher('camera_data/biomass_estimate',numpy_msg(PM3DCameraData),queue_size=10)
     pub.publish(camera_data)  
 

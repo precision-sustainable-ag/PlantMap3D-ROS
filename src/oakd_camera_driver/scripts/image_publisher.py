@@ -115,9 +115,9 @@ class TestImagePublisher():
             
             msg.camera_name = self.camera_name
             msg.header = header
-            msg.rgb_data = self.bridge.cv2_to_imgmsg(array_data) if array_data is not None else None
-            msg.depth_map = self.bridge.cv2_to_imgmsg(depth_data) if depth_data is not None else None
-            msg.segmentation_labels = self.bridge.cv2_to_imgmsg(segmentation_label_arr)
+            msg.rgb_data = self.bridge.cv2_to_imgmsg(array_data,"bgr8") if array_data is not None else None
+            msg.depth_map = self.bridge.cv2_to_imgmsg(depth_data,"bgr8") if depth_data is not None else None
+            msg.segmentation_labels = self.bridge.cv2_to_imgmsg(segmentation_label_arr,"bgr8")
             
             msg.camera_id = self.camera_id
             # Updating camera  coordinates based on camera location 
