@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """
 @author: MathewAaron
+
+NOTE : THIS FILE IS REDUNDANT 
 """
 import time
 import threading
