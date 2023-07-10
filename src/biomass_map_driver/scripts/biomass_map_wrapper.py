@@ -12,6 +12,8 @@ import os, sys
 from collections import Counter
 from biomass_map_driver.srv import PM3DBiomassDataSaver, PM3DBiomassDataSaverRequest
 import datetime, pytz
+from cv_bridge import CvBridge 
+from sensor_msgs.msg import Image
 
 
 
@@ -19,6 +21,7 @@ def biomass_map_wrapper_callback(biomass_estimate_data):
     """
     This function outputs the biomass estimation outputs in a csv file located (default) at /data_saver_driver/biomass_estimation/biomass_save_summary/
     """
+    bridge = CvBridge()
     current_time = datetime.datetime.now(pytz.timezone('US/Eastern'))
     rospack_testset = rospkg.RosPack()
     #ADD the actual path here, but keep the date-based filename
@@ -27,8 +30,11 @@ def biomass_map_wrapper_callback(biomass_estimate_data):
     summary_complete_path_name = __biomass_summary_path + __summary_filename
     image_name = "image_" + str(biomass_estimate_data.camera_name) + "_" +  str(current_time.year) + "_" + str(current_time.month) + "_" + str(current_time.day)+".jpg" 
     counter_biomass = Counter(biomass_estimate_data.biomass_estimate)
-    counter_segmentation = Counter(biomass_estimate_data.segmentation_labels)
-    print(biomass_estimate_data)
+    seg_labels = bridge.imgmsg_to_cv2(biomass_estimate_data.segmentation_labels)
+    seg_labels = np.ravel(seg_labels)
+    counter_segmentation = Counter(seg_labels)
+    print(counter_segmentation)
+    # print(biomass_estimate_data)
    
 
     try :
@@ -53,8 +59,8 @@ def biomass_map_wrapper_callback(biomass_estimate_data):
 
         resp = data_saver(req)
 
-        rospy.loginfo(f"Saving {req} data to biomass summary...")
-        rospy.loginfo(f"Response from server : {resp}")
+        rospy.loginfo(f"Saving data to biomass summary...")
+        # rospy.loginfo(f"Response from server : {resp}")
 
     except rospy.ServiceException as e :
         rospy.logerr("Camera location service call failed..")
