@@ -22,14 +22,14 @@ def biomass_estimator_callback(camera_data):
     Callback function to listen to data published from the height map driver and compute the biomass estimation.
     """
     bridge = CvBridge()
+    pub = rospy.Publisher('camera_data/biomass_estimate',numpy_msg(PM3DCameraData),queue_size=10)
 
     semantic_array = bridge.imgmsg_to_cv2(camera_data.segmentation_labels)
     height_array = bridge.imgmsg_to_cv2(camera_data.height_map)
     biomass_estimator_data = BiomassEstimator(semantic_array,height_array)
     biomass_estimate_res = biomass_estimator_data.run()
-    biomass_estimate_res = biomass_estimate_res.flatten().tolist()
+    biomass_estimate_res = np.array(biomass_estimate_res,dtype=np.int64)
     camera_data.biomass_estimate = biomass_estimate_res
-    pub = rospy.Publisher('camera_data/biomass_estimate',numpy_msg(PM3DCameraData),queue_size=10)
     pub.publish(camera_data)  
 
 if __name__ == '__main__':
