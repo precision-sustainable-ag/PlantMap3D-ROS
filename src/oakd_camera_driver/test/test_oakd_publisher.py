@@ -2,11 +2,10 @@
 """
 @author: MathewAaron
 
-TO RUN THIS FILE
+NOTE : TO RUN THIS FILE
 
-PlantMap3D/ 
-
-catkin_make run_tests_oakd_camera_driver
+    PlantMap3D/ 
+        catkin_make run_tests_oakd_camera_driver
 """
 from unittest import TestCase
 import cv2
@@ -36,7 +35,7 @@ class TestImageSubscriber(TestCase):
 
         rospack_testset = rospkg.RosPack() 
         
-        self.__test_rgbdatapath = rospack_testset.get_path('oakd_camera_driver') + '/test/rgb/1674584672.191502.jpg.jpg'
+        self.__test_rgbdatapath = rospack_testset.get_path('oakd_camera_driver') + '/test/rgb/1674584672.191502.jpg'
         self.__test_depthdatapath = rospack_testset.get_path('oakd_camera_driver') + '/test/depth/1_Depth.png'
 
         self.__test_segmentationpath = rospack_testset.get_path('oakd_camera_driver') + '/test/segmentation/1_Seg.jpg'

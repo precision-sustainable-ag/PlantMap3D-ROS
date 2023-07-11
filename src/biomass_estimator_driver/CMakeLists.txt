@@ -45,7 +45,9 @@ catkin_package(
 
 
 include_directories(
-# include
+include
   ${catkin_INCLUDE_DIRS}
 )
+
+catkin_add_nosetests(test/test_biomass_estimator.py)
 

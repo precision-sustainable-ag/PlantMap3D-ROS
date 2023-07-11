@@ -1,5 +1,14 @@
 #!/usr/bin/env python3
 
+"""
+authors : @danielginn , @MathewAaron 
+
+NOTE : TO RUN THE TEST 
+
+    PlantMap3D/
+        catkin_make run_tests_height_map_driver
+
+"""
 from unittest import TestCase
 import numpy as np
 import os, sys
