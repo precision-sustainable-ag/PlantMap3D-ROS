@@ -7,7 +7,7 @@ import rospy
 from sensor_msgs.msg import NavSatFix, NavSatStatus
 import pynmea2
 import sys
-
+import time
 log_file = open('gps_data.log', 'r')
 
 from camera_trigger_driver.msg import PM3DGPSData
@@ -31,6 +31,7 @@ if __name__ == '__main__':
     # log_file = open('gps_data.log', 'r')
     rospy.logwarn_once("Waiting 10 secs to start all nodes")
     rospy.sleep(10)
+    time.sleep(30)
     rate = rospy.Rate(3)
     while not rospy.is_shutdown():
         

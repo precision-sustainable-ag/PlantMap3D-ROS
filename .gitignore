@@ -7,5 +7,8 @@ mona_lisa.png
 .vscode
 test_loop_break.py
 test_painting.png
+*.png
+*.jpg
+*.csv
 src/data_saver_driver/biomass_estimation/
 src/data_saver_driver/camera_data/

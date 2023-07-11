@@ -215,10 +215,9 @@ class PM3DCameraDataPublisher():
             rgb_out = None
             while True:
                 strt = dai.Clock.now()
-                rgb_in = rgb_queue.tryGet()
+                rgb_in = rgb_queue.get()
                 if rgb_in is not None:
                     rgb_out = rgb_in.getCvFrame()
-                cv2.imwrite('test.png',rgb_out)
 
                 right_in = right_queue.get()
                 right_out = right_in.getFrame()
@@ -227,11 +226,13 @@ class PM3DCameraDataPublisher():
 
                 depth_in = depth_queue.get()
                 depth_out = depth_in.getFrame()
-                
+        
 
                 
                 last = dai.Clock.now()
                 segmentation_labels = segmentation_queue.get()
+
+
                 latencyMs = (dai.Clock.now() - last).total_seconds() * 1000
                 self.diffs4 = np.append(self.diffs4, latencyMs)
 
@@ -256,9 +257,12 @@ class PM3DCameraDataPublisher():
                     header.stamp = time_stamp
                     self.camera_data_msg.camera_name = self.camera_name
                     self.camera_data_msg.header = header
+
+
                     self.camera_data_msg.rgb_data = self.bridge.cv2_to_imgmsg(rgb_out,"bgr8") if rgb_out is not None else None
                     self.camera_data_msg.depth_map = self.bridge.cv2_to_imgmsg(depth_out,"mono16") if depth_out is not None else None
                     self.camera_data_msg.segmentation_labels = self.bridge.cv2_to_imgmsg(seg_labels,"mono8")
+
 
                     self.camera_data_msg.camera_id = self.camera_id
                     self.cam_location_req.gpscoords = [self.gps_data.latitude,self.gps_data.longitude]

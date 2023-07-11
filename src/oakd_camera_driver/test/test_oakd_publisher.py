@@ -36,10 +36,10 @@ class TestImageSubscriber(TestCase):
 
         rospack_testset = rospkg.RosPack() 
         
-        self.__test_rgbdatapath = rospack_testset.get_path('oakd_camera_driver') + '/test/rgb/1674584672.191502.jpg'
-        self.__test_depthdatapath = rospack_testset.get_path('oakd_camera_driver') + '/test/depth/1674592342.1574855.png'
+        self.__test_rgbdatapath = rospack_testset.get_path('oakd_camera_driver') + '/test/rgb/1_Rgb.jpg'
+        self.__test_depthdatapath = rospack_testset.get_path('oakd_camera_driver') + '/test/depth/1_Depth.png'
 
-        self.__test_segmentationpath = rospack_testset.get_path('oakd_camera_driver') + '/test/segmentation/1674584672.191502.png'
+        self.__test_segmentationpath = rospack_testset.get_path('oakd_camera_driver') + '/test/segmentation/1_Seg.jpg'
         rospy.init_node('camera_data_test')
         self.subscribed_depth_data = None
         self.subscribed_rgb_data = None 
