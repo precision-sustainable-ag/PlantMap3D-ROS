@@ -2,6 +2,11 @@
 """
 @author: MathewAaron
 """
+
+"""
+
+NOTE : THIS FILE IS NOT USED BY ANY MODULES AND ONLY FOR DEBUGGING.
+"""
 import rospy
 from camera_location_module.srv import PM3DCameraLocation, PM3DCameraLocationRequest
 
