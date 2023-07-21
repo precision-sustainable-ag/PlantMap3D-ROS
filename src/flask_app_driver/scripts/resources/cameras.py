@@ -21,9 +21,6 @@ class Cameras(Resource):
         if check_camera_connection(camera_ip):
             cameras.append(cameraid)
 
-        # if cd.upload_pipeline(camera_ip):
-        #   cameras.append(cameraid)
-        
       response = {'status': 'success', 'cameras': cameras}
 
       if len(cameras):

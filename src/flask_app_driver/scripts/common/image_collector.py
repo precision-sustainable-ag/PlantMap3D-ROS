@@ -9,8 +9,7 @@ class Collector():
 		obj.__dict__ = cls._shared_borg_state
 		return obj
 
-	def find_file(self, img_type):
-		folder = './images'
+	def find_file(self, img_type, folder):
 		for root, dirs, files in os.walk(folder):
 			for file in files:
 				if img_type in file:

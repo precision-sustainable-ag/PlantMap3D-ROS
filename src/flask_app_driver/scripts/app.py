@@ -1,7 +1,4 @@
 #!/usr/bin/env python3
-"""
-@author: MathewAaron
-"""
 
 import rospy
 from flask import Flask, send_file
@@ -16,7 +13,14 @@ from resources.preview import Preview
 from resources.biomap import Biomap
 from resources.segmentation import Segmentation
 
+class test(Resource):
+  def get(self):
+     response = {'status': 'success', }
+     return response
+     
+     
 def register_endpoints(api):
+  api.add_resource(test, '/')
   api.add_resource(Status, '/status', '/status/<string:action>')
   api.add_resource(Cameras, '/cameras')
   api.add_resource(Preview, '/preview/<string:camera_id>')
@@ -36,7 +40,7 @@ def create_app():
 
 if __name__ == '__main__':
   app = create_app()
-  app.run(debug=True)
+  app.run(debug=True, host="169.254.54.20")
 
 
     

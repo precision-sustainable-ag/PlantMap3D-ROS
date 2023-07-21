@@ -56,6 +56,7 @@ class mapInterpolator:
         num_clusters = np.max(clust.labels_)
         print(np.sum(clust.labels_ == -1))
         for clusterId in range(num_clusters+1):
+            print(num_clusters)
             print(np.sum(clust.labels_ == clusterId))
             if(np.sum(clust.labels_ == clusterId) > min_points_per_cluster): #only process if more than 30 image samples is part of the cluster
                 xk = x[clust.labels_ == clusterId]
@@ -126,7 +127,7 @@ class mapInterpolator:
                                      newshape=(int(fig.bbox.bounds[3]), int(fig.bbox.bounds[2]), -1))
                 io_buf.close()
                 imageio.imwrite(save_directory + "/map_" + str(clusterId) + ".png", img_arr[:,:,0:4])
-            return img_arr
+        return img_arr
 
     def generate_live_map(self, save_path, lat, lon):
         data= pandas.read_csv(self.csv_path, sep=';')
@@ -232,6 +233,6 @@ class mapInterpolator:
             imageio.imwrite(save_path, img_arr[:,:,0:4])
     
 if __name__ == "__main__":
-    cvs_path = "src/flask_app_driver/scripts/common/test_plantmap_2023-04-20.csv"
-    image_arr = mapInterpolator(csv_path=cvs_path, data_column='live_biomass_pixels').generate_all_maps_from_today(save_directory='/home/plantmap3d/Desktop/ROS_dev_ws/PlantMap3D-ROS/src/flask_app_driver/scripts')
+    cvs_path = "/home/plantmap3d/Desktop/ROS_dev_ws/PlantMap3D-ROS/src/flask_app_driver/scripts/common/test_plantmap_2023-04-20.csv"
+    image_arr = mapInterpolator(csv_path=cvs_path, data_column='live_biomass_pixels').generate_all_maps_from_today(save_directory='/home/plantmap3d/Desktop/ROS_dev_ws/PlantMap3D-ROS/src/flask_app_driver/scripts/common/biomap_images')
     print(image_arr.shape)

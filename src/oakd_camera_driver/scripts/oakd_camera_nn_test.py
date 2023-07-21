@@ -350,6 +350,7 @@ class PM3DCameraDataPublisher():
     def run_threads(self):
         t1 = threading.Thread(target=self.enable_camera)
         t2 = threading.Thread(target=self.run_camera_trigger_subscriber)
+        
 
         # starting camera stream
         t1.start()
