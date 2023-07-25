@@ -11,6 +11,7 @@
 #include <math.h>
 
 double lastNorthing=0, lastEasting=0, lastRange=0;
+double prevLat = 0, prevLon = 0, currLat = 0, currLon = 0;
 bool record;
 float lGPSHeadingData;
 float totalDistance = 0;
@@ -32,13 +33,14 @@ void gpsCallBack(const sensor_msgs::NavSatFixConstPtr& msg)
 
     // ROS_INFO("Received GPS position: %f %f", msg->latitude, msg->longitude);
     LLtoUTM(23, msg->latitude, msg->longitude, Northing, Easting, z);
-
-    // ROS_INFO("In UTM %f %f %s", Northing, Easting, z);
+    currLat = msg->latitude;
+    currLon = msg->longitude;
+ 
     d = sqrt(pow(lastNorthing-Northing,2) + pow(lastEasting-Easting,2));
     totalDistance = d;
     distance.data = d;
     distancePub.publish(distance);
-    float tempt_const = 0.001; // temporary variable changed from 10.0 (meters)
+    float tempt_const = 0.001; 
     float gps_heading_data;
      ROS_INFO("Printing distance %f",d);
     /*
@@ -62,21 +64,30 @@ void gpsCallBack(const sensor_msgs::NavSatFixConstPtr& msg)
       cameraTriggerMsg.camera_trigger = true;
       cameraTriggerMsg.distance = totalDistance;
       gpsTriggerPub.publish(cameraTriggerMsg);
+      // ROS_INFO("Current GPS LAT : %f",currLat);
+      // ROS_INFO("Current GPS LON : %f",currLon);
+      // ROS_INFO("Prev GPS Lat : %f",prevLat);
+      // ROS_INFO("Prev GPS Lon : %f",prevLon);
+
+      prevLat = currLat;
+      prevLon = currLon;
       
     }
-    
-      ROS_INFO("Received GPS Heading : %f",lGPSHeadingData);
+      
+
+      
+      // ROS_INFO("Received GPS Heading : %f",lGPSHeadingData);
+      
       req.northing = Northing;
       req.lnorthing = lastNorthing;
       req.easting = Easting;
       req.leasting = lastEasting;
 
-      
       if (gpsHeadingClient.call(req,res)){
       
       gps_heading_data = res.gps_heading;
       lGPSHeadingData = gps_heading_data;
-      // ROS_INFO("Received GPS Heading : %f",gps_heading);
+      ROS_INFO("Received GPS Heading : %f",gps_heading_data);
       
       }
       else {

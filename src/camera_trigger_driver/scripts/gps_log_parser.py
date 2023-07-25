@@ -30,7 +30,7 @@ if __name__ == '__main__':
     
     # log_file = open('gps_data.log', 'r')
     rospy.logwarn_once("Waiting 10 secs to start all nodes")
-    rospy.sleep(10)
+    rospy.sleep(2)
     time.sleep(30)
     rate = rospy.Rate(3)
     while not rospy.is_shutdown():
