@@ -54,7 +54,8 @@ include_directories(
 )
 
 add_executable(camera_trigger_driver src/camera_trigger_node.cpp
-				    include/geotoutm/LatLong-UTMconversion.cpp)
+				    include/geotoutm/LatLong-UTMconversion.cpp
+            include/geotoutm/computeGPSDistance.cpp)
 
 
 add_dependencies(camera_trigger_driver ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})

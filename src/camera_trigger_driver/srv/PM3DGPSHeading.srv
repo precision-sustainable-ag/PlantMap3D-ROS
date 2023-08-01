@@ -1,7 +1,7 @@
-float32 northing
-float32 lnorthing
-float32 easting
-float32 leasting
+float32 prev_lat
+float32 prev_lon
+float32 current_lat 
+float32 current_lon
 ---
 float32 gps_heading
 
