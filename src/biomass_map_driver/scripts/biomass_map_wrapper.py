@@ -30,12 +30,14 @@ def biomass_map_wrapper_callback(biomass_estimate_data):
     summary_complete_path_name = __biomass_summary_path + __summary_filename
     image_name = "image_" + str(biomass_estimate_data.camera_name) + "_" +  str(current_time.year) + "_" + str(current_time.month) + "_" + str(current_time.day)+".jpg" 
     counter_biomass = Counter(biomass_estimate_data.biomass_estimate)
+
     seg_labels = bridge.imgmsg_to_cv2(biomass_estimate_data.segmentation_labels)
     seg_labels = np.ravel(seg_labels)
     counter_segmentation = Counter(seg_labels)
     print(counter_segmentation)
     # print(biomass_estimate_data)
    
+
 
     try :
 

@@ -30,6 +30,8 @@ def biomass_estimator_callback(camera_data):
     biomass_estimate_res = biomass_estimator_data.run()
     biomass_estimate_res = np.array(biomass_estimate_res,dtype=np.int64)
     camera_data.biomass_estimate = biomass_estimate_res
+    rospy.loginfo(camera_data.biomass_estimate)
+    pub = rospy.Publisher('camera_data/biomass_estimate',numpy_msg(PM3DCameraData),queue_size=10)
     pub.publish(camera_data)  
 
 if __name__ == '__main__':

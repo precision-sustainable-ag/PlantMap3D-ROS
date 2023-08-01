@@ -1,4 +1,5 @@
 <launch>
+
     <!-- <node pkg="camera_location_module" type="server_camera_location.py" name="camera_location_interpreter" required="true" output = "screen">
     </node> -->
     <node pkg="biomass_map_driver" type="biomass_map.py" name="biomass_csv_server" required="true" output = "screen">

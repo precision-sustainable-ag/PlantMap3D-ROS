@@ -40,6 +40,7 @@ void gpsCallBack(const sensor_msgs::NavSatFixConstPtr& msg)
     totalDistance = d;
     distance.data = d;
     distancePub.publish(distance);
+
     float tempt_const = 0.001; 
     float gps_heading_data;
     ROS_INFO("Printing distance %f",d);
