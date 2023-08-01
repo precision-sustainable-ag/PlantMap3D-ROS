@@ -35,10 +35,9 @@ class TestImageSubscriber(TestCase):
 
         rospack_testset = rospkg.RosPack() 
         
-        self.__test_rgbdatapath = rospack_testset.get_path('oakd_camera_driver') + '/test/rgb/1674584672.191502.jpg'
-        self.__test_depthdatapath = rospack_testset.get_path('oakd_camera_driver') + '/test/depth/1_Depth.png'
-
-        self.__test_segmentationpath = rospack_testset.get_path('oakd_camera_driver') + '/test/segmentation/1_Seg.jpg'
+        self.__test_rgbdatapath = rospack_testset.get_path('oakd_camera_driver') + '/test/rgb/rgb.npy'
+        self.__test_depthdatapath = rospack_testset.get_path('oakd_camera_driver') + '/test/depth/depth.npy'
+        self.__test_segmentationpath = rospack_testset.get_path('oakd_camera_driver') + '/test/segmentation/seg.npy'
         rospy.init_node('camera_data_test')
         self.subscribed_depth_data = None
         self.subscribed_rgb_data = None 
@@ -65,8 +64,8 @@ class TestImageSubscriber(TestCase):
         """
         rgb_msg = PM3DCameraData()
         
-
-        rgb_data = cv2.imread(self.__test_rgbdatapath)
+        # with open(self.__test_rgbdatapath,'rb') as f:
+        rgb_data = np.load(self.__test_rgbdatapath)
 
         rgb_msg.rgb_data = self.bridge.cv2_to_imgmsg(rgb_data,"bgr8")
         
@@ -84,9 +83,9 @@ class TestImageSubscriber(TestCase):
             Testing Depth data that is published
         """
         depth_msg = PM3DCameraData()
-        depthdata = cv2.imread(self.__test_depthdatapath)
+        depthdata = np.load(self.__test_depthdatapath)
         
-        depth_msg.depth_map = self.bridge.cv2_to_imgmsg(depthdata,"bgr8") 
+        depth_msg.depth_map = self.bridge.cv2_to_imgmsg(depthdata,"mono16") 
 
         rospy.sleep(1)
         self.pub.publish(depth_msg)
@@ -102,9 +101,9 @@ class TestImageSubscriber(TestCase):
         """
         
         segmentation_msg = PM3DCameraData()
-        segmentation_data = cv2.imread(self.__test_segmentationpath)
-        
-        segmentation_msg.segmentation_labels = self.bridge.cv2_to_imgmsg(segmentation_data,"bgr8") 
+        segmentation_data = np.load(self.__test_segmentationpath)
+        segmentation_data = segmentation_data.astype(np.uint8)
+        segmentation_msg.segmentation_labels = self.bridge.cv2_to_imgmsg(segmentation_data,"mono8") 
 
         rospy.sleep(1)
         self.pub.publish(segmentation_msg)
