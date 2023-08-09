@@ -25,3 +25,4 @@ class Segmentation(Resource):
         response = make_response(send_file(img_stream, download_name="segmented_image.jpg", mimetype="image/jpeg"))
 
         return response
+    

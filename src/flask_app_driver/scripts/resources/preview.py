@@ -10,6 +10,8 @@ print(sys.path)
 from common.camera_data_loader import get_camera_nodes
 from common.image_collector import Collector
 from common.device_maker import CameraDevice
+# from common.camera_queuemaker import CameraDevice
+# from common.get_queue import Collector
 from common.check_camera import check_camera_connection
 
 class Preview(Resource):
@@ -23,6 +25,8 @@ class Preview(Resource):
             return {"status": "Error","info": "Camera is offline"} , 400
 
         camera_device.upload_pipeline(camera_ip)
+        camera_device.make_queues()
+        
         rgb_out, _ = camera_device.get_camera_image()
         if rgb_out is None:
             return {"status": "Error","info": "Frame capture failed"} , 400
@@ -31,6 +35,7 @@ class Preview(Resource):
         response = make_response(send_file(img_stream, download_name="preview.jpg", mimetype="image/jpeg"))
 
         return response
+
 
 
 

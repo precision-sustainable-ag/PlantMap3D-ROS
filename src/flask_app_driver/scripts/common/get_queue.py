@@ -19,7 +19,21 @@ class Collector():
 
 			return byte_stream
 	
-	def get_frame():
+	# def get_frame(rgb_queue,segmentation_queue):
+	# 	rgb_in = rgb_queue.get()
+	# 	rgb_out = rgb_in.getCvFrame()
+	# 	segmentation_labels = segmentation_queue.get()
+	# 	seg_labels = (np.array(segmentation_labels.getFirstLayerFp16()).reshape(128,128)).astype(np.uint8)
+	# 	cv2.imwrite("rgb_img.jpg", rgb_out)
+	# 	cv2.imwrite("seg_img.jpg", seg_labels)
+	# 	return rgb_out, seg_labels
+
 		
+		
+
+		
+
+		
+
 
 	
