@@ -61,10 +61,10 @@ class SMB_Interface():
                 #Since pin direction names are defined from the perspective of the Pico,
                 #the "IN" pins need to be output pins on the Jetson side. 
                 if "OUT" in pin_name:
-                    GPIO.setup(pins_to_assign[pin_name],GPIO.IN)
+                    GPIO.setup(int(pins_to_assign[pin_name]),GPIO.IN)
                     self.read_pins[get_pin_holder_index(pin_name)]=pins_to_assign[pin_name]
                 elif "IN" in pin_name:
-                    GPIO.setup(pins_to_assign[pin_name],GPIO.OUT)
+                    GPIO.setup(int(pins_to_assign[pin_name]),GPIO.OUT)
                     self.write_pins[get_pin_holder_index(pin_name)]=pins_to_assign[pin_name]
         else:
             print("Error. No pins found for assignment. ")

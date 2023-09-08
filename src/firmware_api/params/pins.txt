@@ -3,6 +3,7 @@
 #Ex. Pico_IN_Bit_0 is waiting for signals from the Jetson.
 #The last character in a pin name needs to be the 
 #identifier for the input or output pin, such as 0, 1 or 2.
+#The gpio_api expects the LSB is bit 0 and MSB is highest bit.
 Pico_OUT_Bit_0,15
 Pico_OUT_Bit_1,13
 Pico_OUT_Bit_2,18
