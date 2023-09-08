@@ -2,7 +2,7 @@
 
 simulator = False
 import platform
-if platform.system()=="Linux" and "20.04" in platform.release():
+if platform.system()=="Linux" and "tegra" in platform.release():
     import Jetson.GPIO as GPIO
 else:
     import jetson_gpio_sim as GPIO
