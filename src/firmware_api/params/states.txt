@@ -1,0 +1,3 @@
+#Pin2 is MSB. Pin0 is LSB
+1**,Online
+01*,Shutdown
