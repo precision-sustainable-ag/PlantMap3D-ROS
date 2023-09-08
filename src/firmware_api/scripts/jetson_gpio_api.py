@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
+simulator = False
 import platform
 if platform.system()=="Linux" and "20.04" in platform.release():
     import Jetson.GPIO as GPIO
 else:
     import jetson_gpio_sim as GPIO
+    simulator = True
 import os
 import time
 
@@ -94,28 +96,35 @@ class SMB_Interface():
             for state in defined_states.keys():
                 self.binary_states[int(state_from_raw(state),2)] = defined_states[state]
                 self.binary_masks[int(mask_from_raw(state),2)] = defined_states[state]
-    def read_state(self):
+    def read_state(self,simulator=False):
         raw_pin_data = []
-        counter = 0
-        for pin in self.read_pins:
+        if simulator:
+            print("Jetson Input Pins are " + str([x for x in self.read_pins if x != -1][::-1]) + " MSB to LSB")
+        #The output of read_pins is ordered from [LSB,...,MSB],
+        #so reverse the array first to get a standard binary arrangement
+        #from MSB on the left to LSB on the right and request from MSB to LSB (if in sim mode).
+        for pin in self.read_pins[::-1]:
             if pin != -1:
                 raw_pin_data.append(str(int(GPIO.input(int(pin)))))
-            counter += 1
-        #The output of this is ordered from [LSB,...,MSB],
-        #so reverse the array to get a standard binary arrangement
-        #from MSB on the left to LSB on the right. 
-        raw_pin_data.reverse()
         current_state = int("".join(raw_pin_data),2)
-        self.command = ""
+        self.status = ""
+        status_options = []
         for mask in self.binary_masks.keys():
             masked_state = current_state & mask
-            self.command = self.binary_states.get(masked_state)
-
+            status_holder = self.binary_states.get(masked_state)
+            if status_holder is not None:
+                status_options.append(status_holder)
+        if len(status_options)>1:
+            print("WARNING! Multiple State Conditions Found. Choosing First: " + status_options[0])
+        if len(status_options) != 0:
+            board.status = status_options[0]
+        else:
+            board.status = "Unknown"
 
 
 if __name__ == "__main__":
     board = SMB_Interface("../params/")
     board.initialize_GPIO()
     board.format_states()
-    board.read_state()
-    print(board.command)
+    board.read_state(simulator)
+    print(board.status)
