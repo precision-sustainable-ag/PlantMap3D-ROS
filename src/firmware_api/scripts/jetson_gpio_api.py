@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+#11/19/23 best Docker command
+#sudo docker run --name test -it --device /dev/gpiochip0 -v /sys:/sys -v /proc:/proc 362b9486c282
+#nano /usr/local/lib/python3.8/dist-packages/Jetson/GPIO/gpio_pin_data.py
+#add "return JETSON_ORIN" on line 546 
+
 simulator = False
 import platform
 if platform.system()=="Linux" and "tegra" in platform.release():
