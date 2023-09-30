@@ -43,7 +43,8 @@ class SMB_Interface():
                 else:
                     dictionary_holder[parsing_holder[0]]=parsing_holder[1]
             self.parameter_dictionary[each.split(".")[0]]=dictionary_holder
-        self.format_states()
+        self.in_bin_masks,self.in_bin_states = self.format_states("in_states")
+        self.out_bin_masks,self.out_bin_states = self.format_states("out_states")
     def initialize_GPIO(self):
         def get_pin_holder_index(pin_name):
             counter = 0
@@ -72,36 +73,38 @@ class SMB_Interface():
                 elif "IN" in pin_name:
                     GPIO.setup(int(pins_to_assign[pin_name]),GPIO.OUT)
                     self.write_pins[get_pin_holder_index(pin_name)]=pins_to_assign[pin_name]
+            self.write_pin_status = [0 for x in self.write_pins if x != -1]
         else:
             print("Error. No pins found for assignment. ")
-    def format_states(self):
-        def state_from_raw(state_with_ignore):
-            holder = ""
-            input_state = str(state_with_ignore)
-            for char in input_state:
-                if char == "*":
-                    holder += "0"
-                else:
-                    holder += char
-            return holder
-        def mask_from_raw(state_with_ignore):
-            holder = ""
-            input_state = str(state_with_ignore)
-            for char in input_state:
-                if char == "*":
-                    holder += "0"
-                elif (char == "0") or (char == "1"):
-                    holder += "1"
-                else:
-                    holder += char
-            return holder
-        defined_states = self.parameter_dictionary.get("states")
-        self.binary_states = {}
-        self.binary_masks = {}
+    def state_from_raw(self,state_with_ignore):
+        holder = ""
+        input_state = str(state_with_ignore)
+        for char in input_state:
+            if char == "*":
+                holder += "0"
+            else:
+                holder += char
+        return holder
+    def mask_from_raw(self,state_with_ignore):
+        holder = ""
+        input_state = str(state_with_ignore)
+        for char in input_state:
+            if char == "*":
+                holder += "0"
+            elif (char == "0") or (char == "1"):
+                holder += "1"
+            else:
+                holder += char
+        return holder
+    def format_states(self,target_file):
+        defined_states = self.parameter_dictionary.get(target_file)
+        binary_states = {}
+        binary_masks = {}
         if defined_states is not None:
             for state in defined_states.keys():
-                self.binary_states[int(state_from_raw(state),2)] = defined_states[state]
-                self.binary_masks[int(mask_from_raw(state),2)] = defined_states[state]
+                binary_states[int(self.state_from_raw(state),2)] = defined_states[state]
+                binary_masks[int(self.mask_from_raw(state),2)] = defined_states[state]
+        return binary_masks,binary_states
     def read_state(self,simulator=False):
         raw_pin_data = []
         if simulator:
@@ -115,9 +118,9 @@ class SMB_Interface():
         current_state = int("".join(raw_pin_data),2)
         self.status = ""
         status_options = []
-        for mask in self.binary_masks.keys():
+        for mask in self.in_bin_masks.keys():
             masked_state = current_state & mask
-            status_holder = self.binary_states.get(masked_state)
+            status_holder = self.in_bin_states.get(masked_state)
             if status_holder is not None:
                 status_options.append(status_holder)
         if len(status_options)>1:
@@ -127,10 +130,35 @@ class SMB_Interface():
         else:
             board.status = "Unknown"
 
+    def write_to_pins(self):
+        holder = list(zip(self.write_pins[len(self.write_pin_status)-1::-1],self.write_pin_status))
+        for pin_assignment in holder:
+            GPIO.output(int(pin_assignment[0]),int(pin_assignment[1]))
+
+    def lights(self,value):
+        light_state = [x for x in self.out_bin_states.keys() if "light" in self.out_bin_states.get(x).lower()]
+        if len(light_state)>1:
+            raise ValueError("Multiple pin states defined as light controls")
+        light_state = light_state[0] | int("".join([str(x) for x in self.write_pin_status]))
+        light_state = "{:3b}".format(light_state)
+        for i in range(0,len(self.write_pin_status)):
+            self.write_pin_status[i] = int(light_state[i])
+        self.write_to_pins()
+
+    def shutdown(self):
+        sd_state = [x for x in self.out_bin_states.keys() if "shutdown" in self.out_bin_states.get(x).lower()]
+        if len(sd_state)>1:
+            raise ValueError("Multiple pin states defined as light controls")
+        sd_state = sd_state[0] | int("".join([str(x) for x in self.write_pin_status]))
+        sd_state = "{:3b}".format(sd_state)
+        for i in range(0,len(self.write_pin_status)):
+            self.write_pin_status[i] = int(sd_state[i])
+        self.write_to_pins()
 
 if __name__ == "__main__":
     board = SMB_Interface("../params/")
-    board.initialize_GPIO()
-    board.format_states()
+    board.write_to_pins()
+    board.shutdown()
+    board.lights(True)
     board.read_state(simulator)
     print(board.status)

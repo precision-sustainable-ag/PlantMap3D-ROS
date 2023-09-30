@@ -1,0 +1,3 @@
+#Pin 2 is MSB, Pin 0 is LSB
+**1,Lights
+1**,Shutdown Started
