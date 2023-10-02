@@ -140,7 +140,7 @@ class SMB_Interface():
         if len(light_state)>1:
             raise ValueError("Multiple pin states defined as light controls")
         light_state = light_state[0] | int("".join([str(x) for x in self.write_pin_status]))
-        light_state = "{:3b}".format(light_state)
+        light_state = "{0:0{1}b}".format(light_state,len(self.write_pin_status))
         for i in range(0,len(self.write_pin_status)):
             self.write_pin_status[i] = int(light_state[i])
         self.write_to_pins()
@@ -150,7 +150,7 @@ class SMB_Interface():
         if len(sd_state)>1:
             raise ValueError("Multiple pin states defined as light controls")
         sd_state = sd_state[0] | int("".join([str(x) for x in self.write_pin_status]))
-        sd_state = "{:3b}".format(sd_state)
+        sd_state = "{0:0{1}b}".format(sd_state,len(self.write_pin_status))
         for i in range(0,len(self.write_pin_status)):
             self.write_pin_status[i] = int(sd_state[i])
         self.write_to_pins()
