@@ -1,48 +1,5 @@
 # PlantMap3D-ROS
 
-## Current development branch : ```setup/ros_drivers```
-### Initial source code PR link : https://github.com/precision-sustainable-ag/PlantMap3D-ROS/pull/38
-
-## Setting up the repository
-
-Create a workspace
-
-```
-mkdir ROS_dev_ws
-cd ROS_dev_ws
-```
-
-Clone the repository
-
-```
-git clone https://github.com/precision-sustainable-ag/PlantMap3D-ROS.git
-```
-
-Build the project
-
-```
-cd PlantMap3D-ROS
-catkin_make
-```
-
-Source the repository
-
-```
-source devel/setup.bash
-```
-
-Add the setup.bash file to .bashrc file
-
-```
-echo "source ~/ROS_dev_ws/PlantMap3D-ROS/devel/setup.bash" >> ~/.bashrc
-```
-
-Check if all requirements are installed
-
-```
-pip3 install -r requirements.txt
-```
-
 ## Current development branch : ```debug/segmentation_fps``
 ### Initial source code PR link : https://github.com/precision-sustainable-ag/PlantMap3D-ROS/pull/38
 
