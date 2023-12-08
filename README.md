@@ -15,7 +15,4 @@
 
 <img src="https://user-images.githubusercontent.com/71589098/234415197-434c50d7-e88f-4c58-88ef-951392a8840e.png" width=45% height=45% /> <img src="https://user-images.githubusercontent.com/71589098/234415530-8fb0a08b-708e-4fe0-bc6f-1058f79256b7.png" width=48% height=45% />
 
-```
-pip install pynmea2
-```
 
