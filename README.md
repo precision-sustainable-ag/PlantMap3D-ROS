@@ -1,7 +1,6 @@
 # PlantMap3D-ROS
 
 ## Current development branch : ```debug/segmentation_fps``
-### Initial source code PR link : https://github.com/precision-sustainable-ag/PlantMap3D-ROS/pull/38
 
 ## Creating a ROS workspace
 
