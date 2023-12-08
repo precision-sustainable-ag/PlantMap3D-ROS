@@ -2,9 +2,6 @@
 
 ## Current development branch : ```debug/segmentation_fps``
 
-## Creating a ROS workspace
-
-
 ## Intended System Flow-diagram : 
 
 [Note : This diagram is expected to be updated with design upgrades]
